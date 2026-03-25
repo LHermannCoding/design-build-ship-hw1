@@ -1,0 +1,29 @@
+{
+  "permissions": {
+    "allow": [
+      "WebFetch(domain:en.wikipedia.org)",
+      "WebFetch(domain:commons.wikimedia.org)",
+      "WebFetch(domain:fonts.google.com)",
+      "WebFetch(domain:upload.wikimedia.org)",
+      "Bash(open:*)",
+      "Bash(vercel:*)",
+      "Bash(curl -sL -A \"Mozilla/5.0\" \"https://en.wikipedia.org/w/api.php?action=parse&page=Platypus&prop=images&format=json\")",
+      "Bash(python3 -m json.tool)",
+      "Bash(git add:*)",
+      "Bash(git commit:*)",
+      "WebFetch(domain:design-build-ship-three.vercel.app)",
+      "Bash(curl -sL -A \"Mozilla/5.0\" -o platypus-plate.jpg \"https://upload.wikimedia.org/wikipedia/commons/thumb/e/e0/Platypus-plate.jpg/440px-Platypus-plate.jpg\")",
+      "Bash(curl -sL -A \"Mozilla/5.0\" -o skeleton.jpg \"https://upload.wikimedia.org/wikipedia/commons/thumb/2/2b/Platypus_skeleton_Pengo.jpg/440px-Platypus_skeleton_Pengo.jpg\")",
+      "Bash(curl -sL -A \"Mozilla/5.0\" -o electrolocation.png \"https://upload.wikimedia.org/wikipedia/commons/thumb/1/10/Platypus_electrolocation.svg/440px-Platypus_electrolocation.svg.png\")",
+      "Bash(curl -sL -A \"Mozilla/5.0\" -o first-description.jpg \"https://upload.wikimedia.org/wikipedia/commons/thumb/5/55/Platypus_%28Ornithorhynchus_anatinus%29._First_Description_1799.jpg/440px-Platypus_%28Ornithorhynchus_anatinus%29._First_Description_1799.jpg\")",
+      "Bash(curl -sL -A \"Mozilla/5.0\" -o distribution-map.png \"https://upload.wikimedia.org/wikipedia/commons/thumb/3/3e/Distribution_of_the_Platypus_%28Ornithorhynchus_anatinus%29.png/440px-Distribution_of_the_Platypus_%28Ornithorhynchus_anatinus%29.png\")",
+      "Bash(curl -sL -A \"Mozilla/5.0 \\(Macintosh; Intel Mac OS X 10_15_7\\)\" -o /tmp/test.jpg \"https://upload.wikimedia.org/wikipedia/commons/e/e0/Platypus-plate.jpg\")",
+      "Read(//tmp/**)",
+      "Bash(curl -sL -A \"Mozilla/5.0\" -o platypus-plate.jpg \"https://upload.wikimedia.org/wikipedia/commons/4/4f/Platypus-plate.jpg\")",
+      "Bash(curl -sL -A \"Mozilla/5.0\" -o skeleton.jpg \"https://upload.wikimedia.org/wikipedia/commons/thumb/3/3f/Platypus_skeleton_Pengo.jpg/500px-Platypus_skeleton_Pengo.jpg\")",
+      "Bash(curl -sL -A \"Mozilla/5.0\" -o electrolocation.png \"https://upload.wikimedia.org/wikipedia/commons/thumb/e/e4/Platypus_electrolocation.svg/500px-Platypus_electrolocation.svg.png\")",
+      "Bash(curl -sL -A \"Mozilla/5.0\" -o first-description.jpg \"https://upload.wikimedia.org/wikipedia/commons/thumb/6/61/Platypus_%28Ornithorhynchus_anatinus%29._First_Description_1799.jpg/500px-Platypus_%28Ornithorhynchus_anatinus%29._First_Description_1799.jpg\")",
+      "Bash(curl -sL -A \"Mozilla/5.0\" -o distribution-map.png \"https://upload.wikimedia.org/wikipedia/commons/thumb/0/05/Distribution_of_the_Platypus_%28Ornithorhynchus_anatinus%29.png/500px-Distribution_of_the_Platypus_%28Ornithorhynchus_anatinus%29.png\")"
+    ]
+  }
+}
