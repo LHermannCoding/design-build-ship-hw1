@@ -766,11 +766,15 @@ function toggleToc() {
   }
 }
 
-// Force all non-anchor links to point to stop.html
+// Force all links to point to stop.html, except TOC section links
 document.querySelectorAll('a').forEach(a => {
   const href = a.getAttribute('href');
-  if (href && !href.startsWith('#')) {
+  if (!href) return;
+  // Keep only TOC links that go to actual sections (e.g. #description, #taxonomy)
+  const isTocLink = a.closest('.toc') && href.startsWith('#') && href.length > 1;
+  if (!isTocLink) {
     a.href = 'stop.html';
+    a.removeAttribute('target');
   }
 });
 </script>
