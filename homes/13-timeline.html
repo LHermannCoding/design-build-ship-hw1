@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Luke Hermann - Timeline Resume</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: #f5f5f5; color: #333;
+    min-height: 100vh;
+  }
+  .back-link {
+    position: fixed; top: 14px; left: 16px; z-index: 100;
+    color: #00897b; text-decoration: none; font-size: 0.85rem;
+    font-weight: 500; background: #fff; padding: 6px 14px;
+    border-radius: 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    transition: background 0.2s;
+  }
+  .back-link:hover { background: #e0f2f1; }
+  header {
+    text-align: center; padding: 80px 24px 40px;
+    background: #fff; border-bottom: 3px solid #00897b;
+  }
+  header h1 { font-size: 2.6rem; font-weight: 700; color: #1a1a1a; }
+  header p.sub { font-size: 1.05rem; color: #666; margin-top: 6px; }
+  header .contact {
+    display: flex; flex-wrap: wrap; justify-content: center;
+    gap: 14px; margin-top: 14px; font-size: 0.88rem; color: #555;
+  }
+  header .contact a { color: #00897b; text-decoration: none; }
+  header .contact a:hover { text-decoration: underline; }
+
+  .timeline-section { padding: 48px 24px 20px; max-width: 900px; margin: 0 auto; }
+  .timeline-section h2 {
+    text-align: center; font-size: 1.6rem; color: #00897b;
+    margin-bottom: 40px; letter-spacing: 0.5px;
+  }
+
+  .timeline {
+    position: relative;
+    padding: 0;
+    list-style: none;
+  }
+  /* Central line */
+  .timeline::before {
+    content: '';
+    position: absolute;
+    left: 50%; top: 0; bottom: 0;
+    width: 3px; background: #b2dfdb;
+    transform: translateX(-50%);
+  }
+  .tl-item {
+    position: relative;
+    width: 50%;
+    padding: 0 40px 48px;
+    opacity: 0;
+    transition: opacity 0.6s, transform 0.6s;
+  }
+  .tl-item.left {
+    left: 0; text-align: right;
+    transform: translateX(-30px);
+  }
+  .tl-item.right {
+    left: 50%; text-align: left;
+    transform: translateX(30px);
+  }
+  .tl-item.visible {
+    opacity: 1;
+    transform: translateX(0);
+  }
+  /* Dot on line */
+  .tl-item::before {
+    content: '';
+    position: absolute; top: 6px;
+    width: 16px; height: 16px;
+    background: #00897b; border: 3px solid #fff;
+    border-radius: 50%; z-index: 2;
+    box-shadow: 0 0 0 3px #b2dfdb;
+  }
+  .tl-item.left::before { right: -8px; }
+  .tl-item.right::before { left: -8px; }
+
+  .tl-card {
+    background: #fff; border-radius: 12px;
+    padding: 22px 24px;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.06);
+    display: inline-block; text-align: left;
+  }
+  .tl-item.left .tl-card { border-right: 4px solid #00897b; }
+  .tl-item.right .tl-card { border-left: 4px solid #00897b; }
+  .tl-card .date {
+    font-size: 0.78rem; font-weight: 700; color: #00897b;
+    text-transform: uppercase; letter-spacing: 1px; margin-bottom: 6px;
+  }
+  .tl-card h3 { font-size: 1.1rem; font-weight: 700; color: #1a1a1a; margin-bottom: 4px; }
+  .tl-card .role { font-size: 0.88rem; color: #666; margin-bottom: 8px; }
+  .tl-card p, .tl-card li { font-size: 0.85rem; line-height: 1.6; color: #444; }
+  .tl-card ul { padding-left: 16px; margin-top: 4px; }
+  .tl-card ul li { margin-bottom: 3px; }
+
+  /* Skills section */
+  .skills-section {
+    max-width: 900px; margin: 20px auto 0; padding: 0 24px 20px;
+  }
+  .skills-section h2 {
+    text-align: center; font-size: 1.6rem; color: #00897b; margin-bottom: 24px;
+  }
+  .skills-group { margin-bottom: 16px; }
+  .skills-group h3 { font-size: 0.9rem; font-weight: 700; color: #555; margin-bottom: 8px; }
+  .chips { display: flex; flex-wrap: wrap; gap: 8px; }
+  .chip {
+    background: #e0f2f1; color: #00695c; padding: 6px 14px;
+    border-radius: 20px; font-size: 0.82rem; font-weight: 500;
+    transition: background 0.2s;
+  }
+  .chip:hover { background: #00897b; color: #fff; }
+
+  /* Footer card */
+  .footer-card {
+    max-width: 900px; margin: 32px auto 48px; padding: 0 24px;
+  }
+  .footer-card .card-inner {
+    background: #00897b; color: #fff; border-radius: 16px;
+    padding: 32px; text-align: center;
+  }
+  .footer-card h2 { font-size: 1.4rem; margin-bottom: 10px; }
+  .footer-card p { font-size: 0.9rem; opacity: 0.9; }
+  .footer-card a { color: #b2dfdb; }
+
+  @media (max-width: 700px) {
+    .timeline::before { left: 20px; }
+    .tl-item { width: 100%; left: 0 !important; padding-left: 50px; padding-right: 16px; text-align: left !important; }
+    .tl-item::before { left: 12px !important; right: auto !important; }
+    .tl-item.left .tl-card, .tl-item.right .tl-card { border-left: 4px solid #00897b; border-right: none; }
+    .tl-item.left, .tl-item.right { transform: translateX(30px); }
+  }
+</style>
+</head>
+<body>
+<a href="../gallery.html" class="back-link">&larr; Back to Gallery</a>
+
+<header>
+  <h1>Luke Hermann</h1>
+  <p class="sub">MS Computer Science &middot; University of Chicago</p>
+  <div class="contact">
+    <span>(773) 372-4185</span>
+    <a href="mailto:lukehermann@uchicago.edu">lukehermann@uchicago.edu</a>
+    <a href="https://linkedin.com/in/luke-hermann" target="_blank">LinkedIn</a>
+    <a href="https://github.com/LHermannCoding" target="_blank">GitHub</a>
+  </div>
+</header>
+
+<div class="timeline-section">
+  <h2>My Journey</h2>
+  <div class="timeline">
+
+    <div class="tl-item left">
+      <div class="tl-card">
+        <div class="date">Feb &ndash; Apr 2023</div>
+        <h3>Digital Board Game</h3>
+        <div class="role">Personal Project</div>
+        <p>Python Checkers with GUI, bot player, and Git workflow.</p>
+      </div>
+    </div>
+
+    <div class="tl-item right">
+      <div class="tl-card">
+        <div class="date">Jun &ndash; Aug 2023</div>
+        <h3>Code Your Dreams</h3>
+        <div class="role">CS Intern</div>
+        <ul>
+          <li>Created 16 Python lessons &amp; WhatsApp bot curriculum</li>
+          <li>Arduino DanceTech workshops</li>
+          <li>Onboarded 40+ teachers in Burundi</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="tl-item left">
+      <div class="tl-card">
+        <div class="date">Jun &ndash; Sep 2023</div>
+        <h3>Sushi Kitchen Simulator</h3>
+        <div class="role">Personal Project</div>
+        <p>Python game exploring data structures, OOP, and Agile development.</p>
+      </div>
+    </div>
+
+    <div class="tl-item right">
+      <div class="tl-card">
+        <div class="date">Jun &ndash; Sep 2024</div>
+        <h3>Enklu</h3>
+        <div class="role">Software Engineer</div>
+        <ul>
+          <li>Shipped Primal Ranch: 1K+ hours playtime, $36K revenue, 600+ customers</li>
+          <li>Built multiplayer metrics API (C# &amp; Node.js)</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="tl-item left">
+      <div class="tl-card">
+        <div class="date">June 2025</div>
+        <h3>University of Chicago</h3>
+        <div class="role">BS in CS + BA in Economics</div>
+        <p>GPA 3.7 &middot; National Merit Scholar<br>ML for Systems, OS, Databases, Networks</p>
+      </div>
+    </div>
+
+    <div class="tl-item right">
+      <div class="tl-card">
+        <div class="date">Jun &ndash; Sep 2025</div>
+        <h3>Amazon</h3>
+        <div class="role">SDE L4</div>
+        <ul>
+          <li>Deployable banner on Seller/Vendor Central &mdash; 3.6M partners/month</li>
+          <li>Reduced incident response from 6 hrs to &lt;10 min</li>
+          <li>Java API integration, 40+ code reviews under Agile</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="tl-item left">
+      <div class="tl-card">
+        <div class="date">Expected June 2026</div>
+        <h3>University of Chicago</h3>
+        <div class="role">MS in Computer Science</div>
+        <p>Distributed Systems, Functional Programming</p>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<div class="skills-section">
+  <h2>Skills</h2>
+  <div class="skills-group">
+    <h3>Languages</h3>
+    <div class="chips">
+      <span class="chip">Python</span><span class="chip">Java</span><span class="chip">C</span>
+      <span class="chip">C#</span><span class="chip">C++</span><span class="chip">SQL</span>
+      <span class="chip">Haskell</span><span class="chip">x86 Assembly</span><span class="chip">JavaScript</span>
+    </div>
+  </div>
+  <div class="skills-group">
+    <h3>Tools &amp; Platforms</h3>
+    <div class="chips">
+      <span class="chip">Git</span><span class="chip">SVN</span><span class="chip">Linux</span>
+      <span class="chip">VS Code</span><span class="chip">Docker</span><span class="chip">WPF</span>
+      <span class="chip">R</span><span class="chip">Stata</span>
+    </div>
+  </div>
+  <div class="skills-group">
+    <h3>Libraries</h3>
+    <div class="chips">
+      <span class="chip">numpy</span><span class="chip">pandas</span><span class="chip">pygame</span>
+      <span class="chip">flask</span><span class="chip">matplotlib</span>
+    </div>
+  </div>
+</div>
+
+<div class="footer-card">
+  <div class="card-inner">
+    <h2>Let's Connect</h2>
+    <p>(773) 372-4185 &bull; <a href="mailto:lukehermann@uchicago.edu">lukehermann@uchicago.edu</a></p>
+    <p style="margin-top:6px;">
+      <a href="https://linkedin.com/in/luke-hermann" target="_blank">LinkedIn</a> &bull;
+      <a href="https://github.com/LHermannCoding" target="_blank">GitHub</a>
+    </p>
+    <p style="margin-top:12px;font-size:0.82rem;opacity:0.7;">Trumpet Player &bull; Esports Competitor &bull; Basketball Player &bull; Bowler</p>
+  </div>
+</div>
+
+<script>
+  const items = document.querySelectorAll('.tl-item');
+  const obs = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.classList.add('visible');
+      }
+    });
+  }, { threshold: 0.15 });
+  items.forEach(item => obs.observe(item));
+</script>
+</body>
+</html>

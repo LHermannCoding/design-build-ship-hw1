@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Luke Hermann - Portfolio</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'Poppins', sans-serif;
+    min-height: 100vh;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    overflow-x: hidden;
+    color: #fff;
+  }
+  .bg {
+    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+    z-index: 0;
+    background:
+      radial-gradient(ellipse at 20% 50%, rgba(120,80,220,0.8) 0%, transparent 50%),
+      radial-gradient(ellipse at 80% 20%, rgba(255,100,150,0.7) 0%, transparent 50%),
+      radial-gradient(ellipse at 60% 80%, rgba(60,180,255,0.7) 0%, transparent 50%),
+      radial-gradient(ellipse at 10% 90%, rgba(255,160,60,0.6) 0%, transparent 50%),
+      radial-gradient(ellipse at 90% 70%, rgba(160,80,255,0.6) 0%, transparent 50%);
+    background-size: 200% 200%;
+    animation: meshMove 15s ease-in-out infinite;
+  }
+  @keyframes meshMove {
+    0% { background-position: 0% 50%; }
+    25% { background-position: 50% 0%; }
+    50% { background-position: 100% 50%; }
+    75% { background-position: 50% 100%; }
+    100% { background-position: 0% 50%; }
+  }
+  .back-link {
+    position: fixed; top: 16px; left: 20px; z-index: 100;
+    color: rgba(255,255,255,0.8); text-decoration: none; font-size: 0.85rem;
+    backdrop-filter: blur(12px); background: rgba(255,255,255,0.12);
+    padding: 6px 14px; border-radius: 20px;
+    border: 1px solid rgba(255,255,255,0.2);
+    transition: background 0.3s;
+  }
+  .back-link:hover { background: rgba(255,255,255,0.25); }
+  .container {
+    position: relative; z-index: 1;
+    max-width: 1100px; margin: 0 auto;
+    padding: 80px 24px 60px;
+  }
+  .header-card {
+    backdrop-filter: blur(24px);
+    background: rgba(255,255,255,0.13);
+    border: 1px solid rgba(255,255,255,0.25);
+    border-radius: 24px;
+    padding: 48px 40px;
+    text-align: center;
+    margin-bottom: 32px;
+    transition: transform 0.4s, box-shadow 0.4s;
+  }
+  .header-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 24px 60px rgba(0,0,0,0.25);
+  }
+  .header-card h1 { font-size: 2.8rem; font-weight: 700; letter-spacing: -1px; }
+  .header-card .subtitle { font-size: 1.1rem; font-weight: 300; opacity: 0.85; margin-top: 6px; }
+  .header-card .contact-row {
+    display: flex; flex-wrap: wrap; justify-content: center; gap: 16px; margin-top: 18px; font-size: 0.88rem;
+  }
+  .header-card .contact-row a { color: #fff; text-decoration: none; opacity: 0.8; }
+  .header-card .contact-row a:hover { opacity: 1; text-decoration: underline; }
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 28px;
+  }
+  .card {
+    backdrop-filter: blur(20px);
+    background: rgba(255,255,255,0.15);
+    border: 1px solid rgba(255,255,255,0.3);
+    border-radius: 20px;
+    padding: 32px 28px;
+    transition: transform 0.4s cubic-bezier(.25,.8,.25,1), box-shadow 0.4s;
+  }
+  .card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 20px 50px rgba(0,0,0,0.22);
+  }
+  .card h2 {
+    font-size: 1.35rem; font-weight: 600; margin-bottom: 16px;
+    padding-bottom: 10px; border-bottom: 1px solid rgba(255,255,255,0.2);
+  }
+  .card h3 { font-size: 1rem; font-weight: 600; margin: 12px 0 4px; }
+  .card p, .card li { font-size: 0.88rem; font-weight: 300; line-height: 1.65; opacity: 0.9; }
+  .card ul { list-style: none; padding: 0; }
+  .card ul li { padding-left: 16px; position: relative; margin-bottom: 6px; }
+  .card ul li::before { content: ''; position: absolute; left: 0; top: 8px; width: 6px; height: 6px; border-radius: 50%; background: rgba(255,255,255,0.5); }
+  .tags { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 8px; }
+  .tag {
+    background: rgba(255,255,255,0.18); border: 1px solid rgba(255,255,255,0.22);
+    padding: 4px 12px; border-radius: 20px; font-size: 0.78rem; font-weight: 400;
+  }
+  .span-2 { grid-column: span 2; }
+  @media (max-width: 720px) {
+    .span-2 { grid-column: span 1; }
+    .header-card h1 { font-size: 2rem; }
+    .grid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+<a href="../gallery.html" class="back-link">&larr; Back to Gallery</a>
+<div class="bg"></div>
+<div class="container">
+  <div class="header-card">
+    <h1>Luke Hermann</h1>
+    <p class="subtitle">MS Computer Science &middot; University of Chicago</p>
+    <div class="contact-row">
+      <span>(773) 372-4185</span>
+      <a href="mailto:lukehermann@uchicago.edu">lukehermann@uchicago.edu</a>
+      <a href="https://linkedin.com/in/luke-hermann" target="_blank">LinkedIn</a>
+      <a href="https://github.com/LHermannCoding" target="_blank">GitHub</a>
+    </div>
+  </div>
+
+  <div class="grid">
+    <div class="card">
+      <h2>Education</h2>
+      <h3>University of Chicago</h3>
+      <p><strong>MS in Computer Science</strong> &mdash; Expected June 2026</p>
+      <p style="margin-top:2px;font-size:0.82rem;opacity:0.7;">Coursework: Distributed Systems, Functional Programming</p>
+      <h3 style="margin-top:16px;">University of Chicago</h3>
+      <p><strong>BS in Computer Science + BA in Economics</strong> &mdash; June 2025</p>
+      <p style="margin-top:2px;font-size:0.82rem;opacity:0.7;">GPA 3.7 &middot; National Merit Scholar</p>
+      <p style="font-size:0.82rem;opacity:0.7;">Coursework: ML for Systems, OS, Databases, Networks</p>
+    </div>
+
+    <div class="card">
+      <h2>Experience</h2>
+      <h3>Amazon &mdash; SDE L4</h3>
+      <p style="font-size:0.8rem;opacity:0.6;">June &ndash; September 2025</p>
+      <ul>
+        <li>Built deployable banner on Seller/Vendor Central serving 3.6M partners/month</li>
+        <li>Reduced incident response from 6 hrs to &lt;10 min</li>
+        <li>Java API integration, 40+ code reviews under Agile</li>
+      </ul>
+      <h3>Enklu &mdash; SWE</h3>
+      <p style="font-size:0.8rem;opacity:0.6;">June &ndash; September 2024</p>
+      <ul>
+        <li>Primal Ranch game: 1K+ hours playtime, $36K revenue, 600+ customers</li>
+        <li>Multiplayer metrics API in C# &amp; Node.js</li>
+      </ul>
+      <h3>Code Your Dreams &mdash; CS Intern</h3>
+      <p style="font-size:0.8rem;opacity:0.6;">June &ndash; August 2023</p>
+      <ul>
+        <li>Created 16 Python lessons, WhatsApp bot curriculum, Arduino DanceTech</li>
+        <li>Onboarded 40+ teachers in Burundi</li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <h2>Projects</h2>
+      <h3>Sushi Kitchen Simulator</h3>
+      <p>Python game exploring data structures, OOP, and Agile development.</p>
+      <h3 style="margin-top:14px;">Digital Board Game</h3>
+      <p>Python Checkers with GUI, bot player, and Git workflow.</p>
+    </div>
+
+    <div class="card">
+      <h2>Skills</h2>
+      <h3>Languages</h3>
+      <div class="tags">
+        <span class="tag">Python</span><span class="tag">Java</span><span class="tag">C</span>
+        <span class="tag">C#</span><span class="tag">C++</span><span class="tag">SQL</span>
+        <span class="tag">Haskell</span><span class="tag">x86 Assembly</span><span class="tag">JavaScript</span>
+      </div>
+      <h3>Tools</h3>
+      <div class="tags">
+        <span class="tag">Git</span><span class="tag">SVN</span><span class="tag">Linux</span>
+        <span class="tag">VS Code</span><span class="tag">Docker</span><span class="tag">WPF</span>
+        <span class="tag">R</span><span class="tag">Stata</span>
+      </div>
+      <h3>Libraries</h3>
+      <div class="tags">
+        <span class="tag">numpy</span><span class="tag">pandas</span><span class="tag">pygame</span>
+        <span class="tag">flask</span><span class="tag">matplotlib</span>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>Activities</h2>
+      <ul>
+        <li>Trumpet Player</li>
+        <li>Esports Competitor</li>
+        <li>Basketball Player</li>
+        <li>Bowler</li>
+      </ul>
+    </div>
+  </div>
+</div>
+</body>
+</html>

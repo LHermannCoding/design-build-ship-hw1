@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Luke Hermann | Polaroid Corkboard</title>
+<link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;700&family=Inter:wght@400;600&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  font-family: 'Inter', sans-serif;
+  min-height: 100vh;
+  overflow: auto;
+  background-color: #b8894a;
+  background-image:
+    repeating-linear-gradient(90deg, transparent, transparent 30px, rgba(0,0,0,0.03) 30px, rgba(0,0,0,0.03) 31px),
+    repeating-linear-gradient(0deg, transparent, transparent 30px, rgba(0,0,0,0.03) 30px, rgba(0,0,0,0.03) 31px),
+    repeating-linear-gradient(45deg, transparent, transparent 4px, rgba(139,90,43,0.15) 4px, rgba(139,90,43,0.15) 5px),
+    repeating-linear-gradient(-30deg, transparent, transparent 6px, rgba(160,110,50,0.1) 6px, rgba(160,110,50,0.1) 7px),
+    linear-gradient(135deg, #b8894a 0%, #a07838 50%, #c49a58 100%);
+  cursor: default;
+}
+a { color: inherit; }
+.back-link {
+  position: fixed; top: 12px; left: 12px; z-index: 1000;
+  font-size: 13px; font-weight: 600; color: #fff;
+  text-decoration: none; background: rgba(0,0,0,0.5);
+  padding: 6px 14px; border-radius: 4px;
+}
+.back-link:hover { background: rgba(0,0,0,0.7); }
+
+.board-title {
+  text-align: center; padding: 30px 20px 10px;
+  font-family: 'Caveat', cursive; font-size: 42px;
+  color: #3e2723; text-shadow: 1px 1px 0 rgba(255,255,255,0.2);
+}
+.board-subtitle {
+  text-align: center; font-family: 'Caveat', cursive;
+  font-size: 20px; color: #5d4037; margin-bottom: 20px;
+}
+
+.board {
+  position: relative;
+  width: 100%;
+  min-height: calc(100vh - 120px);
+  padding: 20px;
+}
+
+.polaroid {
+  position: absolute;
+  background: #fafafa;
+  padding: 12px 12px 40px 12px;
+  box-shadow: 2px 3px 12px rgba(0,0,0,0.3), 0 0 1px rgba(0,0,0,0.1);
+  cursor: grab;
+  user-select: none;
+  width: 300px;
+  z-index: 1;
+  transition: box-shadow 0.2s;
+  background-image:
+    repeating-linear-gradient(0deg, transparent, transparent 1px, rgba(0,0,0,0.008) 1px, rgba(0,0,0,0.008) 2px);
+}
+.polaroid:active { cursor: grabbing; }
+.polaroid.dragging {
+  box-shadow: 6px 10px 30px rgba(0,0,0,0.4);
+  z-index: 1000;
+}
+
+/* Pushpin */
+.polaroid::before {
+  content: '';
+  position: absolute; top: -8px; left: 50%; transform: translateX(-50%);
+  width: 18px; height: 18px; border-radius: 50%;
+  background: radial-gradient(circle at 6px 6px, #e53935, #b71c1c);
+  box-shadow: 0 2px 4px rgba(0,0,0,0.4), inset 0 -1px 2px rgba(0,0,0,0.2);
+  z-index: 2;
+}
+.polaroid::after {
+  content: '';
+  position: absolute; top: 8px; left: 50%; transform: translateX(-50%);
+  width: 2px; height: 6px; background: #999;
+  z-index: 1;
+}
+
+.photo-area {
+  width: 100%; min-height: 140px;
+  padding: 16px; border-radius: 2px;
+  font-size: 13px; line-height: 1.6; color: #333;
+}
+.photo-area h3 {
+  font-size: 15px; font-weight: 600; margin-bottom: 8px; color: #222;
+}
+.photo-area h4 {
+  font-size: 12px; font-weight: 600; color: #666; margin-bottom: 6px;
+}
+.photo-area ul {
+  padding-left: 16px; margin: 0;
+}
+.photo-area li { margin-bottom: 4px; font-size: 12px; }
+
+.caption {
+  font-family: 'Caveat', cursive;
+  font-size: 20px; color: #3e2723;
+  text-align: center; margin-top: 4px;
+  position: absolute; bottom: 10px; left: 0; right: 0;
+}
+
+/* Card color themes */
+.card-edu .photo-area { background: #e3f2fd; }
+.card-amazon .photo-area { background: #fff3e0; }
+.card-enklu .photo-area { background: #e8f5e9; }
+.card-cyd .photo-area { background: #fce4ec; }
+.card-skills .photo-area { background: #f3e5f5; }
+.card-projects .photo-area { background: #e0f7fa; }
+.card-contact .photo-area { background: #fffde7; }
+.card-activities .photo-area { background: #efebe9; }
+
+.skill-chips {
+  display: flex; flex-wrap: wrap; gap: 4px;
+}
+.skill-chips span {
+  font-size: 11px; background: rgba(0,0,0,0.08);
+  padding: 2px 8px; border-radius: 10px;
+}
+</style>
+</head>
+<body>
+<a href="../gallery.html" class="back-link">&larr; Back to Gallery</a>
+<div class="board-title">Luke Hermann</div>
+<div class="board-subtitle">(773) 372-4185 &bull; lukehermann@uchicago.edu &bull; Software Engineer</div>
+
+<div class="board" id="board">
+
+  <!-- Contact -->
+  <div class="polaroid card-contact" style="transform: rotate(-3deg); left: 40px; top: 20px;">
+    <div class="photo-area">
+      <h3>Contact Info</h3>
+      <p>Phone: (773) 372-4185</p>
+      <p>Email: lukehermann@uchicago.edu</p>
+      <p><a href="https://linkedin.com/in/luke-hermann" target="_blank">LinkedIn</a></p>
+      <p><a href="https://github.com/LHermannCoding" target="_blank">GitHub</a></p>
+    </div>
+    <div class="caption">Get in Touch!</div>
+  </div>
+
+  <!-- Education -->
+  <div class="polaroid card-edu" style="transform: rotate(4deg); left: 380px; top: 10px;">
+    <div class="photo-area">
+      <h3>University of Chicago</h3>
+      <h4>MS in Computer Science &mdash; Expected June 2026</h4>
+      <p style="font-size:12px;">Distributed Systems, Functional Programming</p>
+      <br>
+      <h4>BS in CS + BA in Economics &mdash; June 2025</h4>
+      <p style="font-size:12px;">GPA: 3.7 &bull; National Merit Scholar</p>
+      <p style="font-size:12px;">ML for Systems, OS, Databases, Networks</p>
+    </div>
+    <div class="caption">Go Maroons!</div>
+  </div>
+
+  <!-- Amazon -->
+  <div class="polaroid card-amazon" style="transform: rotate(-5deg); left: 720px; top: 30px;">
+    <div class="photo-area">
+      <h3>Amazon &mdash; SDE L4</h3>
+      <h4>June &ndash; September 2025</h4>
+      <ul>
+        <li>Deployable banner on Seller/Vendor Central, 3.6M partners/month</li>
+        <li>Reduced incident response: 6hrs to &lt;10min</li>
+        <li>Java API integration</li>
+        <li>40+ code reviews, Agile</li>
+      </ul>
+    </div>
+    <div class="caption">Big Tech Summer</div>
+  </div>
+
+  <!-- Enklu -->
+  <div class="polaroid card-enklu" style="transform: rotate(6deg); left: 80px; top: 340px;">
+    <div class="photo-area">
+      <h3>Enklu &mdash; SWE</h3>
+      <h4>June &ndash; September 2024</h4>
+      <ul>
+        <li>Primal Ranch: 1K+ hrs playtime, $36K revenue</li>
+        <li>600+ customers served</li>
+        <li>Multiplayer metrics API</li>
+        <li>C# / Node.js</li>
+      </ul>
+    </div>
+    <div class="caption">Game Dev Life</div>
+  </div>
+
+  <!-- Code Your Dreams -->
+  <div class="polaroid card-cyd" style="transform: rotate(-2deg); left: 420px; top: 320px;">
+    <div class="photo-area">
+      <h3>Code Your Dreams</h3>
+      <h4>CS Intern &mdash; June &ndash; August 2023</h4>
+      <ul>
+        <li>16 Python lessons</li>
+        <li>WhatsApp bot curriculum</li>
+        <li>Arduino DanceTech</li>
+        <li>Onboarded 40+ teachers in Burundi</li>
+      </ul>
+    </div>
+    <div class="caption">Teaching the World</div>
+  </div>
+
+  <!-- Skills -->
+  <div class="polaroid card-skills" style="transform: rotate(3deg); left: 760px; top: 350px;">
+    <div class="photo-area">
+      <h3>Skills & Tools</h3>
+      <div class="skill-chips">
+        <span>Python</span><span>Java</span><span>C</span><span>C#</span><span>C++</span>
+        <span>SQL</span><span>Haskell</span><span>x86 ASM</span><span>JavaScript</span>
+        <span>Git</span><span>Docker</span><span>Linux</span><span>Flask</span>
+        <span>NumPy</span><span>Pandas</span><span>Pygame</span><span>WPF</span>
+        <span>SVN</span><span>Matplotlib</span>
+      </div>
+    </div>
+    <div class="caption">My Toolkit</div>
+  </div>
+
+  <!-- Projects -->
+  <div class="polaroid card-projects" style="transform: rotate(-7deg); left: 200px; top: 640px;">
+    <div class="photo-area">
+      <h3>Projects</h3>
+      <h4>Sushi Kitchen Simulator</h4>
+      <p style="font-size:12px; margin-bottom:8px;">Python game: data structures, OOP, Agile dev.</p>
+      <h4>Digital Board Game</h4>
+      <p style="font-size:12px;">Python Checkers with GUI, bot player, Git workflow.</p>
+    </div>
+    <div class="caption">Side Quests</div>
+  </div>
+
+  <!-- Activities -->
+  <div class="polaroid card-activities" style="transform: rotate(5deg); left: 560px; top: 660px;">
+    <div class="photo-area">
+      <h3>Activities</h3>
+      <p>Trumpet Player</p>
+      <p>Esports Competitor</p>
+      <p>Basketball Player</p>
+      <p>Bowler</p>
+    </div>
+    <div class="caption">Off the Clock</div>
+  </div>
+
+</div>
+
+<script>
+(function() {
+  const polaroids = document.querySelectorAll('.polaroid');
+  let dragging = null;
+  let offsetX = 0, offsetY = 0;
+  let maxZ = 10;
+
+  polaroids.forEach(card => {
+    card.addEventListener('mousedown', startDrag);
+    card.addEventListener('touchstart', startDragTouch, { passive: false });
+  });
+
+  function startDrag(e) {
+    dragging = e.currentTarget;
+    dragging.classList.add('dragging');
+    dragging.style.zIndex = ++maxZ;
+    const rect = dragging.getBoundingClientRect();
+    offsetX = e.clientX - rect.left;
+    offsetY = e.clientY - rect.top;
+    dragging.style.transform = 'rotate(0deg) scale(1.04)';
+    document.addEventListener('mousemove', onDrag);
+    document.addEventListener('mouseup', endDrag);
+    e.preventDefault();
+  }
+
+  function startDragTouch(e) {
+    const touch = e.touches[0];
+    dragging = e.currentTarget;
+    dragging.classList.add('dragging');
+    dragging.style.zIndex = ++maxZ;
+    const rect = dragging.getBoundingClientRect();
+    offsetX = touch.clientX - rect.left;
+    offsetY = touch.clientY - rect.top;
+    dragging.style.transform = 'rotate(0deg) scale(1.04)';
+    document.addEventListener('touchmove', onDragTouch, { passive: false });
+    document.addEventListener('touchend', endDragTouch);
+    e.preventDefault();
+  }
+
+  function onDrag(e) {
+    if (!dragging) return;
+    const board = document.getElementById('board');
+    const boardRect = board.getBoundingClientRect();
+    dragging.style.left = (e.clientX - boardRect.left - offsetX + window.scrollX) + 'px';
+    dragging.style.top = (e.clientY - boardRect.top - offsetY + window.scrollY) + 'px';
+  }
+
+  function onDragTouch(e) {
+    if (!dragging) return;
+    e.preventDefault();
+    const touch = e.touches[0];
+    const board = document.getElementById('board');
+    const boardRect = board.getBoundingClientRect();
+    dragging.style.left = (touch.clientX - boardRect.left - offsetX + window.scrollX) + 'px';
+    dragging.style.top = (touch.clientY - boardRect.top - offsetY + window.scrollY) + 'px';
+  }
+
+  function endDrag() {
+    if (dragging) {
+      dragging.classList.remove('dragging');
+      const randomAngle = (Math.random() * 6 - 3).toFixed(1);
+      dragging.style.transform = `rotate(${randomAngle}deg)`;
+      dragging = null;
+    }
+    document.removeEventListener('mousemove', onDrag);
+    document.removeEventListener('mouseup', endDrag);
+  }
+
+  function endDragTouch() {
+    if (dragging) {
+      dragging.classList.remove('dragging');
+      const randomAngle = (Math.random() * 6 - 3).toFixed(1);
+      dragging.style.transform = `rotate(${randomAngle}deg)`;
+      dragging = null;
+    }
+    document.removeEventListener('touchmove', onDragTouch);
+    document.removeEventListener('touchend', endDragTouch);
+  }
+})();
+</script>
+</body>
+</html>

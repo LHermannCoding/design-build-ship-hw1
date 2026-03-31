@@ -1,0 +1,486 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Luke Hermann - Origami Resume</title>
+<link href="https://fonts.googleapis.com/css2?family=Raleway:wght@200;300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Raleway', sans-serif;
+    background: #fafafa;
+    color: #333;
+    min-height: 100vh;
+    overflow-x: hidden;
+    /* Subtle paper texture via noise */
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
+  }
+
+  .back-link {
+    position: fixed;
+    top: 14px;
+    left: 16px;
+    z-index: 200;
+    font-size: 0.8rem;
+    color: #999;
+    text-decoration: none;
+    font-weight: 400;
+    letter-spacing: 0.5px;
+  }
+  .back-link:hover { color: #c62828; }
+
+  /* Crease decorations */
+  .crease-bg {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    pointer-events: none;
+    z-index: 0;
+    overflow: hidden;
+  }
+  .crease-line {
+    position: absolute;
+    background: rgba(0,0,0,0.03);
+    transform-origin: center;
+  }
+
+  .container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 70px 24px 80px;
+    position: relative;
+    z-index: 1;
+  }
+
+  /* Header */
+  header {
+    text-align: center;
+    margin-bottom: 50px;
+  }
+  header h1 {
+    font-weight: 200;
+    font-size: 3rem;
+    letter-spacing: 8px;
+    text-transform: uppercase;
+    color: #c62828;
+    margin-bottom: 8px;
+  }
+  header .subtitle {
+    font-weight: 300;
+    font-size: 0.95rem;
+    color: #999;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+  }
+  .contact-row {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 8px 22px;
+    margin-top: 16px;
+    font-size: 0.82rem;
+    font-weight: 400;
+    color: #888;
+  }
+  .contact-row a { color: #c62828; text-decoration: none; }
+  .contact-row a:hover { text-decoration: underline; }
+
+  /* Origami panels */
+  .panel-wrapper {
+    margin: 16px 0;
+    perspective: 1200px;
+  }
+
+  .panel-header {
+    background: #fff;
+    padding: 20px 28px;
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    user-select: none;
+    position: relative;
+    z-index: 2;
+    transition: box-shadow 0.3s ease;
+    /* Fold crease line */
+    background-image: linear-gradient(180deg, transparent 48%, rgba(0,0,0,0.04) 49%, rgba(0,0,0,0.04) 51%, transparent 52%);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.06), 0 1px 3px rgba(0,0,0,0.04);
+  }
+  .panel-header:hover {
+    box-shadow: 0 4px 16px rgba(0,0,0,0.1);
+  }
+  .panel-header.open {
+    background-image: none;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+  }
+
+  .panel-title {
+    font-weight: 600;
+    font-size: 1.1rem;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: #c62828;
+  }
+  .panel-number {
+    font-weight: 200;
+    font-size: 1.8rem;
+    color: #ddd;
+    line-height: 1;
+  }
+
+  .fold-icon {
+    width: 20px; height: 20px;
+    position: relative;
+    flex-shrink: 0;
+  }
+  .fold-icon::before, .fold-icon::after {
+    content: '';
+    position: absolute;
+    background: #c62828;
+    transition: transform 0.3s ease;
+  }
+  .fold-icon::before {
+    width: 14px; height: 1.5px;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+  }
+  .fold-icon::after {
+    width: 1.5px; height: 14px;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+  }
+  .panel-header.open .fold-icon::after {
+    transform: translate(-50%, -50%) rotate(90deg);
+  }
+
+  .panel-content {
+    background: #fff;
+    overflow: hidden;
+    transform-origin: top center;
+    transform: rotateX(-90deg) scaleY(0);
+    max-height: 0;
+    opacity: 0;
+    transition: transform 0.6s ease-in-out, max-height 0.6s ease-in-out, opacity 0.4s ease, box-shadow 0.3s ease;
+    box-shadow: none;
+  }
+  .panel-content.open {
+    transform: rotateX(0deg) scaleY(1);
+    max-height: 800px;
+    opacity: 1;
+    box-shadow: 0 8px 30px rgba(0,0,0,0.08);
+  }
+  .panel-inner {
+    padding: 28px 32px 32px;
+    border-top: 1px solid #f0f0f0;
+  }
+
+  /* Content styles */
+  h3 {
+    font-weight: 600;
+    font-size: 0.95rem;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: #c62828;
+    margin: 18px 0 8px;
+  }
+  h3:first-child { margin-top: 0; }
+
+  p { font-size: 0.92rem; line-height: 1.8; color: #555; margin-bottom: 8px; }
+
+  .job {
+    margin-bottom: 18px;
+    padding-bottom: 14px;
+    border-bottom: 1px solid #f0f0f0;
+  }
+  .job:last-child { border-bottom: none; padding-bottom: 0; }
+  .job-title { font-weight: 600; color: #333; font-size: 0.95rem; }
+  .job-meta { font-size: 0.82rem; color: #aaa; margin-bottom: 6px; font-weight: 300; }
+
+  ul { padding-left: 18px; margin-top: 4px; }
+  li {
+    font-size: 0.88rem;
+    color: #666;
+    margin-bottom: 3px;
+    line-height: 1.7;
+  }
+  li::marker { color: #ddd; }
+
+  .skills-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 8px;
+  }
+  .skill-tag {
+    padding: 4px 14px;
+    border: 1px solid #e0e0e0;
+    font-size: 0.8rem;
+    font-weight: 500;
+    color: #666;
+    letter-spacing: 0.5px;
+    transition: all 0.2s ease;
+  }
+  .skill-tag:hover {
+    border-color: #c62828;
+    color: #c62828;
+  }
+
+  .activity-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+    list-style: none;
+    padding: 0;
+    margin-top: 8px;
+  }
+  .activity-list li {
+    font-size: 0.9rem;
+    color: #777;
+    padding-left: 0;
+  }
+  .activity-list li::before {
+    content: '/';
+    color: #c62828;
+    margin-right: 6px;
+    font-weight: 200;
+  }
+
+  footer {
+    text-align: center;
+    margin-top: 50px;
+    font-size: 0.75rem;
+    color: #ccc;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    font-weight: 300;
+  }
+
+  @media(max-width:600px) {
+    header h1 { font-size: 2rem; letter-spacing: 4px; }
+    .panel-inner { padding: 20px 18px 24px; }
+  }
+</style>
+</head>
+<body>
+<a href="../gallery.html" class="back-link">&larr; Back to Gallery</a>
+
+<div class="crease-bg" id="creaseBg"></div>
+
+<div class="container">
+  <header>
+    <h1>Luke Hermann</h1>
+    <p class="subtitle">Software Engineer</p>
+    <div class="contact-row">
+      <span>(773) 372-4185</span>
+      <a href="mailto:lukehermann@uchicago.edu">lukehermann@uchicago.edu</a>
+      <a href="https://linkedin.com/in/luke-hermann" target="_blank">LinkedIn</a>
+      <a href="https://github.com/LHermannCoding" target="_blank">GitHub</a>
+    </div>
+  </header>
+
+  <!-- Panel 1: Education -->
+  <div class="panel-wrapper">
+    <div class="panel-header" onclick="togglePanel(this)">
+      <div style="display:flex;align-items:center;gap:16px">
+        <span class="panel-number">01</span>
+        <span class="panel-title">Education</span>
+      </div>
+      <div class="fold-icon"></div>
+    </div>
+    <div class="panel-content">
+      <div class="panel-inner">
+        <h3>University of Chicago</h3>
+        <div class="job">
+          <p class="job-title">MS in Computer Science</p>
+          <p class="job-meta">Expected June 2026</p>
+          <ul>
+            <li>Coursework: Distributed Systems, Functional Programming</li>
+          </ul>
+        </div>
+        <div class="job">
+          <p class="job-title">BS in Computer Science + BA in Economics</p>
+          <p class="job-meta">June 2025 &middot; GPA 3.7 &middot; National Merit Scholar</p>
+          <ul>
+            <li>Coursework: Machine Learning for Systems, Operating Systems, Databases, Networks</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Panel 2: Experience -->
+  <div class="panel-wrapper">
+    <div class="panel-header" onclick="togglePanel(this)">
+      <div style="display:flex;align-items:center;gap:16px">
+        <span class="panel-number">02</span>
+        <span class="panel-title">Experience</span>
+      </div>
+      <div class="fold-icon"></div>
+    </div>
+    <div class="panel-content">
+      <div class="panel-inner">
+        <div class="job">
+          <p class="job-title">Amazon &mdash; Software Development Engineer (L4)</p>
+          <p class="job-meta">June &ndash; September 2025</p>
+          <ul>
+            <li>Built a deployable banner on Seller/Vendor Central serving 3.6M partners per month</li>
+            <li>Reduced incident response time from 6 hours to under 10 minutes</li>
+            <li>Java API integration, 40+ code reviews under Agile methodology</li>
+          </ul>
+        </div>
+        <div class="job">
+          <p class="job-title">Enklu &mdash; Software Engineer</p>
+          <p class="job-meta">June &ndash; September 2024</p>
+          <ul>
+            <li>Developed Primal Ranch game: 1K+ hours playtime, $36K revenue, 600+ customers</li>
+            <li>Built multiplayer metrics API using C# and Node.js</li>
+          </ul>
+        </div>
+        <div class="job">
+          <p class="job-title">Code Your Dreams &mdash; CS Intern</p>
+          <p class="job-meta">June &ndash; August 2023</p>
+          <ul>
+            <li>Created 16 Python lessons and a WhatsApp bot curriculum</li>
+            <li>Designed Arduino DanceTech projects, onboarded 40+ teachers in Burundi</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Panel 3: Skills -->
+  <div class="panel-wrapper">
+    <div class="panel-header" onclick="togglePanel(this)">
+      <div style="display:flex;align-items:center;gap:16px">
+        <span class="panel-number">03</span>
+        <span class="panel-title">Skills</span>
+      </div>
+      <div class="fold-icon"></div>
+    </div>
+    <div class="panel-content">
+      <div class="panel-inner">
+        <h3>Languages</h3>
+        <div class="skills-grid">
+          <span class="skill-tag">Python</span><span class="skill-tag">Java</span><span class="skill-tag">C</span>
+          <span class="skill-tag">C#</span><span class="skill-tag">C++</span><span class="skill-tag">SQL</span>
+          <span class="skill-tag">Haskell</span><span class="skill-tag">x86 Assembly</span><span class="skill-tag">JavaScript</span>
+        </div>
+        <h3>Tools & Platforms</h3>
+        <div class="skills-grid">
+          <span class="skill-tag">Git</span><span class="skill-tag">SVN</span><span class="skill-tag">Linux</span>
+          <span class="skill-tag">VS Code</span><span class="skill-tag">Docker</span><span class="skill-tag">WPF</span>
+          <span class="skill-tag">R</span><span class="skill-tag">Stata</span>
+        </div>
+        <h3>Libraries</h3>
+        <div class="skills-grid">
+          <span class="skill-tag">numpy</span><span class="skill-tag">pandas</span><span class="skill-tag">pygame</span>
+          <span class="skill-tag">flask</span><span class="skill-tag">matplotlib</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Panel 4: Projects -->
+  <div class="panel-wrapper">
+    <div class="panel-header" onclick="togglePanel(this)">
+      <div style="display:flex;align-items:center;gap:16px">
+        <span class="panel-number">04</span>
+        <span class="panel-title">Projects</span>
+      </div>
+      <div class="fold-icon"></div>
+    </div>
+    <div class="panel-content">
+      <div class="panel-inner">
+        <div class="job">
+          <p class="job-title">Sushi Kitchen Simulator</p>
+          <ul>
+            <li>Python game exploring data structures, object-oriented programming, and Agile development practices</li>
+          </ul>
+        </div>
+        <div class="job">
+          <p class="job-title">Digital Board Game</p>
+          <ul>
+            <li>Python Checkers implementation with GUI, bot player, and structured Git workflow</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Panel 5: Contact & Activities -->
+  <div class="panel-wrapper">
+    <div class="panel-header" onclick="togglePanel(this)">
+      <div style="display:flex;align-items:center;gap:16px">
+        <span class="panel-number">05</span>
+        <span class="panel-title">Contact & Interests</span>
+      </div>
+      <div class="fold-icon"></div>
+    </div>
+    <div class="panel-content">
+      <div class="panel-inner">
+        <h3>Get in Touch</h3>
+        <p>Phone: (773) 372-4185<br>
+        Email: <a href="mailto:lukehermann@uchicago.edu" style="color:#c62828">lukehermann@uchicago.edu</a><br>
+        LinkedIn: <a href="https://linkedin.com/in/luke-hermann" target="_blank" style="color:#c62828">linkedin.com/in/luke-hermann</a><br>
+        GitHub: <a href="https://github.com/LHermannCoding" target="_blank" style="color:#c62828">github.com/LHermannCoding</a></p>
+
+        <h3>Interests</h3>
+        <ul class="activity-list">
+          <li>Trumpet Player</li>
+          <li>Esports Competitor</li>
+          <li>Basketball Player</li>
+          <li>Bowler</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <footer>Folded with precision &middot; Luke Hermann &middot; 2026</footer>
+</div>
+
+<script>
+  // Crease decoration lines
+  const creaseBg = document.getElementById('creaseBg');
+  const lines = [
+    { x: '10%', y: '-5%', w: '1px', h: '120%', rot: 15 },
+    { x: '30%', y: '-5%', w: '1px', h: '120%', rot: -8 },
+    { x: '55%', y: '-5%', w: '1px', h: '120%', rot: 12 },
+    { x: '75%', y: '-5%', w: '1px', h: '120%', rot: -20 },
+    { x: '90%', y: '-5%', w: '1px', h: '120%', rot: 6 },
+    { x: '-5%', y: '20%', w: '120%', h: '1px', rot: 3 },
+    { x: '-5%', y: '50%', w: '120%', h: '1px', rot: -2 },
+    { x: '-5%', y: '80%', w: '120%', h: '1px', rot: 1 },
+  ];
+  lines.forEach(l => {
+    const el = document.createElement('div');
+    el.className = 'crease-line';
+    el.style.left = l.x;
+    el.style.top = l.y;
+    el.style.width = l.w;
+    el.style.height = l.h;
+    el.style.transform = `rotate(${l.rot}deg)`;
+    creaseBg.appendChild(el);
+  });
+
+  // Accordion toggle
+  function togglePanel(header) {
+    const content = header.nextElementSibling;
+    const isOpen = header.classList.contains('open');
+
+    // Close all panels
+    document.querySelectorAll('.panel-header.open').forEach(h => {
+      h.classList.remove('open');
+      h.nextElementSibling.classList.remove('open');
+    });
+
+    // Open clicked if it was closed
+    if (!isOpen) {
+      header.classList.add('open');
+      content.classList.add('open');
+    }
+  }
+</script>
+</body>
+</html>

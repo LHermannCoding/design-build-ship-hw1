@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Luke Hermann - Watercolor Portfolio</title>
+<link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;700&family=Quicksand:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Quicksand', sans-serif;
+    background: #fdf6ec;
+    color: #4a4a4a;
+    overflow-x: hidden;
+    line-height: 1.7;
+  }
+
+  .back-link {
+    position: fixed;
+    top: 16px;
+    left: 18px;
+    z-index: 100;
+    font-size: 0.85rem;
+    color: #7a9e70;
+    text-decoration: none;
+    font-weight: 500;
+    background: rgba(253,246,236,0.85);
+    padding: 4px 12px;
+    border-radius: 20px;
+    box-shadow: 0 2px 12px rgba(178,201,171,0.3);
+  }
+  .back-link:hover { color: #5a7e50; }
+
+  .bg-layer {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    z-index: -2;
+    background:
+      radial-gradient(ellipse at 15% 20%, rgba(178,201,171,0.45) 0%, transparent 55%),
+      radial-gradient(ellipse at 80% 10%, rgba(168,216,234,0.4) 0%, transparent 50%),
+      radial-gradient(ellipse at 50% 60%, rgba(244,194,194,0.35) 0%, transparent 55%),
+      radial-gradient(ellipse at 85% 75%, rgba(213,196,247,0.4) 0%, transparent 50%),
+      radial-gradient(ellipse at 20% 85%, rgba(168,216,234,0.3) 0%, transparent 50%),
+      #fdf6ec;
+    will-change: transform;
+  }
+
+  .floating-elements {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    z-index: -1;
+    pointer-events: none;
+    overflow: hidden;
+  }
+
+  .cloud {
+    position: absolute;
+    border-radius: 50%;
+    opacity: 0.25;
+    animation: floatCloud linear infinite;
+  }
+
+  @keyframes floatCloud {
+    0% { transform: translateX(-120px) translateY(0); }
+    50% { transform: translateX(calc(100vw + 120px)) translateY(-30px); }
+    100% { transform: translateX(-120px) translateY(0); }
+  }
+
+  .leaf {
+    position: absolute;
+    width: 10px; height: 10px;
+    border-radius: 50% 0 50% 0;
+    opacity: 0.35;
+    animation: drift linear infinite;
+  }
+
+  @keyframes drift {
+    0% { transform: translate(0, -40px) rotate(0deg); opacity: 0; }
+    10% { opacity: 0.35; }
+    90% { opacity: 0.35; }
+    100% { transform: translate(80px, 110vh) rotate(360deg); opacity: 0; }
+  }
+
+  .container {
+    max-width: 860px;
+    margin: 0 auto;
+    padding: 60px 24px 80px;
+    position: relative;
+    z-index: 1;
+  }
+
+  header {
+    text-align: center;
+    padding: 50px 20px 40px;
+  }
+
+  h1 {
+    font-family: 'Dancing Script', cursive;
+    font-size: 4rem;
+    color: #6b8f63;
+    text-shadow: 0 2px 20px rgba(178,201,171,0.5);
+    margin-bottom: 8px;
+  }
+
+  .subtitle {
+    font-size: 1.1rem;
+    color: #8a7a9e;
+    font-weight: 300;
+    letter-spacing: 0.5px;
+  }
+
+  .contact-row {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 14px 24px;
+    margin-top: 18px;
+    font-size: 0.88rem;
+    color: #7a7a7a;
+  }
+  .contact-row a { color: #7a9e70; text-decoration: none; }
+  .contact-row a:hover { text-decoration: underline; }
+
+  .section {
+    margin: 40px 0;
+    padding: 36px 38px;
+    background: rgba(253,246,236,0.65);
+    border-radius: 40px 20px 35px 15px;
+    box-shadow:
+      0 4px 30px rgba(178,201,171,0.25),
+      0 0 60px rgba(244,194,194,0.15),
+      inset 0 0 40px rgba(255,255,255,0.4);
+    backdrop-filter: blur(2px);
+    position: relative;
+    transform: translateY(30px);
+    opacity: 0;
+    transition: transform 0.8s ease, opacity 0.8s ease;
+  }
+  .section.visible {
+    transform: translateY(0);
+    opacity: 1;
+  }
+
+  .section.pink { box-shadow: 0 4px 40px rgba(244,194,194,0.35), inset 0 0 40px rgba(255,255,255,0.4); }
+  .section.blue { box-shadow: 0 4px 40px rgba(168,216,234,0.35), inset 0 0 40px rgba(255,255,255,0.4); }
+  .section.lavender { box-shadow: 0 4px 40px rgba(213,196,247,0.35), inset 0 0 40px rgba(255,255,255,0.4); }
+  .section.sage { box-shadow: 0 4px 40px rgba(178,201,171,0.35), inset 0 0 40px rgba(255,255,255,0.4); }
+
+  h2 {
+    font-family: 'Dancing Script', cursive;
+    font-size: 2.2rem;
+    margin-bottom: 18px;
+  }
+  .section.sage h2 { color: #6b8f63; }
+  .section.pink h2 { color: #c47a7a; }
+  .section.blue h2 { color: #5a9ab5; }
+  .section.lavender h2 { color: #8a6abf; }
+
+  h3 {
+    font-family: 'Dancing Script', cursive;
+    font-size: 1.4rem;
+    color: #7a7a7a;
+    margin: 18px 0 6px;
+  }
+
+  .job {
+    margin-bottom: 20px;
+    padding-bottom: 16px;
+    border-bottom: 1px dashed rgba(178,201,171,0.4);
+  }
+  .job:last-child { border-bottom: none; padding-bottom: 0; }
+
+  .job-title { font-weight: 600; color: #5a5a5a; }
+  .job-date { font-size: 0.85rem; color: #aaa; font-style: italic; }
+
+  ul { padding-left: 20px; margin-top: 6px; }
+  li { margin-bottom: 4px; font-size: 0.95rem; }
+  li::marker { color: #b2c9ab; }
+
+  .skills-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 10px;
+  }
+
+  .skill-tag {
+    background: rgba(213,196,247,0.3);
+    padding: 6px 16px;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    color: #6a5a8a;
+    box-shadow: 0 2px 10px rgba(213,196,247,0.2);
+  }
+
+  .activities {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    justify-content: center;
+    margin-top: 14px;
+  }
+  .activity {
+    background: rgba(168,216,234,0.25);
+    padding: 8px 20px;
+    border-radius: 25px;
+    font-size: 0.9rem;
+    color: #5a8a9e;
+  }
+
+  footer {
+    text-align: center;
+    margin-top: 50px;
+    font-size: 0.8rem;
+    color: #bbb;
+    font-style: italic;
+  }
+</style>
+</head>
+<body>
+<a href="../gallery.html" class="back-link">&larr; Back to Gallery</a>
+
+<div class="bg-layer" id="bgLayer"></div>
+
+<div class="floating-elements" id="floatingEl"></div>
+
+<div class="container">
+  <header>
+    <h1>Luke Hermann</h1>
+    <p class="subtitle">Software Engineer &middot; Builder &middot; Dreamer</p>
+    <div class="contact-row">
+      <span>(773) 372-4185</span>
+      <a href="mailto:lukehermann@uchicago.edu">lukehermann@uchicago.edu</a>
+      <a href="https://linkedin.com/in/luke-hermann" target="_blank">LinkedIn</a>
+      <a href="https://github.com/LHermannCoding" target="_blank">GitHub</a>
+    </div>
+  </header>
+
+  <div class="section sage">
+    <h2>Education</h2>
+    <h3>University of Chicago</h3>
+    <p><span class="job-title">MS in Computer Science</span> <span class="job-date">&mdash; Expected June 2026</span></p>
+    <ul>
+      <li>Coursework: Distributed Systems, Functional Programming</li>
+    </ul>
+    <p style="margin-top:14px"><span class="job-title">BS in Computer Science + BA in Economics</span> <span class="job-date">&mdash; June 2025</span></p>
+    <ul>
+      <li>GPA: 3.7 &middot; National Merit Scholar</li>
+      <li>Coursework: Machine Learning for Systems, Operating Systems, Databases, Networks</li>
+    </ul>
+  </div>
+
+  <div class="section pink">
+    <h2>Experience</h2>
+    <div class="job">
+      <p><span class="job-title">Amazon &mdash; Software Development Engineer (L4)</span></p>
+      <p class="job-date">June &ndash; September 2025</p>
+      <ul>
+        <li>Built a deployable banner on Seller/Vendor Central serving 3.6M partners per month</li>
+        <li>Reduced incident response time from 6 hours to under 10 minutes</li>
+        <li>Integrated Java APIs and completed 40+ code reviews under Agile methodology</li>
+      </ul>
+    </div>
+    <div class="job">
+      <p><span class="job-title">Enklu &mdash; Software Engineer</span></p>
+      <p class="job-date">June &ndash; September 2024</p>
+      <ul>
+        <li>Developed Primal Ranch game: 1K+ hours playtime, $36K revenue, 600+ customers</li>
+        <li>Built multiplayer metrics API using C# and Node.js</li>
+      </ul>
+    </div>
+    <div class="job">
+      <p><span class="job-title">Code Your Dreams &mdash; CS Intern</span></p>
+      <p class="job-date">June &ndash; August 2023</p>
+      <ul>
+        <li>Created 16 Python lessons and a WhatsApp bot curriculum</li>
+        <li>Designed Arduino DanceTech projects, onboarded 40+ teachers in Burundi</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="section lavender">
+    <h2>Projects</h2>
+    <div class="job">
+      <p><span class="job-title">Sushi Kitchen Simulator</span></p>
+      <ul>
+        <li>Python game exploring data structures, OOP, and Agile development practices</li>
+      </ul>
+    </div>
+    <div class="job">
+      <p><span class="job-title">Digital Board Game</span></p>
+      <ul>
+        <li>Python Checkers with GUI, bot player, and structured Git workflow</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="section blue">
+    <h2>Skills</h2>
+    <h3>Languages</h3>
+    <div class="skills-grid">
+      <span class="skill-tag">Python</span><span class="skill-tag">Java</span><span class="skill-tag">C</span>
+      <span class="skill-tag">C#</span><span class="skill-tag">C++</span><span class="skill-tag">SQL</span>
+      <span class="skill-tag">Haskell</span><span class="skill-tag">x86 Assembly</span><span class="skill-tag">JavaScript</span>
+    </div>
+    <h3>Tools & Frameworks</h3>
+    <div class="skills-grid">
+      <span class="skill-tag">Git</span><span class="skill-tag">SVN</span><span class="skill-tag">Linux</span>
+      <span class="skill-tag">VS Code</span><span class="skill-tag">Docker</span><span class="skill-tag">WPF</span>
+      <span class="skill-tag">R</span><span class="skill-tag">Stata</span>
+    </div>
+    <h3>Libraries</h3>
+    <div class="skills-grid">
+      <span class="skill-tag">numpy</span><span class="skill-tag">pandas</span><span class="skill-tag">pygame</span>
+      <span class="skill-tag">flask</span><span class="skill-tag">matplotlib</span>
+    </div>
+  </div>
+
+  <div class="section sage">
+    <h2>Beyond the Code</h2>
+    <div class="activities">
+      <span class="activity">Trumpet Player</span>
+      <span class="activity">Esports Competitor</span>
+      <span class="activity">Basketball Player</span>
+      <span class="activity">Bowler</span>
+    </div>
+  </div>
+
+  <footer>painted with care &middot; Luke Hermann &middot; 2026</footer>
+</div>
+
+<script>
+  // Parallax background
+  const bgLayer = document.getElementById('bgLayer');
+  window.addEventListener('scroll', () => {
+    bgLayer.style.transform = `translateY(${window.scrollY * 0.3}px)`;
+  });
+
+  // Floating clouds and leaves
+  const container = document.getElementById('floatingEl');
+  const colors = ['#b2c9ab','#f4c2c2','#a8d8ea','#d5c4f7'];
+
+  for (let i = 0; i < 6; i++) {
+    const cloud = document.createElement('div');
+    cloud.className = 'cloud';
+    const size = 60 + Math.random() * 100;
+    cloud.style.width = size + 'px';
+    cloud.style.height = (size * 0.55) + 'px';
+    cloud.style.top = (5 + Math.random() * 70) + '%';
+    cloud.style.background = colors[i % colors.length];
+    cloud.style.animationDuration = (35 + Math.random() * 40) + 's';
+    cloud.style.animationDelay = (-Math.random() * 40) + 's';
+    container.appendChild(cloud);
+  }
+
+  for (let i = 0; i < 12; i++) {
+    const leaf = document.createElement('div');
+    leaf.className = 'leaf';
+    leaf.style.left = (Math.random() * 100) + '%';
+    leaf.style.background = colors[i % colors.length];
+    leaf.style.animationDuration = (10 + Math.random() * 15) + 's';
+    leaf.style.animationDelay = (-Math.random() * 20) + 's';
+    container.appendChild(leaf);
+  }
+
+  // Reveal on scroll
+  const sections = document.querySelectorAll('.section');
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+  }, { threshold: 0.15 });
+  sections.forEach(s => observer.observe(s));
+</script>
+</body>
+</html>

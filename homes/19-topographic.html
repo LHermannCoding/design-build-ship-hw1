@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Luke Hermann | Topographic Map</title>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+:root {
+  --olive: #556b2f;
+  --tan: #d2b48c;
+  --forest: #228b22;
+  --cream: #faebd7;
+  --dark: #3b3b2e;
+}
+body {
+  font-family: 'IBM Plex Mono', monospace;
+  background: var(--cream);
+  color: var(--dark);
+  min-height: 100vh;
+  overflow-x: hidden;
+  position: relative;
+}
+a { color: var(--olive); }
+.back-link {
+  position: fixed; top: 10px; left: 10px; z-index: 200;
+  font-size: 12px; font-weight: 600;
+  text-decoration: none; color: var(--dark);
+  background: rgba(250,235,215,0.9);
+  padding: 4px 10px; border: 1px solid var(--olive);
+}
+.back-link:hover { background: var(--olive); color: #fff; }
+
+/* SVG contour background */
+.contour-bg {
+  position: fixed; inset: 0; z-index: 0; pointer-events: none;
+  opacity: 0.15;
+}
+
+/* Grid coordinates */
+.grid-x {
+  position: fixed; top: 0; left: 0; right: 0; height: 24px;
+  display: flex; z-index: 10; background: rgba(250,235,215,0.85);
+  border-bottom: 1px solid var(--olive);
+  font-size: 10px; color: var(--olive);
+}
+.grid-x span {
+  flex: 1; text-align: center; line-height: 24px;
+}
+.grid-y {
+  position: fixed; top: 24px; left: 0; bottom: 0; width: 24px;
+  z-index: 10; background: rgba(250,235,215,0.85);
+  border-right: 1px solid var(--olive);
+  font-size: 10px; color: var(--olive);
+  display: flex; flex-direction: column;
+}
+.grid-y span {
+  flex: 1; display: flex; align-items: center; justify-content: center;
+  writing-mode: vertical-lr; transform: rotate(180deg);
+}
+
+/* Main content */
+.map {
+  position: relative; z-index: 5;
+  padding: 50px 50px 100px 50px;
+  max-width: 1100px; margin: 0 auto;
+}
+
+/* Title cartouche */
+.cartouche {
+  text-align: center; margin-bottom: 40px;
+  padding: 20px 30px;
+  border: 2px solid var(--olive);
+  background: rgba(250,235,215,0.9);
+  display: inline-block;
+  position: relative; left: 50%; transform: translateX(-50%);
+}
+.cartouche h1 {
+  font-size: 28px; font-weight: 700;
+  letter-spacing: 4px; text-transform: uppercase;
+  color: var(--dark);
+}
+.cartouche p {
+  font-size: 11px; letter-spacing: 3px;
+  color: var(--olive); margin-top: 4px;
+}
+
+/* Compass rose */
+.compass {
+  position: fixed; bottom: 60px; right: 40px; z-index: 50;
+  width: 80px; height: 80px;
+}
+.compass svg { width: 100%; height: 100%; }
+
+/* Scale bar */
+.scale-bar {
+  position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%);
+  z-index: 50; display: flex; align-items: center; gap: 8px;
+  font-size: 10px; color: var(--olive);
+  background: rgba(250,235,215,0.9); padding: 4px 12px;
+}
+.scale-bar .bar {
+  display: flex; height: 6px;
+}
+.scale-bar .bar span {
+  width: 30px; height: 100%;
+}
+.scale-bar .bar span:nth-child(odd) { background: var(--dark); }
+.scale-bar .bar span:nth-child(even) { background: var(--cream); border: 1px solid var(--dark); }
+
+/* Legend */
+.legend {
+  position: fixed; bottom: 50px; left: 40px; z-index: 50;
+  font-size: 10px; background: rgba(250,235,215,0.95);
+  border: 1px solid var(--olive); padding: 10px 14px;
+}
+.legend h4 {
+  font-size: 10px; letter-spacing: 2px; text-transform: uppercase;
+  border-bottom: 1px solid var(--olive); padding-bottom: 4px;
+  margin-bottom: 6px; color: var(--olive);
+}
+.legend-item {
+  display: flex; align-items: center; gap: 8px; margin-bottom: 3px;
+}
+.legend-pin {
+  width: 10px; height: 10px; border-radius: 50%;
+}
+.pin-edu { background: var(--forest); }
+.pin-work { background: #c62828; }
+.pin-skill { background: var(--olive); }
+.pin-project { background: #1565c0; }
+
+/* Map pins / landmarks */
+.landmark {
+  position: relative;
+  margin-bottom: 50px;
+  padding-left: 40px;
+}
+.landmark::before {
+  content: '';
+  position: absolute; left: 10px; top: 4px;
+  width: 16px; height: 16px; border-radius: 50% 50% 50% 0;
+  transform: rotate(-45deg);
+  box-shadow: 0 1px 3px rgba(0,0,0,0.3);
+}
+.landmark::after {
+  content: '';
+  position: absolute; left: 14px; top: 8px;
+  width: 8px; height: 8px; border-radius: 50%;
+  background: #fff;
+}
+.landmark.edu::before { background: var(--forest); }
+.landmark.work::before { background: #c62828; }
+.landmark.skill::before { background: var(--olive); }
+.landmark.project::before { background: #1565c0; }
+.landmark.activity::before { background: var(--tan); }
+
+.landmark .label {
+  font-size: 10px; font-weight: 600;
+  text-transform: uppercase; letter-spacing: 2px;
+  color: var(--olive);
+}
+.landmark h2 {
+  font-size: 18px; font-weight: 700;
+  margin: 2px 0 6px;
+}
+.landmark h3 {
+  font-size: 13px; font-weight: 600;
+  color: var(--olive); margin-bottom: 4px;
+}
+.landmark p, .landmark li {
+  font-size: 12px; line-height: 1.7; color: #555;
+}
+.landmark ul {
+  list-style: none; padding: 0;
+}
+.landmark ul li::before {
+  content: '> ';
+  color: var(--olive);
+}
+
+/* Tooltip */
+.tooltip-popup {
+  display: none;
+  position: absolute; top: -10px; left: 45px;
+  background: var(--cream); border: 1px solid var(--olive);
+  padding: 10px 14px; z-index: 100;
+  font-size: 11px; min-width: 200px;
+  box-shadow: 2px 2px 6px rgba(0,0,0,0.15);
+}
+.landmark:hover .tooltip-popup {
+  display: block;
+}
+
+/* Elevation zones */
+.elevation-zone {
+  border-left: 3px solid;
+  padding: 20px 0 20px 20px;
+  margin-left: 20px;
+  margin-bottom: 30px;
+}
+.zone-high { border-color: var(--forest); background: rgba(34,139,34,0.03); }
+.zone-mid { border-color: var(--olive); background: rgba(85,107,47,0.03); }
+.zone-low { border-color: var(--tan); background: rgba(210,180,140,0.1); }
+
+.zone-label {
+  font-size: 9px; letter-spacing: 3px; text-transform: uppercase;
+  color: var(--olive); margin-bottom: 12px;
+}
+
+/* Trail path */
+.trail-svg {
+  position: absolute; left: 26px; top: 0;
+  width: 2px; pointer-events: none; z-index: 0;
+}
+
+/* Skills as contour labels */
+.skills-contour {
+  display: flex; flex-wrap: wrap; gap: 6px;
+}
+.skills-contour span {
+  font-size: 11px; padding: 3px 10px;
+  border: 1px solid var(--olive);
+  color: var(--olive); letter-spacing: 1px;
+  background: rgba(250,235,215,0.5);
+}
+
+/* Contact coordinates */
+.contact-coords {
+  display: grid; grid-template-columns: 1fr 1fr;
+  gap: 6px; font-size: 12px;
+}
+.contact-coords .coord-label {
+  font-size: 9px; text-transform: uppercase;
+  letter-spacing: 2px; color: var(--olive);
+}
+</style>
+</head>
+<body>
+<a href="../gallery.html" class="back-link">&larr; Back to Gallery</a>
+
+<!-- Contour SVG Background -->
+<svg class="contour-bg" viewBox="0 0 1000 1400" preserveAspectRatio="none">
+  <g fill="none" stroke="#556b2f" stroke-width="1.5">
+    <ellipse cx="500" cy="300" rx="400" ry="180" />
+    <ellipse cx="520" cy="310" rx="340" ry="150" />
+    <ellipse cx="510" cy="305" rx="280" ry="120" />
+    <ellipse cx="530" cy="315" rx="220" ry="90" />
+    <ellipse cx="515" cy="308" rx="160" ry="65" />
+    <ellipse cx="525" cy="312" rx="100" ry="40" />
+    <ellipse cx="300" cy="700" rx="250" ry="160" />
+    <ellipse cx="310" cy="710" rx="200" ry="130" />
+    <ellipse cx="305" cy="705" rx="150" ry="100" />
+    <ellipse cx="315" cy="715" rx="100" ry="65" />
+    <ellipse cx="700" cy="900" rx="280" ry="140" />
+    <ellipse cx="710" cy="910" rx="220" ry="110" />
+    <ellipse cx="705" cy="905" rx="160" ry="80" />
+    <ellipse cx="715" cy="915" rx="100" ry="50" />
+    <ellipse cx="450" cy="1200" rx="350" ry="150" />
+    <ellipse cx="460" cy="1210" rx="280" ry="120" />
+    <ellipse cx="455" cy="1205" rx="210" ry="90" />
+  </g>
+</svg>
+
+<!-- Grid coordinates -->
+<div class="grid-x">
+  <span>A</span><span>B</span><span>C</span><span>D</span><span>E</span>
+  <span>F</span><span>G</span><span>H</span><span>I</span><span>J</span>
+</div>
+<div class="grid-y">
+  <span>1</span><span>2</span><span>3</span><span>4</span>
+  <span>5</span><span>6</span><span>7</span><span>8</span>
+</div>
+
+<!-- Compass Rose -->
+<div class="compass">
+  <svg viewBox="0 0 100 100">
+    <g fill="none" stroke="#556b2f" stroke-width="1">
+      <circle cx="50" cy="50" r="38" />
+      <circle cx="50" cy="50" r="35" />
+    </g>
+    <polygon points="50,10 54,45 50,40 46,45" fill="#3b3b2e" />
+    <polygon points="50,90 54,55 50,60 46,55" fill="#d2b48c" />
+    <polygon points="10,50 45,46 40,50 45,54" fill="#d2b48c" />
+    <polygon points="90,50 55,46 60,50 55,54" fill="#d2b48c" />
+    <text x="50" y="8" text-anchor="middle" font-size="8" font-family="IBM Plex Mono" fill="#3b3b2e" font-weight="700">N</text>
+    <text x="50" y="98" text-anchor="middle" font-size="8" font-family="IBM Plex Mono" fill="#556b2f">S</text>
+    <text x="4" y="53" text-anchor="middle" font-size="8" font-family="IBM Plex Mono" fill="#556b2f">W</text>
+    <text x="96" y="53" text-anchor="middle" font-size="8" font-family="IBM Plex Mono" fill="#556b2f">E</text>
+    <circle cx="50" cy="50" r="3" fill="#3b3b2e" />
+  </svg>
+</div>
+
+<!-- Scale Bar -->
+<div class="scale-bar">
+  <span>0</span>
+  <div class="bar"><span></span><span></span><span></span><span></span></div>
+  <span>1 yr</span>
+  <div class="bar"><span></span><span></span><span></span><span></span></div>
+  <span>2 yrs</span>
+  <div class="bar"><span></span><span></span><span></span><span></span></div>
+  <span>3 yrs</span>
+</div>
+
+<!-- Legend -->
+<div class="legend">
+  <h4>Legend</h4>
+  <div class="legend-item"><div class="legend-pin pin-edu"></div> Education</div>
+  <div class="legend-item"><div class="legend-pin pin-work"></div> Experience</div>
+  <div class="legend-item"><div class="legend-pin pin-skill"></div> Skills</div>
+  <div class="legend-item"><div class="legend-pin pin-project"></div> Projects</div>
+</div>
+
+<!-- Main Map Content -->
+<div class="map">
+  <!-- Title Cartouche -->
+  <div class="cartouche">
+    <h1>Luke Hermann</h1>
+    <p>Topographic Survey &mdash; Career Terrain Map</p>
+    <p style="margin-top:2px;">(773) 372-4185 &bull; lukehermann@uchicago.edu</p>
+  </div>
+
+  <!-- HIGH ELEVATION: Education -->
+  <div class="elevation-zone zone-high">
+    <div class="zone-label">&#9650; Summit Elevation &mdash; 3200ft</div>
+
+    <div class="landmark edu">
+      <div class="label">Sector D-2 &bull; Education</div>
+      <h2>University of Chicago</h2>
+      <h3>MS in Computer Science &mdash; Expected June 2026</h3>
+      <p>Coursework: Distributed Systems, Functional Programming</p>
+      <br>
+      <h3>BS in Computer Science + BA in Economics &mdash; June 2025</h3>
+      <p>GPA: 3.7 &bull; National Merit Scholar</p>
+      <p>Coursework: ML for Systems, OS, Databases, Networks</p>
+      <div class="tooltip-popup">
+        PEAK ELEVATION: Dual degree holder pursuing graduate studies.<br>
+        Coordinates: 41.7886&deg;N, 87.5987&deg;W
+      </div>
+    </div>
+  </div>
+
+  <!-- MID ELEVATION: Experience -->
+  <div class="elevation-zone zone-mid">
+    <div class="zone-label">&#9650; Ridge Elevation &mdash; 2400ft</div>
+
+    <div class="landmark work">
+      <div class="label">Sector F-4 &bull; Experience</div>
+      <h2>Amazon &mdash; SDE L4</h2>
+      <h3>June &ndash; September 2025</h3>
+      <ul>
+        <li>Deployable banner on Seller/Vendor Central, 3.6M partners/month</li>
+        <li>Reduced incident response from 6hrs to &lt;10min</li>
+        <li>Java API integration across services</li>
+        <li>40+ code reviews under Agile methodology</li>
+      </ul>
+      <div class="tooltip-popup">
+        MAJOR RIDGE: Enterprise-scale systems engineering.<br>
+        Impact radius: 3.6M monthly active users
+      </div>
+    </div>
+
+    <div class="landmark work">
+      <div class="label">Sector E-5 &bull; Experience</div>
+      <h2>Enklu &mdash; Software Engineer</h2>
+      <h3>June &ndash; September 2024</h3>
+      <ul>
+        <li>Primal Ranch game: 1K+ hrs playtime, $36K revenue</li>
+        <li>600+ customers served</li>
+        <li>Multiplayer metrics API (C#, Node.js)</li>
+      </ul>
+      <div class="tooltip-popup">
+        GAME DEVELOPMENT VALLEY: Interactive entertainment.<br>
+        Revenue generated: $36,000
+      </div>
+    </div>
+
+    <div class="landmark work">
+      <div class="label">Sector C-6 &bull; Experience</div>
+      <h2>Code Your Dreams &mdash; CS Intern</h2>
+      <h3>June &ndash; August 2023</h3>
+      <ul>
+        <li>16 Python lessons + WhatsApp bot curriculum</li>
+        <li>Arduino DanceTech projects</li>
+        <li>Onboarded 40+ teachers in Burundi</li>
+      </ul>
+      <div class="tooltip-popup">
+        EDUCATION OUTPOST: International teaching mission.<br>
+        Reach: 40+ educators trained
+      </div>
+    </div>
+  </div>
+
+  <!-- LOW ELEVATION: Skills & Projects -->
+  <div class="elevation-zone zone-low">
+    <div class="zone-label">&#9650; Basecamp Elevation &mdash; 1200ft</div>
+
+    <div class="landmark skill">
+      <div class="label">Sector G-7 &bull; Technical Skills</div>
+      <h2>Skill Terrain</h2>
+      <div class="skills-contour">
+        <span>Python</span><span>Java</span><span>C</span><span>C#</span><span>C++</span>
+        <span>SQL</span><span>Haskell</span><span>x86 ASM</span><span>JavaScript</span>
+        <span>Git</span><span>SVN</span><span>Linux</span><span>Docker</span>
+        <span>WPF</span><span>R</span><span>Stata</span>
+        <span>NumPy</span><span>Pandas</span><span>Pygame</span><span>Flask</span><span>Matplotlib</span>
+      </div>
+    </div>
+
+    <div class="landmark project">
+      <div class="label">Sector H-8 &bull; Projects</div>
+      <h2>Surveyed Projects</h2>
+      <h3>Sushi Kitchen Simulator</h3>
+      <p>Python game &mdash; data structures, OOP, Agile development</p>
+      <br>
+      <h3>Digital Board Game</h3>
+      <p>Python Checkers &mdash; GUI, bot player, collaborative Git workflow</p>
+    </div>
+
+    <div class="landmark activity">
+      <div class="label">Sector B-8 &bull; Activities</div>
+      <h2>Recreational Trails</h2>
+      <p>Trumpet Player &bull; Esports Competitor &bull; Basketball Player &bull; Bowler</p>
+    </div>
+  </div>
+
+  <!-- Contact Coordinates -->
+  <div style="margin-top: 30px; border-top: 1px solid var(--olive); padding-top: 16px;">
+    <div style="font-size:9px; letter-spacing:3px; text-transform:uppercase; color:var(--olive); margin-bottom:10px;">Surveyor Contact Coordinates</div>
+    <div class="contact-coords">
+      <div>
+        <div class="coord-label">Phone</div>
+        <div>(773) 372-4185</div>
+      </div>
+      <div>
+        <div class="coord-label">Email</div>
+        <div>lukehermann@uchicago.edu</div>
+      </div>
+      <div>
+        <div class="coord-label">LinkedIn</div>
+        <div><a href="https://linkedin.com/in/luke-hermann" target="_blank">linkedin.com/in/luke-hermann</a></div>
+      </div>
+      <div>
+        <div class="coord-label">GitHub</div>
+        <div><a href="https://github.com/LHermannCoding" target="_blank">github.com/LHermannCoding</a></div>
+      </div>
+    </div>
+  </div>
+
+  <div style="text-align:center; margin-top:30px; font-size:10px; color:var(--olive); letter-spacing:2px;">
+    MAP SURVEY &copy; 2026 &bull; LUKE HERMANN &bull; ALL COORDINATES VERIFIED
+  </div>
+</div>
+
+</body>
+</html>

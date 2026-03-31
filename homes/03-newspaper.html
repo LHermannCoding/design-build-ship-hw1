@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Luke Hermann - The Hermann Chronicle</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=Lora:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  background: #f5f0e8;
+  color: #2a2a2a;
+  font-family: 'Lora', Georgia, serif;
+  font-size: 15px;
+  line-height: 1.65;
+}
+a { color: #2a2a2a; }
+.back-link {
+  position: fixed; top: 8px; left: 12px; z-index: 100;
+  color: #2a2a2a; font-size: 11px; text-decoration: none;
+  font-family: 'Lora', serif; background: #f5f0e8;
+  padding: 2px 8px; border: 1px solid #999;
+}
+.back-link:hover { background: #2a2a2a; color: #f5f0e8; }
+
+.page {
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 20px 30px 60px;
+}
+
+/* MASTHEAD */
+.masthead {
+  text-align: center;
+  padding: 30px 0 10px;
+  border-bottom: 4px double #2a2a2a;
+}
+.masthead-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 11px;
+  font-family: 'Lora', serif;
+  color: #777;
+  margin-bottom: 8px;
+}
+.masthead h1 {
+  font-family: 'Playfair Display', serif;
+  font-size: 58px;
+  font-weight: 900;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  line-height: 1;
+}
+.masthead-subtitle {
+  font-family: 'Lora', serif;
+  font-style: italic;
+  font-size: 13px;
+  color: #666;
+  margin-top: 6px;
+}
+.masthead-contact {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  font-size: 11px;
+  margin-top: 8px;
+  padding-top: 8px;
+  border-top: 1px solid #ccc;
+  color: #666;
+}
+.masthead-contact a { color: #666; text-decoration: none; }
+.masthead-contact a:hover { color: #2a2a2a; text-decoration: underline; }
+
+/* ORNAMENTAL DIVIDER */
+.divider {
+  text-align: center;
+  margin: 24px 0;
+  position: relative;
+}
+.divider::before {
+  content: '';
+  position: absolute;
+  left: 0; right: 0; top: 50%;
+  height: 1px;
+  background: #bbb;
+}
+.divider span {
+  background: #f5f0e8;
+  padding: 0 16px;
+  position: relative;
+  font-family: 'Playfair Display', serif;
+  font-size: 18px;
+  color: #999;
+}
+
+/* HALFTONE BORDER */
+.halftone-border {
+  background-image: radial-gradient(circle, #2a2a2a 1px, transparent 1px);
+  background-size: 4px 4px;
+  height: 6px;
+  margin: 20px 0;
+}
+
+/* COLUMNS */
+.columns-3 {
+  column-count: 3;
+  column-gap: 30px;
+  column-rule: 1px solid #ccc;
+}
+.columns-2 {
+  column-count: 2;
+  column-gap: 30px;
+  column-rule: 1px solid #ccc;
+}
+
+/* ARTICLE */
+.article {
+  break-inside: avoid;
+  margin-bottom: 24px;
+}
+.article h2 {
+  font-family: 'Playfair Display', serif;
+  font-size: 26px;
+  font-weight: 900;
+  line-height: 1.15;
+  margin-bottom: 4px;
+}
+.article h3 {
+  font-family: 'Playfair Display', serif;
+  font-size: 18px;
+  font-weight: 700;
+  font-style: italic;
+  margin-bottom: 4px;
+  color: #555;
+}
+.article .byline {
+  font-size: 11px;
+  font-style: italic;
+  color: #888;
+  margin-bottom: 8px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+.article p {
+  text-align: justify;
+  margin-bottom: 8px;
+  hyphens: auto;
+}
+
+/* DROP CAP */
+.drop-cap::first-letter {
+  float: left;
+  font-family: 'Playfair Display', serif;
+  font-size: 56px;
+  font-weight: 900;
+  line-height: 0.8;
+  padding: 4px 8px 0 0;
+  color: #2a2a2a;
+}
+
+/* HEADLINE BANNER */
+.headline-banner {
+  border-top: 4px solid #2a2a2a;
+  border-bottom: 2px solid #2a2a2a;
+  padding: 8px 0;
+  margin: 16px 0;
+  text-align: center;
+}
+.headline-banner h2 {
+  font-family: 'Playfair Display', serif;
+  font-size: 36px;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 4px;
+}
+
+/* SKILLS BOX */
+.skills-box {
+  border: 2px solid #2a2a2a;
+  padding: 14px;
+  break-inside: avoid;
+  margin-bottom: 24px;
+}
+.skills-box h4 {
+  font-family: 'Playfair Display', serif;
+  font-size: 14px;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  border-bottom: 1px solid #bbb;
+  padding-bottom: 4px;
+  margin-bottom: 6px;
+}
+.skills-box p {
+  font-size: 13px;
+  line-height: 1.6;
+}
+
+/* PULL QUOTE */
+.pull-quote {
+  border-top: 3px solid #2a2a2a;
+  border-bottom: 3px solid #2a2a2a;
+  padding: 12px 0;
+  margin: 16px 0;
+  text-align: center;
+  break-inside: avoid;
+}
+.pull-quote p {
+  font-family: 'Playfair Display', serif;
+  font-size: 20px;
+  font-style: italic;
+  text-align: center;
+}
+
+/* FOOTER */
+.footer {
+  text-align: center;
+  font-size: 11px;
+  color: #999;
+  padding-top: 12px;
+  border-top: 2px solid #2a2a2a;
+  margin-top: 30px;
+  font-style: italic;
+}
+
+@media (max-width: 750px) {
+  .columns-3 { column-count: 1; }
+  .columns-2 { column-count: 1; }
+  .masthead h1 { font-size: 32px; }
+  .masthead-top { flex-direction: column; gap: 2px; }
+  .masthead-contact { flex-direction: column; gap: 4px; }
+}
+</style>
+</head>
+<body>
+<a href="../gallery.html" class="back-link">&larr; Back to Gallery</a>
+<div class="page">
+
+  <div class="masthead">
+    <div class="masthead-top">
+      <span>Vol. I, No. 1</span>
+      <span>"All the Skills That Are Fit to Ship"</span>
+      <span>March 30, 2026</span>
+    </div>
+    <h1>The Hermann Chronicle</h1>
+    <div class="masthead-subtitle">A Record of Professional Achievement &amp; Technical Endeavor</div>
+    <div class="masthead-contact">
+      <a href="tel:7733724185">(773) 372-4185</a>
+      <a href="mailto:lukehermann@uchicago.edu">lukehermann@uchicago.edu</a>
+      <a href="https://linkedin.com/in/luke-hermann" target="_blank">LinkedIn</a>
+      <a href="https://github.com/LHermannCoding" target="_blank">GitHub</a>
+    </div>
+  </div>
+
+  <div class="headline-banner">
+    <h2>Luke Hermann: Engineer, Builder, Shipper</h2>
+  </div>
+
+  <div class="columns-3">
+
+    <div class="article">
+      <h2>Amazon Taps Hermann for L4 Engineering Role</h2>
+      <div class="byline">Seller Central &bull; Summer 2025</div>
+      <p class="drop-cap">Amazon selected Luke Hermann as a Software Development Engineer (L4) for the summer of 2025, tasking him with high-impact projects across Seller and Vendor Central. The deployment of a configurable banner system now reaches 3.6 million partners each month, marking a significant contribution to Amazon's seller-facing infrastructure.</p>
+      <p>Hermann's work on incident response tooling reduced response times from six hours to under ten minutes, a 97% improvement that earned attention across his org. He completed a Java API integration and participated in over 40 code reviews under an Agile workflow.</p>
+    </div>
+
+    <div class="pull-quote">
+      <p>"Reduced incident response from 6 hours to under 10 minutes."</p>
+    </div>
+
+    <div class="article">
+      <h2>Game Studio Sees $36K Revenue from Hermann-Built Title</h2>
+      <div class="byline">Enklu &bull; Summer 2024</div>
+      <p class="drop-cap">During his tenure at Enklu, Hermann engineered Primal Ranch, a game that accumulated over one thousand hours of playtime and generated $36,000 in revenue from more than 600 customers. He also architected a multiplayer metrics API using C# and Node.js, providing real-time analytics for the development team.</p>
+    </div>
+
+    <div class="halftone-border"></div>
+
+    <div class="article">
+      <h2>40 Teachers Onboarded in Burundi Through CS Initiative</h2>
+      <div class="byline">Code Your Dreams &bull; Summer 2023</div>
+      <p class="drop-cap">As a Computer Science Intern at Code Your Dreams, Hermann authored sixteen Python lessons and developed a WhatsApp bot curriculum designed for accessibility. His Arduino DanceTech project brought physical computing to the classroom. The initiative onboarded over forty teachers in Burundi, expanding computer science education in East Africa.</p>
+    </div>
+
+    <div class="article">
+      <h2>University of Chicago Confers Dual Degrees; MS Underway</h2>
+      <div class="byline">Hyde Park Bureau &bull; Education Report</div>
+      <p class="drop-cap">Hermann holds a Bachelor of Science in Computer Science and a Bachelor of Arts in Economics from the University of Chicago, awarded June 2025, with a GPA of 3.7. He was recognized as a National Merit Scholar. His coursework included Machine Learning for Systems, Operating Systems, Databases, and Networks.</p>
+      <p>He is currently pursuing a Master of Science in Computer Science at the same institution, expected June 2026, with coursework in Distributed Systems and Functional Programming.</p>
+    </div>
+
+    <div class="halftone-border"></div>
+
+    <div class="skills-box">
+      <h4>Languages</h4>
+      <p>Python, Java, C, C#, C++, SQL, Haskell, x86 Assembly, JavaScript</p>
+    </div>
+
+    <div class="skills-box">
+      <h4>Tools &amp; Platforms</h4>
+      <p>Git, SVN, Linux, VS Code, Docker, WPF, R, Stata</p>
+    </div>
+
+    <div class="skills-box">
+      <h4>Libraries</h4>
+      <p>numpy, pandas, pygame, flask, matplotlib</p>
+    </div>
+
+    <div class="article">
+      <h2>Projects: From Sushi to Checkers</h2>
+      <div class="byline">Special Feature</div>
+      <p class="drop-cap">Hermann's project portfolio includes a Sushi Kitchen Simulator, a Python game employing data structures, object-oriented programming, and Agile development practices. His Digital Board Game project implements Checkers in Python with a graphical interface, an AI bot player, and a structured Git workflow.</p>
+    </div>
+
+    <div class="pull-quote">
+      <p>"National Merit Scholar, GPA 3.7"</p>
+    </div>
+
+    <div class="article">
+      <h3>Life Beyond the Terminal</h3>
+      <p>When not writing code, Hermann can be found playing trumpet, competing in esports, playing basketball, or at the bowling alley. These pursuits reflect the same competitive drive and discipline he brings to engineering.</p>
+    </div>
+
+  </div>
+
+  <div class="divider"><span>&sect;</span></div>
+
+  <div class="footer">
+    &copy; 2026 The Hermann Chronicle &mdash; Published in the interest of good software and great resumes &mdash; Chicago, Illinois
+  </div>
+
+</div>
+</body>
+</html>

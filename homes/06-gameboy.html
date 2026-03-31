@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Luke Hermann - Game Boy Resume</title>
+<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    background: #0f380f;
+    font-family: 'Press Start 2P', monospace;
+    display: flex; justify-content: center; align-items: center;
+    min-height: 100vh; color: #0f380f;
+    overflow: hidden;
+  }
+  .back-link {
+    position: fixed; top: 12px; left: 12px; z-index: 999;
+    font-family: 'Press Start 2P', monospace; font-size: 8px;
+    color: #9bbc0f; text-decoration: none;
+  }
+  .back-link:hover { color: #8bac0f; }
+  .gameboy {
+    width: 380px; background: #8b8b7a;
+    border-radius: 20px 20px 60px 20px;
+    padding: 30px 30px 50px;
+    box-shadow: 4px 4px 0 #5a5a4a, inset -2px -2px 0 #a0a090;
+    position: relative;
+  }
+  .screen-bezel {
+    background: #4a4a5a; border-radius: 12px; padding: 20px;
+    box-shadow: inset 3px 3px 0 #2a2a3a;
+  }
+  .dot-label { font-size: 6px; color: #2a2a3a; text-align: center; margin-bottom: 6px; letter-spacing: 2px; }
+  .screen {
+    width: 100%; height: 320px; background: #9bbc0f;
+    border: 4px solid #306230;
+    box-shadow: inset 4px 4px 0 #8bac0f;
+    overflow: hidden; position: relative;
+  }
+  .screen-content {
+    width: 100%; height: 100%; padding: 12px;
+    font-size: 8px; line-height: 1.8;
+    position: absolute; top: 0; left: 0;
+    transition: opacity 0.3s;
+  }
+  .screen-content.hidden { opacity: 0; pointer-events: none; }
+  .screen-content.visible { opacity: 1; pointer-events: auto; }
+  .fade-overlay {
+    position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+    background: #0f380f; opacity: 0; pointer-events: none;
+    transition: opacity 0.25s;
+    z-index: 10;
+  }
+  .fade-overlay.active { opacity: 1; }
+  .menu-item { padding: 4px 0; cursor: pointer; display: flex; align-items: center; }
+  .menu-item .arrow { visibility: hidden; margin-right: 6px; }
+  .menu-item.selected .arrow { visibility: visible; }
+  .menu-item:hover .arrow { visibility: visible; }
+  .title-text { text-align: center; margin-bottom: 12px; font-size: 10px; border-bottom: 2px solid #306230; padding-bottom: 8px; }
+  .controls { display: flex; justify-content: space-between; margin-top: 20px; align-items: flex-start; }
+  .dpad {
+    width: 90px; height: 90px; position: relative;
+  }
+  .dpad-btn {
+    position: absolute; background: #2a2a3a; border: none; cursor: pointer;
+    box-shadow: 1px 1px 0 #1a1a2a;
+  }
+  .dpad-btn:active { box-shadow: none; transform: translate(1px,1px); }
+  .dpad-up { width: 28px; height: 30px; top: 0; left: 31px; border-radius: 3px 3px 0 0; }
+  .dpad-down { width: 28px; height: 30px; bottom: 0; left: 31px; border-radius: 0 0 3px 3px; }
+  .dpad-left { width: 30px; height: 28px; top: 31px; left: 0; border-radius: 3px 0 0 3px; }
+  .dpad-right { width: 30px; height: 28px; top: 31px; right: 0; border-radius: 0 3px 3px 0; }
+  .dpad-center { width: 28px; height: 28px; top: 31px; left: 31px; background: #2a2a3a; position: absolute; }
+  .ab-buttons { display: flex; gap: 12px; transform: rotate(-25deg); margin-top: 15px; }
+  .ab-btn {
+    width: 40px; height: 40px; border-radius: 50%; background: #6a2060;
+    border: none; cursor: pointer; color: #8b8b7a;
+    font-family: 'Press Start 2P', monospace; font-size: 10px;
+    box-shadow: 2px 2px 0 #4a1040;
+  }
+  .ab-btn:active { box-shadow: none; transform: translate(1px,1px); }
+  .start-select { display: flex; gap: 20px; justify-content: center; margin-top: 15px; }
+  .ss-btn {
+    width: 36px; height: 10px; background: #5a5a4a; border: none; border-radius: 5px;
+    cursor: pointer; transform: rotate(-25deg);
+  }
+  .ss-label { font-size: 5px; color: #5a5a4a; text-align: center; margin-top: 4px; }
+  .speaker { margin-top: 20px; display: flex; justify-content: flex-end; gap: 4px; }
+  .speaker-line { width: 40px; height: 3px; background: #6a6a5a; border-radius: 2px; }
+  .mute-toggle {
+    position: absolute; bottom: 12px; right: 16px;
+    font-size: 5px; color: #5a5a4a; cursor: pointer; border: none; background: none;
+    font-family: 'Press Start 2P', monospace;
+  }
+  .scroll-hint { font-size: 6px; text-align: center; margin-top: 8px; animation: blink 1.2s infinite; }
+  @keyframes blink { 0%,100% { opacity: 1; } 50% { opacity: 0; } }
+  .sub-item { padding: 2px 0 2px 12px; font-size: 7px; line-height: 1.6; }
+  .section-scroll { overflow-y: auto; height: 250px; scrollbar-width: none; }
+  .section-scroll::-webkit-scrollbar { display: none; }
+  .brand-text { font-size: 7px; color: #6a6a5a; text-align: center; margin-top: 8px; letter-spacing: 3px; }
+</style>
+</head>
+<body>
+<a class="back-link" href="../gallery.html">&lt; Back to Gallery</a>
+<div class="gameboy">
+  <div class="screen-bezel">
+    <div class="dot-label">DOT MATRIX WITH STEREO SOUND</div>
+    <div class="screen">
+      <div class="fade-overlay" id="fade"></div>
+
+      <!-- MAIN MENU -->
+      <div class="screen-content visible" id="screen-menu">
+        <div class="title-text">LUKE HERMANN<br>- RESUME -</div>
+        <div class="menu-item selected" data-idx="0" data-target="about" onclick="goTo('about')"><span class="arrow">&#9654;</span> ABOUT</div>
+        <div class="menu-item" data-idx="1" data-target="skills" onclick="goTo('skills')"><span class="arrow">&#9654;</span> SKILLS</div>
+        <div class="menu-item" data-idx="2" data-target="xp" onclick="goTo('xp')"><span class="arrow">&#9654;</span> XP</div>
+        <div class="menu-item" data-idx="3" data-target="quests" onclick="goTo('quests')"><span class="arrow">&#9654;</span> QUESTS</div>
+        <div class="menu-item" data-idx="4" data-target="stats" onclick="goTo('stats')"><span class="arrow">&#9654;</span> STATS</div>
+        <div class="scroll-hint">PRESS A or ENTER</div>
+      </div>
+
+      <!-- ABOUT -->
+      <div class="screen-content hidden" id="screen-about">
+        <div class="title-text">ABOUT ME</div>
+        <div class="section-scroll">
+          <div class="sub-item">NAME: Luke Hermann</div>
+          <div class="sub-item">TEL: (773) 372-4185</div>
+          <div class="sub-item">EMAIL: lukehermann @uchicago.edu</div>
+          <div class="sub-item">LINKEDIN: luke-hermann</div>
+          <div class="sub-item">GITHUB: LHermannCoding</div>
+          <div class="sub-item" style="margin-top:8px">TRUMPET PLAYER</div>
+          <div class="sub-item">ESPORTS COMPETITOR</div>
+          <div class="sub-item">BASKETBALL PLAYER</div>
+          <div class="sub-item">BOWLER</div>
+        </div>
+        <div class="scroll-hint">B = BACK</div>
+      </div>
+
+      <!-- SKILLS -->
+      <div class="screen-content hidden" id="screen-skills">
+        <div class="title-text">SKILLS</div>
+        <div class="section-scroll">
+          <div class="sub-item">LANG: Python Java C C# C++ SQL Haskell x86 JS</div>
+          <div class="sub-item" style="margin-top:6px">TOOLS: Git SVN Linux Docker VS Code WPF R Stata</div>
+          <div class="sub-item" style="margin-top:6px">LIBS: numpy pandas pygame flask matplotlib</div>
+        </div>
+        <div class="scroll-hint">B = BACK</div>
+      </div>
+
+      <!-- XP -->
+      <div class="screen-content hidden" id="screen-xp">
+        <div class="title-text">EXPERIENCE</div>
+        <div class="section-scroll">
+          <div class="sub-item" style="font-size:8px">--- AMAZON ---</div>
+          <div class="sub-item">SDE L4 Jun-Sep 2025</div>
+          <div class="sub-item">3.6M partners/month banner</div>
+          <div class="sub-item">Incidents 6hrs to &lt;10min</div>
+          <div class="sub-item">40+ code reviews</div>
+          <div class="sub-item" style="margin-top:8px;font-size:8px">--- ENKLU ---</div>
+          <div class="sub-item">SWE Jun-Sep 2024</div>
+          <div class="sub-item">Primal Ranch: 1K+ hrs</div>
+          <div class="sub-item">$36K rev, 600+ users</div>
+          <div class="sub-item" style="margin-top:8px;font-size:8px">--- CODE YOUR DREAMS ---</div>
+          <div class="sub-item">Intern Jun-Aug 2023</div>
+          <div class="sub-item">16 Python lessons</div>
+          <div class="sub-item">40+ teachers onboarded</div>
+        </div>
+        <div class="scroll-hint">B = BACK</div>
+      </div>
+
+      <!-- QUESTS -->
+      <div class="screen-content hidden" id="screen-quests">
+        <div class="title-text">QUESTS</div>
+        <div class="section-scroll">
+          <div class="sub-item" style="font-size:8px">SUSHI KITCHEN SIM</div>
+          <div class="sub-item">Python game w/ data structures, OOP, Agile dev</div>
+          <div class="sub-item" style="margin-top:8px;font-size:8px">DIGITAL BOARD GAME</div>
+          <div class="sub-item">Python Checkers w/ GUI, bot player, Git workflow</div>
+        </div>
+        <div class="scroll-hint">B = BACK</div>
+      </div>
+
+      <!-- STATS -->
+      <div class="screen-content hidden" id="screen-stats">
+        <div class="title-text">STATS</div>
+        <div class="section-scroll">
+          <div class="sub-item" style="font-size:8px">U OF CHICAGO</div>
+          <div class="sub-item">MS Computer Science</div>
+          <div class="sub-item">Expected June 2026</div>
+          <div class="sub-item">Distributed Systems</div>
+          <div class="sub-item">Functional Programming</div>
+          <div class="sub-item" style="margin-top:8px">BS CS + BA Econ</div>
+          <div class="sub-item">June 2025 | GPA 3.7</div>
+          <div class="sub-item">National Merit Scholar</div>
+          <div class="sub-item">ML for Systems, OS,</div>
+          <div class="sub-item">Databases, Networks</div>
+        </div>
+        <div class="scroll-hint">B = BACK</div>
+      </div>
+    </div>
+  </div>
+  <div class="brand-text">RESUME BOY</div>
+  <div class="controls">
+    <div class="dpad">
+      <button class="dpad-btn dpad-up" onclick="moveUp()"></button>
+      <button class="dpad-btn dpad-down" onclick="moveDown()"></button>
+      <button class="dpad-btn dpad-left" onclick="goBack()"></button>
+      <button class="dpad-btn dpad-right"></button>
+      <div class="dpad-center"></div>
+    </div>
+    <div class="ab-buttons">
+      <div style="text-align:center"><button class="ab-btn" onclick="goBack()">B</button><div class="ss-label">BACK</div></div>
+      <div style="text-align:center"><button class="ab-btn" onclick="selectItem()">A</button><div class="ss-label">SELECT</div></div>
+    </div>
+  </div>
+  <div class="start-select">
+    <div style="text-align:center"><button class="ss-btn"></button><div class="ss-label">SELECT</div></div>
+    <div style="text-align:center"><button class="ss-btn"></button><div class="ss-label">START</div></div>
+  </div>
+  <div class="speaker">
+    <div class="speaker-line"></div><div class="speaker-line"></div>
+    <div class="speaker-line"></div><div class="speaker-line"></div>
+    <div class="speaker-line"></div>
+  </div>
+  <button class="mute-toggle" id="muteBtn" onclick="toggleMute()">SOUND: OFF</button>
+</div>
+
+<script>
+let currentScreen = 'menu';
+let selectedIdx = 0;
+let muted = true;
+const menuItems = document.querySelectorAll('#screen-menu .menu-item');
+const screens = ['about','skills','xp','quests','stats'];
+const fade = document.getElementById('fade');
+
+function updateSelection() {
+  menuItems.forEach((item, i) => {
+    item.classList.toggle('selected', i === selectedIdx);
+  });
+}
+
+function moveUp() {
+  if (currentScreen !== 'menu') return;
+  selectedIdx = (selectedIdx - 1 + menuItems.length) % menuItems.length;
+  updateSelection();
+}
+
+function moveDown() {
+  if (currentScreen !== 'menu') return;
+  selectedIdx = (selectedIdx + 1) % menuItems.length;
+  updateSelection();
+}
+
+function transition(from, to) {
+  fade.classList.add('active');
+  setTimeout(() => {
+    document.getElementById('screen-' + from).classList.remove('visible');
+    document.getElementById('screen-' + from).classList.add('hidden');
+    document.getElementById('screen-' + to).classList.remove('hidden');
+    document.getElementById('screen-' + to).classList.add('visible');
+    currentScreen = to;
+    setTimeout(() => fade.classList.remove('active'), 100);
+  }, 300);
+}
+
+function goTo(target) {
+  if (currentScreen !== 'menu') return;
+  transition('menu', target);
+}
+
+function selectItem() {
+  if (currentScreen === 'menu') {
+    goTo(screens[selectedIdx]);
+  }
+}
+
+function goBack() {
+  if (currentScreen !== 'menu') {
+    transition(currentScreen, 'menu');
+  }
+}
+
+function toggleMute() {
+  muted = !muted;
+  document.getElementById('muteBtn').textContent = 'SOUND: ' + (muted ? 'OFF' : 'ON');
+}
+
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'ArrowUp') { e.preventDefault(); moveUp(); }
+  if (e.key === 'ArrowDown') { e.preventDefault(); moveDown(); }
+  if (e.key === 'Enter' || e.key === 'a') { selectItem(); }
+  if (e.key === 'Escape' || e.key === 'b') { goBack(); }
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Luke Hermann - Analytics Dashboard</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;900&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: 'Inter', sans-serif; background: #1a1a2e; color: #e0e0e0; display: flex; min-height: 100vh; }
+  a.back-link {
+    position: fixed; top: 12px; left: 70px; z-index: 999;
+    font-size: 11px; color: #e94560; text-decoration: none; font-weight: 600;
+  }
+  a.back-link:hover { text-decoration: underline; }
+
+  /* Sidebar */
+  .sidebar {
+    width: 56px; background: #0f3460; position: fixed; top: 0; left: 0;
+    height: 100vh; display: flex; flex-direction: column; align-items: center;
+    padding-top: 60px; gap: 24px; z-index: 100;
+  }
+  .nav-icon {
+    width: 32px; height: 32px; border-radius: 8px; background: #16213e;
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer; font-size: 14px; transition: all 0.2s;
+    color: #8892b0; text-decoration: none;
+  }
+  .nav-icon:hover, .nav-icon.active { background: #e94560; color: #fff; }
+
+  /* Main */
+  .main { margin-left: 56px; padding: 24px; width: calc(100% - 56px); }
+  .header { margin-bottom: 24px; }
+  .header h1 { font-size: 28px; font-weight: 900; color: #fff; }
+  .header p { color: #8892b0; font-size: 13px; margin-top: 4px; }
+  .header-contacts { display: flex; gap: 16px; margin-top: 8px; flex-wrap: wrap; }
+  .header-contacts a, .header-contacts span {
+    font-size: 11px; color: #e94560; text-decoration: none;
+  }
+  .header-contacts a:hover { text-decoration: underline; }
+
+  /* Grid */
+  .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 16px; }
+  .card {
+    background: #16213e; border-radius: 12px; padding: 20px;
+    transition: transform 0.2s, box-shadow 0.2s;
+    border: 1px solid transparent;
+  }
+  .card:hover { transform: translateY(-3px); box-shadow: 0 4px 20px rgba(233,69,96,0.15); border-color: #0f3460; }
+  .card-title { font-size: 11px; text-transform: uppercase; letter-spacing: 1.5px; color: #e94560; margin-bottom: 14px; font-weight: 700; }
+
+  /* KPI */
+  .kpi-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 12px; margin-bottom: 16px; }
+  .kpi {
+    background: #16213e; border-radius: 12px; padding: 16px; text-align: center;
+    border: 1px solid #0f3460; transition: transform 0.2s, box-shadow 0.2s;
+  }
+  .kpi:hover { transform: translateY(-2px); box-shadow: 0 4px 20px rgba(233,69,96,0.1); }
+  .kpi-value { font-size: 32px; font-weight: 900; color: #e94560; }
+  .kpi-label { font-size: 10px; color: #8892b0; margin-top: 4px; text-transform: uppercase; letter-spacing: 1px; }
+
+  /* Skill bars */
+  .skill-row { display: flex; align-items: center; margin-bottom: 10px; }
+  .skill-name { width: 80px; font-size: 11px; color: #8892b0; flex-shrink: 0; }
+  .skill-bar-bg { flex: 1; height: 8px; background: #0f3460; border-radius: 4px; overflow: hidden; }
+  .skill-bar-fill { height: 100%; border-radius: 4px; background: linear-gradient(90deg, #e94560, #ff6b81); width: 0; transition: width 1.2s ease-out; }
+
+  /* Timeline */
+  .timeline-item { position: relative; padding-left: 20px; margin-bottom: 18px; border-left: 2px solid #0f3460; }
+  .timeline-item::before {
+    content: ''; position: absolute; left: -5px; top: 4px;
+    width: 8px; height: 8px; border-radius: 50%; background: #e94560;
+  }
+  .timeline-company { font-weight: 700; font-size: 14px; color: #fff; }
+  .timeline-role { font-size: 11px; color: #e94560; }
+  .timeline-date { font-size: 10px; color: #8892b0; margin-bottom: 4px; }
+  .timeline-desc { font-size: 12px; color: #b0b0c0; line-height: 1.6; }
+  .timeline-duration {
+    position: absolute; right: 0; top: 0; font-size: 9px;
+    background: #0f3460; color: #e94560; padding: 2px 8px; border-radius: 10px;
+  }
+
+  /* Tags */
+  .tag {
+    display: inline-block; padding: 4px 10px; border-radius: 20px;
+    font-size: 10px; margin: 3px; background: #0f3460; color: #e94560; font-weight: 600;
+  }
+
+  /* Counter animation */
+  .counter { font-variant-numeric: tabular-nums; }
+
+  .full-width { grid-column: 1 / -1; }
+  .section { scroll-margin-top: 20px; }
+</style>
+</head>
+<body>
+<a class="back-link" href="../gallery.html">&larr; Back to Gallery</a>
+
+<nav class="sidebar">
+  <a class="nav-icon active" href="#overview" title="Overview">&#9632;</a>
+  <a class="nav-icon" href="#skills" title="Skills">&#9733;</a>
+  <a class="nav-icon" href="#experience" title="Experience">&#9650;</a>
+  <a class="nav-icon" href="#education" title="Education">&#9679;</a>
+  <a class="nav-icon" href="#projects" title="Projects">&#9830;</a>
+</nav>
+
+<div class="main">
+  <div class="header" id="overview">
+    <h1>Luke Hermann</h1>
+    <p>Software Development Engineer &bull; University of Chicago</p>
+    <div class="header-contacts">
+      <span>(773) 372-4185</span>
+      <a href="mailto:lukehermann@uchicago.edu">lukehermann@uchicago.edu</a>
+      <a href="https://linkedin.com/in/luke-hermann" target="_blank">LinkedIn</a>
+      <a href="https://github.com/LHermannCoding" target="_blank">GitHub</a>
+    </div>
+  </div>
+
+  <!-- KPIs -->
+  <div class="kpi-row">
+    <div class="kpi"><div class="kpi-value counter" data-target="3600000" data-suffix="" data-format="abbr">0</div><div class="kpi-label">Partners Served/Mo</div></div>
+    <div class="kpi"><div class="kpi-value">3.7</div><div class="kpi-label">GPA</div></div>
+    <div class="kpi"><div class="kpi-value counter" data-target="600" data-suffix="+">0</div><div class="kpi-label">Customers</div></div>
+    <div class="kpi"><div class="kpi-value counter" data-target="40" data-suffix="+">0</div><div class="kpi-label">Code Reviews</div></div>
+    <div class="kpi"><div class="kpi-value">2026</div><div class="kpi-label">MS Expected</div></div>
+  </div>
+
+  <div class="grid">
+    <!-- Skills -->
+    <div class="card section" id="skills">
+      <div class="card-title">Languages</div>
+      <div class="skill-row"><span class="skill-name">Python</span><div class="skill-bar-bg"><div class="skill-bar-fill" data-width="95"></div></div></div>
+      <div class="skill-row"><span class="skill-name">Java</span><div class="skill-bar-bg"><div class="skill-bar-fill" data-width="90"></div></div></div>
+      <div class="skill-row"><span class="skill-name">C / C++</span><div class="skill-bar-bg"><div class="skill-bar-fill" data-width="80"></div></div></div>
+      <div class="skill-row"><span class="skill-name">C#</span><div class="skill-bar-bg"><div class="skill-bar-fill" data-width="75"></div></div></div>
+      <div class="skill-row"><span class="skill-name">SQL</span><div class="skill-bar-bg"><div class="skill-bar-fill" data-width="70"></div></div></div>
+      <div class="skill-row"><span class="skill-name">Haskell</span><div class="skill-bar-bg"><div class="skill-bar-fill" data-width="60"></div></div></div>
+      <div class="skill-row"><span class="skill-name">JavaScript</span><div class="skill-bar-bg"><div class="skill-bar-fill" data-width="72"></div></div></div>
+      <div class="skill-row"><span class="skill-name">x86 ASM</span><div class="skill-bar-bg"><div class="skill-bar-fill" data-width="50"></div></div></div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Tools & Libraries</div>
+      <div style="margin-top: 8px;">
+        <span class="tag">Git</span><span class="tag">SVN</span><span class="tag">Linux</span>
+        <span class="tag">Docker</span><span class="tag">VS Code</span><span class="tag">WPF</span>
+        <span class="tag">R</span><span class="tag">Stata</span>
+      </div>
+      <div style="margin-top: 12px;">
+        <span class="tag">numpy</span><span class="tag">pandas</span><span class="tag">pygame</span>
+        <span class="tag">flask</span><span class="tag">matplotlib</span>
+      </div>
+    </div>
+
+    <!-- Experience -->
+    <div class="card full-width section" id="experience">
+      <div class="card-title">Experience Timeline</div>
+      <div class="timeline-item">
+        <div class="timeline-duration">4 months</div>
+        <div class="timeline-company">Amazon</div>
+        <div class="timeline-role">SDE L4</div>
+        <div class="timeline-date">June &ndash; September 2025</div>
+        <div class="timeline-desc">Deployable banner on Seller/Vendor Central serving 3.6M partners/month. Reduced incident response from 6hrs to &lt;10min. Java API integration, 40+ code reviews under Agile.</div>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-duration">4 months</div>
+        <div class="timeline-company">Enklu</div>
+        <div class="timeline-role">Software Engineer</div>
+        <div class="timeline-date">June &ndash; September 2024</div>
+        <div class="timeline-desc">Primal Ranch game: 1K+ hours playtime, $36K revenue, 600+ customers. Built multiplayer metrics API with C#/Node.js.</div>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-duration">3 months</div>
+        <div class="timeline-company">Code Your Dreams</div>
+        <div class="timeline-role">CS Intern</div>
+        <div class="timeline-date">June &ndash; August 2023</div>
+        <div class="timeline-desc">Created 16 Python lessons, WhatsApp bot curriculum, Arduino DanceTech. Onboarded 40+ teachers in Burundi.</div>
+      </div>
+    </div>
+
+    <!-- Education -->
+    <div class="card section" id="education">
+      <div class="card-title">Education</div>
+      <div style="margin-bottom: 14px;">
+        <div style="font-weight:700; color:#fff;">University of Chicago</div>
+        <div style="font-size:12px; color:#e94560;">MS in Computer Science</div>
+        <div style="font-size:11px; color:#8892b0;">Expected June 2026</div>
+        <div style="font-size:11px; color:#b0b0c0; margin-top:4px;">Distributed Systems, Functional Programming</div>
+      </div>
+      <div>
+        <div style="font-weight:700; color:#fff;">University of Chicago</div>
+        <div style="font-size:12px; color:#e94560;">BS in CS + BA in Economics</div>
+        <div style="font-size:11px; color:#8892b0;">June 2025 &bull; GPA 3.7 &bull; National Merit Scholar</div>
+        <div style="font-size:11px; color:#b0b0c0; margin-top:4px;">ML for Systems, OS, Databases, Networks</div>
+      </div>
+    </div>
+
+    <!-- Projects -->
+    <div class="card section" id="projects">
+      <div class="card-title">Projects</div>
+      <div style="margin-bottom: 14px;">
+        <div style="font-weight:700; color:#fff;">Sushi Kitchen Simulator</div>
+        <div style="font-size:12px; color:#b0b0c0; line-height:1.6;">Python game built with data structures, OOP, and Agile development.</div>
+      </div>
+      <div>
+        <div style="font-weight:700; color:#fff;">Digital Board Game</div>
+        <div style="font-size:12px; color:#b0b0c0; line-height:1.6;">Python Checkers with GUI, bot player, and Git workflow.</div>
+      </div>
+    </div>
+
+    <!-- Activities -->
+    <div class="card">
+      <div class="card-title">Activities</div>
+      <span class="tag">Trumpet Player</span><span class="tag">Esports Competitor</span>
+      <span class="tag">Basketball Player</span><span class="tag">Bowler</span>
+    </div>
+  </div>
+</div>
+
+<script>
+// Animate skill bars on load
+function animateBars() {
+  document.querySelectorAll('.skill-bar-fill').forEach(bar => {
+    const w = bar.getAttribute('data-width');
+    bar.style.width = w + '%';
+  });
+}
+
+// Counter animation
+function animateCounters() {
+  document.querySelectorAll('.counter').forEach(el => {
+    const target = parseInt(el.getAttribute('data-target'));
+    const suffix = el.getAttribute('data-suffix') || '';
+    const fmt = el.getAttribute('data-format');
+    const duration = 1500;
+    const start = performance.now();
+    function tick(now) {
+      const elapsed = now - start;
+      const progress = Math.min(elapsed / duration, 1);
+      const eased = 1 - Math.pow(1 - progress, 3);
+      let val = Math.floor(eased * target);
+      if (fmt === 'abbr') {
+        if (val >= 1000000) el.textContent = (val / 1000000).toFixed(1) + 'M' + suffix;
+        else if (val >= 1000) el.textContent = (val / 1000).toFixed(0) + 'K' + suffix;
+        else el.textContent = val + suffix;
+      } else {
+        el.textContent = val.toLocaleString() + suffix;
+      }
+      if (progress < 1) requestAnimationFrame(tick);
+    }
+    requestAnimationFrame(tick);
+  });
+}
+
+// Intersection observer for scroll-triggered counters
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      animateCounters();
+      animateBars();
+      observer.disconnect();
+    }
+  });
+}, { threshold: 0.2 });
+
+document.querySelectorAll('.kpi-row').forEach(el => observer.observe(el));
+
+// Sidebar active state
+document.querySelectorAll('.nav-icon').forEach(icon => {
+  icon.addEventListener('click', () => {
+    document.querySelectorAll('.nav-icon').forEach(i => i.classList.remove('active'));
+    icon.classList.add('active');
+  });
+});
+
+// Fallback: animate on load
+window.addEventListener('load', () => { setTimeout(() => { animateBars(); animateCounters(); }, 300); });
+</script>
+</body>
+</html>

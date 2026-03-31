@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Luke Hermann - Wikipedia</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+    font-size: 14px;
+    line-height: 1.6;
+    color: #222;
+    background: #f6f6f6;
+  }
+
+  .back-link {
+    position: fixed;
+    top: 8px;
+    left: 8px;
+    z-index: 200;
+    font-size: 0.8rem;
+    color: #0645ad;
+    text-decoration: none;
+    background: rgba(255,255,255,0.95);
+    padding: 3px 10px;
+    border: 1px solid #ccc;
+    border-radius: 2px;
+  }
+  .back-link:hover { text-decoration: underline; }
+
+  a { color: #0645ad; text-decoration: none; }
+  a:hover { text-decoration: underline; }
+
+  /* Layout */
+  .wiki-wrapper {
+    display: flex;
+    min-height: 100vh;
+  }
+
+  /* Sidebar */
+  .sidebar {
+    width: 200px;
+    background: #f6f6f6;
+    border-right: 1px solid #a7d7f9;
+    padding: 50px 10px 20px;
+    flex-shrink: 0;
+    font-size: 13px;
+  }
+  .sidebar-logo {
+    text-align: center;
+    margin-bottom: 20px;
+    padding-bottom: 14px;
+    border-bottom: 1px solid #c8ccd1;
+  }
+  .sidebar-logo .w { font-size: 2rem; font-weight: 700; font-family: 'Linux Libertine', 'Georgia', serif; }
+  .sidebar-logo .sub { font-size: 0.7rem; color: #555; }
+  .sidebar h3 {
+    font-size: 12px;
+    color: #555;
+    padding: 8px 0 4px;
+    margin-top: 8px;
+    border-top: 1px solid #c8ccd1;
+    text-transform: capitalize;
+  }
+  .sidebar ul { list-style: none; }
+  .sidebar li { padding: 2px 0; }
+  .sidebar a { color: #0645ad; font-size: 13px; }
+
+  /* Main content */
+  .main {
+    flex: 1;
+    background: #fff;
+    border-left: 1px solid #a7d7f9;
+    padding: 20px 28px 40px;
+    max-width: 960px;
+  }
+
+  /* Banners */
+  .banner {
+    background: #fef6e7;
+    border: 1px solid #f0c36d;
+    padding: 10px 14px;
+    margin-bottom: 12px;
+    font-size: 13px;
+    line-height: 1.5;
+    display: flex;
+    align-items: start;
+    gap: 10px;
+  }
+  .banner-icon {
+    font-size: 1.5rem;
+    flex-shrink: 0;
+    line-height: 1;
+  }
+
+  /* Title */
+  .article-title {
+    font-family: 'Linux Libertine', Georgia, serif;
+    font-size: 1.9rem;
+    font-weight: 400;
+    border-bottom: 1px solid #a2a9b1;
+    padding-bottom: 4px;
+    margin-bottom: 10px;
+  }
+
+  .shortdesc {
+    font-size: 13px;
+    color: #555;
+    font-style: italic;
+    margin-bottom: 16px;
+  }
+
+  /* Infobox */
+  .infobox {
+    float: right;
+    width: 280px;
+    border: 1px solid #a2a9b1;
+    background: #f8f9fa;
+    margin: 0 0 16px 20px;
+    font-size: 13px;
+    border-collapse: collapse;
+  }
+  .infobox caption {
+    background: #cedff2;
+    padding: 8px;
+    font-weight: 700;
+    font-size: 15px;
+    text-align: center;
+  }
+  .infobox td, .infobox th {
+    padding: 5px 10px;
+    border-top: 1px solid #ddd;
+    vertical-align: top;
+  }
+  .infobox th {
+    text-align: left;
+    font-weight: 600;
+    width: 100px;
+    background: #eef3fa;
+    font-size: 12px;
+  }
+  .infobox-subheader {
+    background: #dce5f0;
+    text-align: center;
+    font-weight: 600;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  /* TOC */
+  .toc {
+    border: 1px solid #a2a9b1;
+    background: #f8f9fa;
+    padding: 12px 18px;
+    display: inline-block;
+    margin: 10px 0 16px;
+    font-size: 13px;
+    min-width: 260px;
+  }
+  .toc-title {
+    font-weight: 700;
+    text-align: center;
+    margin-bottom: 6px;
+  }
+  .toc ol { padding-left: 24px; }
+  .toc li { margin: 2px 0; }
+  .toc ol ol { padding-left: 20px; }
+
+  /* Section headings */
+  h2.section-heading {
+    font-family: 'Linux Libertine', Georgia, serif;
+    font-size: 1.4rem;
+    font-weight: 400;
+    border-bottom: 1px solid #a2a9b1;
+    margin: 24px 0 10px;
+    padding-bottom: 3px;
+    clear: both;
+  }
+  h3.sub-heading {
+    font-size: 1.1rem;
+    font-weight: 600;
+    margin: 16px 0 6px;
+  }
+  .edit-link {
+    font-size: 12px;
+    font-weight: 400;
+    margin-left: 10px;
+    font-family: sans-serif;
+    color: #0645ad;
+  }
+
+  p { margin-bottom: 10px; }
+
+  sup.ref {
+    font-size: 10px;
+    color: #0645ad;
+    cursor: pointer;
+    vertical-align: super;
+  }
+
+  /* Skills table */
+  .wikitable {
+    border-collapse: collapse;
+    margin: 10px 0;
+    font-size: 13px;
+  }
+  .wikitable th, .wikitable td {
+    border: 1px solid #a2a9b1;
+    padding: 6px 10px;
+  }
+  .wikitable th {
+    background: #eaecf0;
+    text-align: left;
+    font-weight: 600;
+  }
+
+  /* References */
+  .references {
+    font-size: 12px;
+    color: #555;
+    margin-top: 8px;
+  }
+  .references li {
+    margin-bottom: 4px;
+  }
+  .ref-link { color: #0645ad; }
+
+  /* Categories */
+  .categories {
+    margin-top: 28px;
+    padding: 10px 14px;
+    background: #f8f9fa;
+    border: 1px solid #ddd;
+    font-size: 12px;
+  }
+  .categories span { font-weight: 600; }
+
+  /* Footer */
+  .wiki-footer {
+    margin-top: 24px;
+    padding-top: 10px;
+    border-top: 1px solid #a2a9b1;
+    font-size: 12px;
+    color: #777;
+  }
+
+  @media(max-width:768px) {
+    .sidebar { display: none; }
+    .infobox { float: none; width: 100%; margin: 0 0 16px; }
+  }
+</style>
+</head>
+<body>
+<a href="../gallery.html" class="back-link">&larr; Back to Gallery</a>
+
+<div class="wiki-wrapper">
+  <nav class="sidebar">
+    <div class="sidebar-logo">
+      <div class="w">W</div>
+      <div class="sub">WICKEDPEDIA<br>The Free-ish Encyclopedia</div>
+    </div>
+    <h3>Navigation</h3>
+    <ul>
+      <li><a href="#">Main page</a></li>
+      <li><a href="#">Contents</a></li>
+      <li><a href="#">Current events</a></li>
+      <li><a href="#">Random article</a></li>
+    </ul>
+    <h3>Contribute</h3>
+    <ul>
+      <li><a href="#">Help</a></li>
+      <li><a href="#">Learn to edit</a></li>
+      <li><a href="#">Community portal</a></li>
+    </ul>
+    <h3>Tools</h3>
+    <ul>
+      <li><a href="#">What links here</a></li>
+      <li><a href="#">Related changes</a></li>
+      <li><a href="#">Upload file</a></li>
+      <li><a href="#">Special pages</a></li>
+    </ul>
+    <h3>Contact</h3>
+    <ul>
+      <li><a href="mailto:lukehermann@uchicago.edu">Email</a></li>
+      <li><a href="https://linkedin.com/in/luke-hermann">LinkedIn</a></li>
+      <li><a href="https://github.com/LHermannCoding">GitHub</a></li>
+      <li><a href="tel:7733724185">(773) 372-4185</a></li>
+    </ul>
+  </nav>
+
+  <main class="main">
+    <div class="banner">
+      <span class="banner-icon">&#9888;</span>
+      <div>This article <b>may contain original research</b>. Please help <a href="#">improve it</a> by verifying the claims made and adding inline citations. <i>(Tagged since June 2025)</i></div>
+    </div>
+    <div class="banner">
+      <span class="banner-icon">&#128221;</span>
+      <div>This article's <b>tone or style may not reflect the encyclopedic tone</b> used on Wikipedia. The author seems unreasonably proud of their GPA. <i>(Tagged since June 2025)</i></div>
+    </div>
+
+    <h1 class="article-title">Luke Hermann</h1>
+    <p class="shortdesc">American software engineer and computer scientist</p>
+
+    <!-- Infobox -->
+    <table class="infobox">
+      <caption>Luke Hermann</caption>
+      <tr class="infobox-subheader"><td colspan="2">Biological Classification</td></tr>
+      <tr><th>Species</th><td>Software Engineer</td></tr>
+      <tr><th>Genus</th><td>Full-Stack</td></tr>
+      <tr><th>Family</th><td>UChicago Maroons</td></tr>
+      <tr class="infobox-subheader"><td colspan="2">Personal Information</td></tr>
+      <tr><th>Occupation</th><td>Software Development Engineer</td></tr>
+      <tr><th>Education</th><td><a href="#">University of Chicago</a> (BS, BA, MS)</td></tr>
+      <tr><th>Known&nbsp;for</th><td>Amazon banner system, Primal Ranch game</td></tr>
+      <tr><th>GPA</th><td>3.7 (undergrad)</td></tr>
+      <tr><th>Awards</th><td>National Merit Scholar</td></tr>
+      <tr><th>Website</th><td><a href="https://github.com/LHermannCoding">github.com/LHermannCoding</a></td></tr>
+    </table>
+
+    <p><b>Luke Hermann</b> is an American <a href="#">software engineer</a> and <a href="#">computer scientist</a> currently pursuing a Master of Science in <a href="#">Computer Science</a> at the <a href="#">University of Chicago</a>. He is known for developing a banner deployment system at <a href="#">Amazon</a> that serves 3.6 million partners monthly,<sup class="ref">[1]</sup> and for his work on the commercially successful video game <i>Primal Ranch</i>.<sup class="ref">[2]</sup></p>
+
+    <p>Hermann completed his undergraduate studies at UChicago with dual degrees in Computer Science (BS) and Economics (BA) in June 2025, graduating with a 3.7 GPA and earning recognition as a <a href="#">National Merit Scholar</a>.<sup class="ref">[3]</sup></p>
+
+    <!-- TOC -->
+    <div class="toc">
+      <div class="toc-title">Contents</div>
+      <ol>
+        <li><a href="#education">Early life and education</a></li>
+        <li><a href="#career">Career</a>
+          <ol>
+            <li><a href="#cyd">Code Your Dreams</a></li>
+            <li><a href="#enklu">Enklu</a></li>
+            <li><a href="#amazon">Amazon</a></li>
+          </ol>
+        </li>
+        <li><a href="#skills">Technical skills</a></li>
+        <li><a href="#projects">Projects</a></li>
+        <li><a href="#interests">Personal interests</a></li>
+        <li><a href="#references">References</a></li>
+      </ol>
+    </div>
+
+    <h2 class="section-heading" id="education">Early life and education <a href="#" class="edit-link">[edit]</a></h2>
+    <p>Hermann attended the <a href="#">University of Chicago</a>, where he pursued a rigorous dual-degree program combining computer science with economics. His undergraduate coursework included <a href="#">Machine Learning for Systems</a>, <a href="#">Operating Systems</a>, <a href="#">Databases</a>, and <a href="#">Computer Networks</a>. He graduated in June 2025 with a BS in Computer Science and a BA in Economics, achieving a cumulative GPA of 3.7.<sup class="ref">[3]</sup></p>
+
+    <p>He was recognized as a <a href="#">National Merit Scholar</a>, an achievement that reportedly made his parents "very proud and slightly insufferable at dinner parties."<sup class="ref">[4]</sup></p>
+
+    <p>As of 2026, Hermann is pursuing a Master of Science in Computer Science at the same institution, with coursework in <a href="#">Distributed Systems</a> and <a href="#">Functional Programming</a>. He is expected to complete the program in June 2026.<sup class="ref">[5]</sup></p>
+
+    <h2 class="section-heading" id="career">Career <a href="#" class="edit-link">[edit]</a></h2>
+
+    <h3 class="sub-heading" id="cyd">Code Your Dreams <a href="#" class="edit-link">[edit]</a></h3>
+    <p>In the summer of 2023, Hermann interned at <a href="#">Code Your Dreams</a>, a nonprofit focused on computer science education. He created 16 Python programming lessons and developed a WhatsApp bot curriculum. He also designed an Arduino-based DanceTech project and helped onboard over 40 teachers in <a href="#">Burundi</a>.<sup class="ref">[6]</sup> Sources describe his WhatsApp bot as "functional, if occasionally sarcastic."<sup class="ref">[7]</sup></p>
+
+    <h3 class="sub-heading" id="enklu">Enklu <a href="#" class="edit-link">[edit]</a></h3>
+    <p>During the summer of 2024, Hermann worked as a Software Engineer at <a href="#">Enklu</a>, where he contributed to the development of <i>Primal Ranch</i>, a video game that accumulated over 1,000 hours of player engagement, generated $36,000 in revenue, and attracted more than 600 customers.<sup class="ref">[2]</sup> He built a multiplayer metrics API using <a href="#">C#</a> and <a href="#">Node.js</a>. Industry analysts noted the game was "surprisingly addictive for something built in one summer."<sup class="ref">[8]</sup></p>
+
+    <h3 class="sub-heading" id="amazon">Amazon <a href="#" class="edit-link">[edit]</a></h3>
+    <p>In the summer of 2025, Hermann joined <a href="#">Amazon</a> as a Software Development Engineer at the L4 level. He developed a deployable banner system for <a href="#">Seller Central</a> and <a href="#">Vendor Central</a>, serving approximately 3.6 million partners per month.<sup class="ref">[1]</sup> He reduced incident response times from 6 hours to under 10 minutes, a 97.2% improvement that his team reportedly celebrated with cake.<sup class="ref">[9]</sup> During his tenure, he integrated Java APIs and completed over 40 code reviews under <a href="#">Agile</a> methodology.</p>
+
+    <h2 class="section-heading" id="skills">Technical skills <a href="#" class="edit-link">[edit]</a></h2>
+    <table class="wikitable">
+      <tr><th>Category</th><th>Technologies</th></tr>
+      <tr><td>Languages</td><td>Python, Java, C, C#, C++, SQL, Haskell, x86 Assembly, JavaScript</td></tr>
+      <tr><td>Tools</td><td>Git, SVN, Linux, VS Code, Docker, WPF, R, Stata</td></tr>
+      <tr><td>Libraries</td><td>numpy, pandas, pygame, flask, matplotlib</td></tr>
+    </table>
+
+    <h2 class="section-heading" id="projects">Projects <a href="#" class="edit-link">[edit]</a></h2>
+    <p><b>Sushi Kitchen Simulator</b> &mdash; A Python-based game utilizing data structures, object-oriented programming, and Agile development principles. The game reportedly does not come with actual sushi, a fact that disappointed several early testers.<sup class="ref">[10]</sup></p>
+    <p><b>Digital Board Game</b> &mdash; A Python implementation of <a href="#">Checkers</a> featuring a graphical user interface, an AI bot player, and a structured Git workflow. The bot player maintains an unverified win rate that Hermann describes as "respectable."<sup class="ref">[11]</sup></p>
+
+    <h2 class="section-heading" id="interests">Personal interests <a href="#" class="edit-link">[edit]</a></h2>
+    <p>Outside of software engineering, Hermann is known as a <a href="#">trumpet</a> player, an <a href="#">esports</a> competitor, a <a href="#">basketball</a> player, and a <a href="#">bowling</a> enthusiast. He has not publicly disclosed his bowling average, leading to rampant speculation on various forums.<sup class="ref">[12]</sup></p>
+
+    <h2 class="section-heading" id="references">References <a href="#" class="edit-link">[edit]</a></h2>
+    <ol class="references">
+      <li>[1] <span class="ref-link">"Amazon Seller Central Internal Metrics Dashboard"</span>, Amazon Web Services, Q3 2025.</li>
+      <li>[2] <span class="ref-link">"Primal Ranch: A Post-Mortem"</span>, Enklu Development Blog, October 2024.</li>
+      <li>[3] <span class="ref-link">"University of Chicago Commencement Records"</span>, Office of the Registrar, June 2025.</li>
+      <li>[4] Hermann, Mrs. (2025). <i>My Son the Computer Scientist: A Mother's Perspective</i>. Unpublished manuscript.</li>
+      <li>[5] <span class="ref-link">"Graduate Program Enrollment"</span>, UChicago CS Department, 2025-2026 academic year.</li>
+      <li>[6] <span class="ref-link">"Expanding CS Education in East Africa"</span>, Code Your Dreams Annual Report, 2023.</li>
+      <li>[7] Anonymous teacher in Burundi, personal communication, August 2023.</li>
+      <li>[8] TechCrunch Gaming Weekly (fictitious), "Indie Games That Punched Above Their Weight", September 2024.</li>
+      <li>[9] <span class="ref-link">"Incident Response Time Reduction: A Case Study"</span>, Internal Amazon engineering review, 2025. [<i>subscription required</i>]</li>
+      <li>[10] Early Beta Tester Survey, unpublished, 2024. Several respondents asked: "Where is the actual sushi?"</li>
+      <li>[11] Hermann, L. (2024). "My bot is pretty good, trust me." GitHub README.</li>
+      <li>[12] r/bowling, "Does anyone know Luke Hermann's average?", thread with 3 upvotes, 2024.</li>
+    </ol>
+
+    <div class="categories">
+      <span>Categories:</span>
+      <a href="#">University of Chicago alumni</a> &middot;
+      <a href="#">American software engineers</a> &middot;
+      <a href="#">Amazon employees</a> &middot;
+      <a href="#">National Merit Scholars</a> &middot;
+      <a href="#">Game developers</a> &middot;
+      <a href="#">People who bowl</a>
+    </div>
+
+    <div class="wiki-footer">
+      This page was last edited on 30 March 2026, at 14:32 (UTC).<br>
+      Text is available under the <a href="#">Creative Commons Attribution-ShareAlike License</a>; additional terms may apply.
+    </div>
+  </main>
+</div>
+
+</body>
+</html>

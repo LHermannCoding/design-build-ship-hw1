@@ -1,0 +1,490 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Luke Hermann | RPG Character Sheet</title>
+<link href="https://fonts.googleapis.com/css2?family=MedievalSharp&family=Crimson+Text:ital,wght@0,400;0,600;0,700;1,400&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+:root {
+  --parchment: #f4e8c1;
+  --ink: #3e2723;
+  --gold: #b8860b;
+  --dark-gold: #8b6914;
+  --red: #8b0000;
+}
+body {
+  font-family: 'Crimson Text', serif;
+  background: var(--parchment);
+  color: var(--ink);
+  min-height: 100vh;
+  background-image:
+    url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.06'/%3E%3C/svg%3E");
+}
+a { color: var(--ink); }
+.back-link {
+  position: fixed; top: 12px; left: 12px; z-index: 100;
+  font-family: 'MedievalSharp', cursive; font-size: 14px;
+  text-decoration: none; color: var(--ink);
+  border-bottom: 1px solid var(--ink);
+}
+.back-link:hover { color: var(--red); }
+
+.sheet {
+  max-width: 900px; margin: 0 auto;
+  padding: 40px 50px 60px;
+  position: relative;
+}
+
+/* Ornate border */
+.sheet::before {
+  content: '';
+  position: absolute; inset: 20px;
+  border: 3px double var(--ink);
+  pointer-events: none;
+}
+.sheet::after {
+  content: '';
+  position: absolute; inset: 26px;
+  border: 1px solid var(--gold);
+  pointer-events: none;
+}
+
+/* Corner flourishes */
+.corner { position: absolute; font-size: 32px; color: var(--gold); line-height: 1; }
+.corner-tl { top: 8px; left: 8px; }
+.corner-tr { top: 8px; right: 8px; }
+.corner-bl { bottom: 8px; left: 8px; }
+.corner-br { bottom: 8px; right: 8px; }
+
+/* Header */
+.header {
+  text-align: center; margin-bottom: 30px;
+  padding-top: 20px;
+}
+.header h1 {
+  font-family: 'MedievalSharp', cursive;
+  font-size: 48px; color: var(--ink);
+  letter-spacing: 3px;
+}
+.header .subtitle {
+  font-family: 'MedievalSharp', cursive;
+  font-size: 16px; color: var(--gold);
+  letter-spacing: 4px; margin-top: 4px;
+}
+.divider {
+  text-align: center; color: var(--gold);
+  font-size: 18px; letter-spacing: 8px; margin: 16px 0;
+}
+
+/* Character info row */
+.char-info {
+  display: grid; grid-template-columns: 200px 1fr;
+  gap: 24px; margin-bottom: 24px;
+}
+
+/* Portrait */
+.portrait {
+  width: 200px; height: 220px;
+  border: 2px solid var(--ink);
+  display: flex; align-items: center; justify-content: center;
+  background: rgba(62,39,35,0.05);
+  position: relative;
+}
+.portrait .initials {
+  font-family: 'MedievalSharp', cursive;
+  font-size: 80px; color: var(--ink);
+  opacity: 0.8;
+}
+.portrait .frame-label {
+  position: absolute; bottom: -10px; left: 50%; transform: translateX(-50%);
+  background: var(--parchment); padding: 0 10px;
+  font-family: 'MedievalSharp', cursive; font-size: 12px;
+  color: var(--gold); letter-spacing: 2px;
+}
+
+/* Info fields */
+.info-grid {
+  display: grid; grid-template-columns: 1fr 1fr;
+  gap: 8px 20px;
+}
+.field {
+  border-bottom: 1px solid rgba(62,39,35,0.3);
+  padding: 6px 0;
+}
+.field-label {
+  font-family: 'MedievalSharp', cursive;
+  font-size: 12px; color: var(--gold);
+  text-transform: uppercase; letter-spacing: 2px;
+}
+.field-value {
+  font-size: 16px; font-weight: 600;
+}
+
+/* HP / XP bars */
+.bars {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 16px;
+  margin-bottom: 24px;
+}
+.bar-group label {
+  font-family: 'MedievalSharp', cursive;
+  font-size: 14px; color: var(--ink);
+  display: block; margin-bottom: 4px;
+}
+.bar-track {
+  width: 100%; height: 22px;
+  border: 2px solid var(--ink); border-radius: 2px;
+  background: rgba(62,39,35,0.05);
+  position: relative; overflow: hidden;
+}
+.bar-fill {
+  height: 100%; transition: width 1s ease;
+}
+.bar-fill.hp { background: linear-gradient(90deg, #8b0000, #c62828); }
+.bar-fill.xp { background: linear-gradient(90deg, var(--dark-gold), var(--gold)); }
+.bar-text {
+  position: absolute; inset: 0;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 12px; font-weight: 700; color: var(--ink);
+  mix-blend-mode: multiply;
+}
+
+/* Stats block */
+.stats-section {
+  margin-bottom: 24px;
+}
+.section-title {
+  font-family: 'MedievalSharp', cursive;
+  font-size: 22px; color: var(--ink);
+  border-bottom: 2px solid var(--ink);
+  padding-bottom: 4px; margin-bottom: 16px;
+}
+.stats-grid {
+  display: grid; grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+}
+.stat-block {
+  text-align: center; border: 2px solid var(--ink);
+  padding: 12px 8px;
+  position: relative;
+  background: rgba(62,39,35,0.02);
+}
+.stat-name {
+  font-family: 'MedievalSharp', cursive;
+  font-size: 13px; letter-spacing: 2px;
+  color: var(--gold); text-transform: uppercase;
+}
+.stat-score {
+  font-size: 36px; font-weight: 700;
+  line-height: 1.1;
+}
+.stat-mod {
+  font-size: 12px; color: #666;
+  margin-top: 2px;
+}
+.stat-bar {
+  margin-top: 6px; height: 6px;
+  background: rgba(62,39,35,0.1);
+  border-radius: 3px; overflow: hidden;
+}
+.stat-bar-fill {
+  height: 100%; border-radius: 3px;
+  background: var(--gold);
+}
+
+/* Quest Log */
+.quest-section { margin-bottom: 24px; }
+.quest {
+  padding: 12px 16px;
+  border-left: 4px solid var(--gold);
+  margin-bottom: 12px;
+  background: rgba(62,39,35,0.03);
+}
+.quest-status {
+  font-family: 'MedievalSharp', cursive;
+  font-size: 12px; color: var(--gold);
+  text-transform: uppercase; letter-spacing: 2px;
+}
+.quest-status.active { color: var(--red); }
+.quest h3 {
+  font-family: 'MedievalSharp', cursive;
+  font-size: 18px; margin: 4px 0;
+}
+.quest p {
+  font-size: 14px; line-height: 1.5; color: #555;
+}
+.quest .rewards {
+  margin-top: 6px; font-size: 13px;
+  color: var(--gold); font-style: italic;
+}
+
+/* Inventory */
+.inventory-grid {
+  display: grid; grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+  gap: 8px; margin-bottom: 24px;
+}
+.inv-item {
+  border: 1px solid rgba(62,39,35,0.3);
+  padding: 10px; text-align: center;
+  background: rgba(62,39,35,0.02);
+  transition: background 0.2s;
+}
+.inv-item:hover {
+  background: rgba(184,134,11,0.1);
+}
+.inv-icon { font-size: 24px; }
+.inv-name { font-size: 12px; margin-top: 4px; }
+
+/* Achievements */
+.achievements {
+  display: flex; flex-wrap: wrap; gap: 10px;
+  margin-bottom: 24px;
+}
+.achievement {
+  display: flex; align-items: center; gap: 8px;
+  border: 2px solid var(--gold);
+  padding: 8px 14px; border-radius: 4px;
+  background: rgba(184,134,11,0.05);
+  font-size: 13px;
+}
+.achievement .badge { font-size: 20px; }
+
+/* Footer */
+.footer {
+  text-align: center;
+  font-family: 'MedievalSharp', cursive;
+  font-size: 13px; color: var(--gold);
+  letter-spacing: 3px; margin-top: 20px;
+}
+</style>
+</head>
+<body>
+<a href="../gallery.html" class="back-link">&larr; Back to Gallery</a>
+
+<div class="sheet">
+  <!-- Corner flourishes -->
+  <span class="corner corner-tl">&#x2740;</span>
+  <span class="corner corner-tr">&#x2740;</span>
+  <span class="corner corner-bl">&#x2740;</span>
+  <span class="corner corner-br">&#x2740;</span>
+
+  <!-- Header -->
+  <div class="header">
+    <h1>Luke Hermann</h1>
+    <div class="subtitle">CHARACTER SHEET</div>
+  </div>
+  <div class="divider">&#x2666; &#x2666; &#x2666;</div>
+
+  <!-- Character info -->
+  <div class="char-info">
+    <div class="portrait">
+      <div class="initials">LH</div>
+      <div class="frame-label">PORTRAIT</div>
+    </div>
+    <div class="info-grid">
+      <div class="field">
+        <div class="field-label">Name</div>
+        <div class="field-value">Luke Hermann</div>
+      </div>
+      <div class="field">
+        <div class="field-label">Class</div>
+        <div class="field-value">Software Engineer</div>
+      </div>
+      <div class="field">
+        <div class="field-label">Level</div>
+        <div class="field-value">4 (Amazon L4)</div>
+      </div>
+      <div class="field">
+        <div class="field-label">Race</div>
+        <div class="field-value">Human</div>
+      </div>
+      <div class="field">
+        <div class="field-label">Alignment</div>
+        <div class="field-value">Lawful Good</div>
+      </div>
+      <div class="field">
+        <div class="field-label">Background</div>
+        <div class="field-value">Scholar (UChicago)</div>
+      </div>
+      <div class="field">
+        <div class="field-label">Contact</div>
+        <div class="field-value" style="font-size:13px;">(773) 372-4185</div>
+      </div>
+      <div class="field">
+        <div class="field-label">Scroll</div>
+        <div class="field-value" style="font-size:13px;">lukehermann@uchicago.edu</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- HP / XP -->
+  <div class="bars">
+    <div class="bar-group">
+      <label>HP (Skills Mastered: 19/25)</label>
+      <div class="bar-track">
+        <div class="bar-fill hp" id="hpBar" style="width: 0%;"></div>
+        <div class="bar-text">19 / 25</div>
+      </div>
+    </div>
+    <div class="bar-group">
+      <label>XP (Years of Experience: 3/10)</label>
+      <div class="bar-track">
+        <div class="bar-fill xp" id="xpBar" style="width: 0%;"></div>
+        <div class="bar-text">3 / 10</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Stats -->
+  <div class="stats-section">
+    <div class="section-title">Ability Scores</div>
+    <div class="stats-grid">
+      <div class="stat-block">
+        <div class="stat-name">STR</div>
+        <div class="stat-score">18</div>
+        <div class="stat-mod">Python / Java</div>
+        <div class="stat-bar"><div class="stat-bar-fill" style="width:90%"></div></div>
+      </div>
+      <div class="stat-block">
+        <div class="stat-name">DEX</div>
+        <div class="stat-score">16</div>
+        <div class="stat-mod">Git / Docker</div>
+        <div class="stat-bar"><div class="stat-bar-fill" style="width:80%"></div></div>
+      </div>
+      <div class="stat-block">
+        <div class="stat-name">CON</div>
+        <div class="stat-score">15</div>
+        <div class="stat-mod">C / C++</div>
+        <div class="stat-bar"><div class="stat-bar-fill" style="width:75%"></div></div>
+      </div>
+      <div class="stat-block">
+        <div class="stat-name">INT</div>
+        <div class="stat-score">19</div>
+        <div class="stat-mod">Algorithms / DS</div>
+        <div class="stat-bar"><div class="stat-bar-fill" style="width:95%"></div></div>
+      </div>
+      <div class="stat-block">
+        <div class="stat-name">WIS</div>
+        <div class="stat-score">14</div>
+        <div class="stat-mod">Economics</div>
+        <div class="stat-bar"><div class="stat-bar-fill" style="width:70%"></div></div>
+      </div>
+      <div class="stat-block">
+        <div class="stat-name">CHA</div>
+        <div class="stat-score">16</div>
+        <div class="stat-mod">Teaching / Leadership</div>
+        <div class="stat-bar"><div class="stat-bar-fill" style="width:80%"></div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="divider">&#x2666; &#x2666; &#x2666;</div>
+
+  <!-- Quest Log -->
+  <div class="quest-section">
+    <div class="section-title">Quest Log</div>
+
+    <div class="quest">
+      <div class="quest-status active">&#x2694; Active Quest</div>
+      <h3>The Scholar's Path</h3>
+      <p>Pursue a Master of Science in Computer Science at the University of Chicago. Study the arcane arts of Distributed Systems and Functional Programming.</p>
+      <div class="rewards">Reward: MS Degree (Expected June 2026)</div>
+    </div>
+
+    <div class="quest">
+      <div class="quest-status">&#x2714; Completed</div>
+      <h3>The Amazon Expedition</h3>
+      <p>Deployed a mighty banner upon Seller/Vendor Central, reaching 3.6 million merchant partners each moon. Forged Java API integrations and reduced incident response from 6 hours to mere minutes. Reviewed 40+ scrolls of code under Agile doctrine.</p>
+      <div class="rewards">Reward: SDE L4 Title, Summer 2025</div>
+    </div>
+
+    <div class="quest">
+      <div class="quest-status">&#x2714; Completed</div>
+      <h3>The Primal Ranch Chronicles</h3>
+      <p>At the Enklu guild, crafted the Primal Ranch game. Amassed 1,000+ hours of playtime, 36,000 gold pieces in revenue, and served 600+ adventurers. Built a multiplayer metrics oracle using C# and Node.js.</p>
+      <div class="rewards">Reward: Game Developer Title, Summer 2024</div>
+    </div>
+
+    <div class="quest">
+      <div class="quest-status">&#x2714; Completed</div>
+      <h3>Dreams of Code</h3>
+      <p>Scribed 16 Python lesson scrolls and a WhatsApp familiar curriculum. Enchanted Arduino devices for DanceTech rituals. Trained 40+ sages in the distant land of Burundi.</p>
+      <div class="rewards">Reward: Teacher's Blessing, Summer 2023</div>
+    </div>
+  </div>
+
+  <div class="divider">&#x2666; &#x2666; &#x2666;</div>
+
+  <!-- Inventory -->
+  <div>
+    <div class="section-title">Inventory</div>
+    <div class="inventory-grid">
+      <div class="inv-item"><div class="inv-icon">&#x1F40D;</div><div class="inv-name">Python</div></div>
+      <div class="inv-item"><div class="inv-icon">&#x2615;</div><div class="inv-name">Java</div></div>
+      <div class="inv-item"><div class="inv-icon">&#x2699;</div><div class="inv-name">C / C++</div></div>
+      <div class="inv-item"><div class="inv-icon">&#x1F3AE;</div><div class="inv-name">C#</div></div>
+      <div class="inv-item"><div class="inv-icon">&#x1F4BE;</div><div class="inv-name">SQL</div></div>
+      <div class="inv-item"><div class="inv-icon">&#x03BB;</div><div class="inv-name">Haskell</div></div>
+      <div class="inv-item"><div class="inv-icon">&#x1F5A5;</div><div class="inv-name">x86 ASM</div></div>
+      <div class="inv-item"><div class="inv-icon">&#x1F310;</div><div class="inv-name">JavaScript</div></div>
+      <div class="inv-item"><div class="inv-icon">&#x1F333;</div><div class="inv-name">Git</div></div>
+      <div class="inv-item"><div class="inv-icon">&#x1F4E6;</div><div class="inv-name">Docker</div></div>
+      <div class="inv-item"><div class="inv-icon">&#x1F427;</div><div class="inv-name">Linux</div></div>
+      <div class="inv-item"><div class="inv-icon">&#x1F52C;</div><div class="inv-name">Flask</div></div>
+      <div class="inv-item"><div class="inv-icon">&#x1F4CA;</div><div class="inv-name">NumPy</div></div>
+      <div class="inv-item"><div class="inv-icon">&#x1F43C;</div><div class="inv-name">Pandas</div></div>
+      <div class="inv-item"><div class="inv-icon">&#x1F3AE;</div><div class="inv-name">Pygame</div></div>
+    </div>
+  </div>
+
+  <div class="divider">&#x2666; &#x2666; &#x2666;</div>
+
+  <!-- Achievements -->
+  <div>
+    <div class="section-title">Achievements</div>
+    <div class="achievements">
+      <div class="achievement"><span class="badge">&#x1F3C6;</span> National Merit Scholar</div>
+      <div class="achievement"><span class="badge">&#x2B50;</span> GPA 3.7</div>
+      <div class="achievement"><span class="badge">&#x1F4B0;</span> $36K Revenue Generated</div>
+      <div class="achievement"><span class="badge">&#x1F465;</span> 3.6M Users Served</div>
+      <div class="achievement"><span class="badge">&#x1F4DD;</span> 40+ Code Reviews</div>
+      <div class="achievement"><span class="badge">&#x1F393;</span> Dual Degree (CS + Econ)</div>
+      <div class="achievement"><span class="badge">&#x1F30D;</span> 40+ Teachers Onboarded</div>
+      <div class="achievement"><span class="badge">&#x1F3B5;</span> Trumpet Player</div>
+    </div>
+  </div>
+
+  <!-- Projects as Side Quests -->
+  <div style="margin-top: 20px;">
+    <div class="section-title">Side Quests</div>
+    <div class="quest">
+      <div class="quest-status">&#x2714; Completed</div>
+      <h3>Sushi Kitchen Simulator</h3>
+      <p>A Python-crafted game wielding data structures, OOP enchantments, and Agile sprint rituals.</p>
+    </div>
+    <div class="quest">
+      <div class="quest-status">&#x2714; Completed</div>
+      <h3>Digital Board Game</h3>
+      <p>Python Checkers with a graphical scrying glass (GUI), an autonomous bot challenger, and Git-based party coordination.</p>
+    </div>
+  </div>
+
+  <div class="divider" style="margin-top:20px;">&#x2666; &#x2666; &#x2666;</div>
+  <div class="footer">
+    <a href="https://linkedin.com/in/luke-hermann" target="_blank">LinkedIn</a> &bull;
+    <a href="https://github.com/LHermannCoding" target="_blank">GitHub</a>
+    <br>&#x00A9; 2026 Luke Hermann &mdash; All Quests Reserved
+  </div>
+</div>
+
+<script>
+window.addEventListener('load', () => {
+  setTimeout(() => {
+    document.getElementById('hpBar').style.width = '76%';
+    document.getElementById('xpBar').style.width = '30%';
+  }, 300);
+});
+</script>
+</body>
+</html>

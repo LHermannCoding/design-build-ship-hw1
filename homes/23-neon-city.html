@@ -1,0 +1,497 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Luke Hermann - Neon City</title>
+<link href="https://fonts.googleapis.com/css2?family=Monoton&family=Rajdhani:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: #0a0a0a;
+    color: #ccc;
+    font-family: 'Rajdhani', sans-serif;
+    overflow-x: hidden;
+    min-height: 100vh;
+  }
+
+  .back-link {
+    position: fixed;
+    top: 14px;
+    left: 16px;
+    z-index: 200;
+    font-size: 0.8rem;
+    color: #666;
+    text-decoration: none;
+    padding: 4px 10px;
+    border: 1px solid #333;
+    border-radius: 3px;
+    background: rgba(10,10,10,0.9);
+  }
+  .back-link:hover { color: #00d4ff; border-color: #00d4ff; }
+
+  /* Rain */
+  .rain-container {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    pointer-events: none;
+    z-index: 1;
+    overflow: hidden;
+  }
+  .raindrop {
+    position: absolute;
+    top: -20px;
+    width: 1px;
+    background: linear-gradient(to bottom, transparent, rgba(0,212,255,0.15));
+    animation: rain linear infinite;
+  }
+  @keyframes rain {
+    to { transform: translateY(105vh); }
+  }
+
+  /* Fog overlay */
+  .fog {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background: linear-gradient(180deg, rgba(10,10,10,0.3) 0%, transparent 30%, transparent 70%, rgba(10,10,10,0.6) 100%);
+    pointer-events: none;
+    z-index: 2;
+  }
+
+  .content {
+    position: relative;
+    z-index: 10;
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 80px 24px 200px;
+  }
+
+  /* Neon text effect */
+  .neon { font-family: 'Monoton', cursive; }
+
+  .neon-pink {
+    color: #ff2d95;
+    text-shadow:
+      0 0 7px #ff2d95,
+      0 0 20px #ff2d95,
+      0 0 42px #ff2d95,
+      0 0 80px #ff2d95;
+    animation: flicker 3s infinite alternate;
+  }
+  .neon-blue {
+    color: #00d4ff;
+    text-shadow:
+      0 0 7px #00d4ff,
+      0 0 20px #00d4ff,
+      0 0 42px #00d4ff,
+      0 0 80px #00d4ff;
+    animation: flicker 4s 0.5s infinite alternate;
+  }
+  .neon-purple {
+    color: #b967ff;
+    text-shadow:
+      0 0 7px #b967ff,
+      0 0 20px #b967ff,
+      0 0 42px #b967ff,
+      0 0 80px #b967ff;
+    animation: flicker 5s 1s infinite alternate;
+  }
+  .neon-green {
+    color: #39ff14;
+    text-shadow:
+      0 0 7px #39ff14,
+      0 0 20px #39ff14,
+      0 0 42px #39ff14;
+    animation: flicker 3.5s 0.3s infinite alternate;
+  }
+  .neon-yellow {
+    color: #ffe100;
+    text-shadow:
+      0 0 7px #ffe100,
+      0 0 20px #ffe100,
+      0 0 42px #ffe100;
+    animation: flicker 4.5s 0.8s infinite alternate;
+  }
+
+  @keyframes flicker {
+    0%, 19%, 21%, 23%, 25%, 54%, 56%, 100% { opacity: 1; }
+    20%, 24%, 55% { opacity: 0.6; }
+  }
+
+  /* Header */
+  header {
+    text-align: center;
+    padding: 40px 0 60px;
+  }
+  header h1 {
+    font-size: 4rem;
+    letter-spacing: 6px;
+    margin-bottom: 10px;
+  }
+  .tagline {
+    font-size: 1.1rem;
+    color: #555;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+  }
+  .contact-neon {
+    margin-top: 20px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 10px 24px;
+    font-size: 0.88rem;
+  }
+  .contact-neon span { color: #555; }
+  .contact-neon a {
+    color: #00d4ff;
+    text-decoration: none;
+    text-shadow: 0 0 6px rgba(0,212,255,0.4);
+  }
+  .contact-neon a:hover { text-shadow: 0 0 12px #00d4ff; }
+
+  /* Sign sections */
+  .sign {
+    margin: 50px 0;
+    padding: 32px 36px;
+    border-radius: 4px;
+    position: relative;
+  }
+  .sign::before {
+    content: '';
+    position: absolute;
+    top: -2px; left: -2px; right: -2px; bottom: -2px;
+    border-radius: 6px;
+    z-index: -1;
+  }
+
+  .sign.pink-sign { border: 1px solid rgba(255,45,149,0.3); background: rgba(255,45,149,0.03); }
+  .sign.pink-sign::before { box-shadow: 0 0 30px rgba(255,45,149,0.1); }
+  .sign.blue-sign { border: 1px solid rgba(0,212,255,0.3); background: rgba(0,212,255,0.03); }
+  .sign.blue-sign::before { box-shadow: 0 0 30px rgba(0,212,255,0.1); }
+  .sign.purple-sign { border: 1px solid rgba(185,103,255,0.3); background: rgba(185,103,255,0.03); }
+  .sign.purple-sign::before { box-shadow: 0 0 30px rgba(185,103,255,0.1); }
+  .sign.green-sign { border: 1px solid rgba(57,255,20,0.3); background: rgba(57,255,20,0.03); }
+  .sign.green-sign::before { box-shadow: 0 0 30px rgba(57,255,20,0.1); }
+  .sign.yellow-sign { border: 1px solid rgba(255,225,0,0.3); background: rgba(255,225,0,0.03); }
+  .sign.yellow-sign::before { box-shadow: 0 0 30px rgba(255,225,0,0.1); }
+
+  .sign h2 {
+    font-size: 2rem;
+    letter-spacing: 3px;
+    margin-bottom: 20px;
+  }
+
+  /* Wire connections */
+  .wire {
+    height: 40px;
+    position: relative;
+    margin: 0 auto;
+    width: 2px;
+  }
+  .wire::before {
+    content: '';
+    position: absolute;
+    left: 50%;
+    top: 0;
+    width: 2px;
+    height: 100%;
+    background: #222;
+    transform: translateX(-50%);
+  }
+  .wire::after {
+    content: '';
+    position: absolute;
+    left: 50%;
+    bottom: 0;
+    width: 8px; height: 8px;
+    background: #333;
+    border-radius: 50%;
+    transform: translateX(-50%);
+  }
+
+  /* Reflection effect */
+  .reflection {
+    transform: scaleY(-1);
+    opacity: 0.12;
+    filter: blur(3px);
+    pointer-events: none;
+    user-select: none;
+    max-height: 50px;
+    overflow: hidden;
+    margin-top: -5px;
+  }
+
+  .sign h3 {
+    font-family: 'Rajdhani', sans-serif;
+    font-weight: 600;
+    font-size: 1.15rem;
+    margin: 16px 0 6px;
+    color: #888;
+    letter-spacing: 1px;
+  }
+
+  .job {
+    margin-bottom: 16px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid #1a1a1a;
+  }
+  .job:last-child { border-bottom: none; }
+  .job-title { font-weight: 600; color: #ddd; font-size: 1rem; }
+  .job-date { font-size: 0.8rem; color: #555; }
+
+  ul { padding-left: 18px; margin-top: 6px; }
+  li { margin-bottom: 3px; font-size: 0.92rem; color: #999; }
+  li::marker { color: #333; }
+
+  .skills-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 10px;
+  }
+  .skill-chip {
+    padding: 5px 14px;
+    border-radius: 3px;
+    font-size: 0.82rem;
+    font-weight: 500;
+    letter-spacing: 0.5px;
+  }
+  .chip-pink { border: 1px solid rgba(255,45,149,0.4); color: #ff2d95; }
+  .chip-blue { border: 1px solid rgba(0,212,255,0.4); color: #00d4ff; }
+  .chip-purple { border: 1px solid rgba(185,103,255,0.4); color: #b967ff; }
+
+  .activities-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 14px;
+    margin-top: 12px;
+  }
+  .activity-badge {
+    font-size: 0.9rem;
+    color: #ffe100;
+    text-shadow: 0 0 8px rgba(255,225,0,0.3);
+  }
+
+  /* Cityscape */
+  .cityscape {
+    position: fixed;
+    bottom: 0; left: 0;
+    width: 100%; height: 180px;
+    z-index: 3;
+    pointer-events: none;
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    gap: 3px;
+    padding: 0 10px;
+    overflow: hidden;
+  }
+  .building {
+    background: #0d0d0d;
+    flex-shrink: 0;
+    position: relative;
+  }
+  .building .window {
+    position: absolute;
+    width: 4px; height: 4px;
+    background: rgba(255,225,0,0.25);
+  }
+
+  @media(max-width:600px) {
+    header h1 { font-size: 2.4rem; }
+    .sign h2 { font-size: 1.4rem; }
+    .sign { padding: 24px 20px; }
+  }
+</style>
+</head>
+<body>
+<a href="../gallery.html" class="back-link">&larr; Back to Gallery</a>
+
+<div class="rain-container" id="rainContainer"></div>
+<div class="fog"></div>
+
+<div class="content">
+  <header>
+    <h1 class="neon neon-pink">LUKE HERMANN</h1>
+    <div class="reflection"><h1 class="neon neon-pink" aria-hidden="true">LUKE HERMANN</h1></div>
+    <p class="tagline">Software Engineer // Neon District</p>
+    <div class="contact-neon">
+      <span>(773) 372-4185</span>
+      <a href="mailto:lukehermann@uchicago.edu">lukehermann@uchicago.edu</a>
+      <a href="https://linkedin.com/in/luke-hermann" target="_blank">LinkedIn</a>
+      <a href="https://github.com/LHermannCoding" target="_blank">GitHub</a>
+    </div>
+  </header>
+
+  <div class="wire"></div>
+
+  <div class="sign pink-sign">
+    <h2 class="neon neon-pink">EDUCATION</h2>
+    <div class="reflection"><span class="neon neon-pink" style="font-size:1.4rem;font-family:'Monoton',cursive" aria-hidden="true">EDUCATION</span></div>
+    <h3>University of Chicago</h3>
+    <div class="job">
+      <p class="job-title">MS in Computer Science</p>
+      <p class="job-date">Expected June 2026</p>
+      <ul>
+        <li>Coursework: Distributed Systems, Functional Programming</li>
+      </ul>
+    </div>
+    <div class="job">
+      <p class="job-title">BS in Computer Science + BA in Economics</p>
+      <p class="job-date">June 2025 &bull; GPA 3.7 &bull; National Merit Scholar</p>
+      <ul>
+        <li>Coursework: ML for Systems, Operating Systems, Databases, Networks</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="wire"></div>
+
+  <div class="sign blue-sign">
+    <h2 class="neon neon-blue">EXPERIENCE</h2>
+    <div class="reflection"><span class="neon neon-blue" style="font-size:1.4rem;font-family:'Monoton',cursive" aria-hidden="true">EXPERIENCE</span></div>
+    <div class="job">
+      <p class="job-title">Amazon &mdash; SDE L4</p>
+      <p class="job-date">June &ndash; September 2025</p>
+      <ul>
+        <li>Built deployable banner on Seller/Vendor Central serving 3.6M partners/month</li>
+        <li>Reduced incident response from 6 hours to under 10 minutes</li>
+        <li>Java API integration, 40+ code reviews under Agile methodology</li>
+      </ul>
+    </div>
+    <div class="job">
+      <p class="job-title">Enklu &mdash; Software Engineer</p>
+      <p class="job-date">June &ndash; September 2024</p>
+      <ul>
+        <li>Primal Ranch game: 1K+ hours playtime, $36K revenue, 600+ customers</li>
+        <li>Built multiplayer metrics API with C# and Node.js</li>
+      </ul>
+    </div>
+    <div class="job">
+      <p class="job-title">Code Your Dreams &mdash; CS Intern</p>
+      <p class="job-date">June &ndash; August 2023</p>
+      <ul>
+        <li>16 Python lessons, WhatsApp bot curriculum, Arduino DanceTech</li>
+        <li>Onboarded 40+ teachers in Burundi</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="wire"></div>
+
+  <div class="sign purple-sign">
+    <h2 class="neon neon-purple">PROJECTS</h2>
+    <div class="reflection"><span class="neon neon-purple" style="font-size:1.4rem;font-family:'Monoton',cursive" aria-hidden="true">PROJECTS</span></div>
+    <div class="job">
+      <p class="job-title">Sushi Kitchen Simulator</p>
+      <ul><li>Python game built with data structures, OOP, and Agile development</li></ul>
+    </div>
+    <div class="job">
+      <p class="job-title">Digital Board Game</p>
+      <ul><li>Python Checkers with GUI, bot player, and Git workflow</li></ul>
+    </div>
+  </div>
+
+  <div class="wire"></div>
+
+  <div class="sign green-sign">
+    <h2 class="neon neon-green">SKILLS</h2>
+    <div class="reflection"><span class="neon neon-green" style="font-size:1.4rem;font-family:'Monoton',cursive" aria-hidden="true">SKILLS</span></div>
+    <h3>Languages</h3>
+    <div class="skills-grid">
+      <span class="skill-chip chip-pink">Python</span>
+      <span class="skill-chip chip-blue">Java</span>
+      <span class="skill-chip chip-purple">C</span>
+      <span class="skill-chip chip-pink">C#</span>
+      <span class="skill-chip chip-blue">C++</span>
+      <span class="skill-chip chip-purple">SQL</span>
+      <span class="skill-chip chip-pink">Haskell</span>
+      <span class="skill-chip chip-blue">x86 Assembly</span>
+      <span class="skill-chip chip-purple">JavaScript</span>
+    </div>
+    <h3>Tools</h3>
+    <div class="skills-grid">
+      <span class="skill-chip chip-blue">Git</span>
+      <span class="skill-chip chip-pink">SVN</span>
+      <span class="skill-chip chip-purple">Linux</span>
+      <span class="skill-chip chip-blue">VS Code</span>
+      <span class="skill-chip chip-pink">Docker</span>
+      <span class="skill-chip chip-purple">WPF</span>
+      <span class="skill-chip chip-blue">R</span>
+      <span class="skill-chip chip-pink">Stata</span>
+    </div>
+    <h3>Libraries</h3>
+    <div class="skills-grid">
+      <span class="skill-chip chip-purple">numpy</span>
+      <span class="skill-chip chip-blue">pandas</span>
+      <span class="skill-chip chip-pink">pygame</span>
+      <span class="skill-chip chip-purple">flask</span>
+      <span class="skill-chip chip-blue">matplotlib</span>
+    </div>
+  </div>
+
+  <div class="wire"></div>
+
+  <div class="sign yellow-sign">
+    <h2 class="neon neon-yellow">AFTER HOURS</h2>
+    <div class="reflection"><span class="neon neon-yellow" style="font-size:1.4rem;font-family:'Monoton',cursive" aria-hidden="true">AFTER HOURS</span></div>
+    <div class="activities-row">
+      <span class="activity-badge">// Trumpet Player</span>
+      <span class="activity-badge">// Esports Competitor</span>
+      <span class="activity-badge">// Basketball Player</span>
+      <span class="activity-badge">// Bowler</span>
+    </div>
+  </div>
+</div>
+
+<!-- Cityscape -->
+<div class="cityscape" id="cityscape"></div>
+
+<script>
+  // Rain
+  const rc = document.getElementById('rainContainer');
+  for (let i = 0; i < 80; i++) {
+    const drop = document.createElement('div');
+    drop.className = 'raindrop';
+    drop.style.left = Math.random() * 100 + '%';
+    drop.style.height = (15 + Math.random() * 25) + 'px';
+    drop.style.animationDuration = (0.5 + Math.random() * 0.8) + 's';
+    drop.style.animationDelay = (-Math.random() * 2) + 's';
+    drop.style.opacity = 0.15 + Math.random() * 0.2;
+    rc.appendChild(drop);
+  }
+
+  // Cityscape buildings
+  const cs = document.getElementById('cityscape');
+  const bCount = Math.floor(window.innerWidth / 18);
+  for (let i = 0; i < bCount; i++) {
+    const b = document.createElement('div');
+    b.className = 'building';
+    const h = 30 + Math.random() * 140;
+    const w = 10 + Math.random() * 20;
+    b.style.height = h + 'px';
+    b.style.width = w + 'px';
+    // windows
+    const rows = Math.floor(h / 14);
+    const cols = Math.floor(w / 8);
+    for (let r = 0; r < rows; r++) {
+      for (let c = 0; c < cols; c++) {
+        if (Math.random() > 0.5) {
+          const win = document.createElement('div');
+          win.className = 'window';
+          win.style.left = (2 + c * 8) + 'px';
+          win.style.top = (4 + r * 14) + 'px';
+          if (Math.random() > 0.7) win.style.background = 'rgba(0,212,255,0.3)';
+          b.appendChild(win);
+        }
+      }
+    }
+    cs.appendChild(b);
+  }
+</script>
+</body>
+</html>

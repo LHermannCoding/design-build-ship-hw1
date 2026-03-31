@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Luke Hermann - DIY Zine Resume</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    background: #fff; color: #000; overflow-x: hidden;
+    min-height: 100vh; position: relative;
+  }
+  a.back-link {
+    position: fixed; top: 10px; left: 10px; z-index: 9999;
+    font-family: 'Courier New', monospace; font-size: 12px;
+    color: #ff1493; text-decoration: none; font-weight: bold;
+    background: #000; padding: 4px 8px;
+  }
+  .zine { max-width: 1000px; margin: 0 auto; padding: 40px 20px; position: relative; }
+
+  /* Ransom typography helper */
+  .ransom { display: inline; }
+  .r1 { font-family: 'Courier New', monospace; }
+  .r2 { font-family: Impact, sans-serif; }
+  .r3 { font-family: 'Comic Sans MS', cursive; }
+  .r4 { font-family: Georgia, serif; }
+  .r5 { font-family: 'Arial Black', sans-serif; }
+
+  /* Torn paper edges */
+  .torn {
+    clip-path: polygon(0% 2%, 4% 0%, 8% 3%, 15% 0%, 20% 2%, 28% 0%, 35% 3%, 40% 1%, 48% 3%, 55% 0%, 60% 2%, 68% 0%, 75% 3%, 80% 1%, 88% 3%, 92% 0%, 96% 2%, 100% 0%, 100% 97%, 96% 100%, 92% 98%, 88% 100%, 82% 97%, 75% 100%, 68% 98%, 62% 100%, 55% 97%, 48% 100%, 42% 98%, 35% 100%, 28% 97%, 22% 100%, 15% 98%, 8% 100%, 4% 97%, 0% 100%);
+    padding: 40px 30px;
+  }
+
+  /* Tape decoration */
+  .tape {
+    position: absolute; width: 80px; height: 24px;
+    background: rgba(255,237,0,0.6); transform: rotate(-3deg);
+    z-index: 10; border: 1px solid rgba(0,0,0,0.05);
+  }
+
+  /* Sticker badges */
+  .sticker {
+    display: inline-block; padding: 6px 14px; margin: 4px;
+    font-family: 'Arial Black', sans-serif; font-size: 12px;
+    font-weight: 900; text-transform: uppercase;
+    box-shadow: 2px 2px 0 rgba(0,0,0,0.3);
+    transform: rotate(var(--rot, 0deg));
+  }
+
+  /* Wavy underline SVG */
+  .wavy-underline {
+    display: inline-block; position: relative;
+  }
+  .wavy-underline::after {
+    content: ''; position: absolute; left: 0; bottom: -4px; width: 100%; height: 6px;
+    background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='40' height='6'%3E%3Cpath d='M0 3 Q5 0 10 3 T20 3 T30 3 T40 3' stroke='%23ff1493' fill='none' stroke-width='2'/%3E%3C/svg%3E") repeat-x;
+  }
+
+  .crossed { text-decoration: line-through; opacity: 0.5; }
+
+  /* Section blocks */
+  .block {
+    position: relative; margin: 30px 0;
+  }
+
+  .hero-block {
+    text-align: center; padding: 60px 20px 40px;
+    background: #000; color: #fff;
+  }
+  .hero-block h1 {
+    font-family: Impact, sans-serif; font-size: 64px;
+    text-transform: uppercase; letter-spacing: 4px;
+    transform: rotate(-2deg);
+  }
+  .hero-sub {
+    font-family: 'Courier New', monospace; font-size: 14px;
+    color: #ff1493; margin-top: 12px; transform: rotate(1deg);
+  }
+
+  .contact-strip {
+    background: #ffed00; color: #000; padding: 12px 20px;
+    font-family: 'Courier New', monospace; font-size: 11px;
+    display: flex; flex-wrap: wrap; gap: 16px; justify-content: center;
+    transform: rotate(0.5deg);
+    border-top: 3px dashed #000; border-bottom: 3px dashed #000;
+  }
+  .contact-strip a { color: #000; }
+
+  .exp-card {
+    background: #fff; border: 3px solid #000; padding: 20px;
+    position: relative; margin: 16px 0;
+  }
+  .exp-card h3 { font-family: Impact, sans-serif; font-size: 28px; text-transform: uppercase; }
+  .exp-card .role { font-family: 'Comic Sans MS', cursive; color: #ff1493; font-size: 14px; }
+  .exp-card p { font-family: Georgia, serif; font-size: 13px; line-height: 1.7; margin-top: 8px; }
+
+  .pink-section { background: #ff1493; color: #fff; }
+  .yellow-section { background: #ffed00; color: #000; }
+  .black-section { background: #000; color: #fff; }
+
+  .skills-cloud { display: flex; flex-wrap: wrap; justify-content: center; padding: 20px; }
+
+  .edu-block {
+    font-family: Georgia, serif; font-size: 14px; line-height: 2;
+    padding: 30px; border: 3px solid #ff1493;
+    transform: rotate(-1deg); background: #fff;
+  }
+  .edu-block strong { font-family: 'Arial Black', sans-serif; }
+
+  .collage-row { display: flex; gap: 16px; flex-wrap: wrap; }
+  .collage-row > * { flex: 1; min-width: 250px; }
+
+  .staple {
+    position: absolute; width: 4px; height: 16px; background: #888;
+    border-radius: 1px; z-index: 20;
+    box-shadow: 1px 0 0 #666;
+  }
+
+  .activities-strip {
+    display: flex; gap: 0; flex-wrap: wrap; justify-content: center;
+  }
+  .act-item {
+    padding: 16px 24px; font-family: Impact, sans-serif;
+    font-size: 20px; text-transform: uppercase;
+    border: 2px solid #000;
+  }
+</style>
+</head>
+<body>
+<a class="back-link" href="../gallery.html">&larr; BACK TO GALLERY</a>
+
+<div class="zine">
+  <!-- TAPE decorations -->
+  <div class="tape" style="top:80px;left:20px;transform:rotate(-8deg);"></div>
+  <div class="tape" style="top:280px;right:30px;transform:rotate(5deg);"></div>
+  <div class="tape" style="top:900px;left:40px;transform:rotate(-3deg);"></div>
+
+  <!-- HERO -->
+  <div class="block hero-block torn">
+    <div style="transform:rotate(1deg);">
+      <span class="r3 crossed" style="font-size:18px;color:#ff1493;">curriculum vitae</span>
+    </div>
+    <h1>LUKE<br>HERMANN</h1>
+    <div class="hero-sub">
+      <span class="wavy-underline">SOFTWARE ENGINEER</span> &bull; UCHICAGO &bull; CLASS OF 2026
+    </div>
+    <div style="margin-top:16px;">
+      <span class="staple" style="top:10px;left:50%;"></span>
+    </div>
+  </div>
+
+  <!-- CONTACT -->
+  <div class="block contact-strip">
+    <span>(773) 372-4185</span>
+    <a href="mailto:lukehermann@uchicago.edu">lukehermann@uchicago.edu</a>
+    <a href="https://linkedin.com/in/luke-hermann" target="_blank">LinkedIn</a>
+    <a href="https://github.com/LHermannCoding" target="_blank">GitHub</a>
+  </div>
+
+  <!-- EXPERIENCE -->
+  <div class="block" style="transform:rotate(-0.5deg);">
+    <div class="torn black-section" style="padding:16px 30px;display:inline-block;margin-bottom:-8px;">
+      <span class="r2" style="color:#ffed00;font-size:32px;">EXPERIENCE</span>
+    </div>
+
+    <div class="exp-card" style="transform:rotate(0.8deg);">
+      <div class="tape" style="top:-8px;right:20px;transform:rotate(12deg);"></div>
+      <h3>AMAZON</h3>
+      <div class="role">SDE L4 &bull; June-Sept 2025</div>
+      <p>Deployable banner on Seller/Vendor Central serving <strong style="font-size:18px;font-family:'Arial Black';">3.6M</strong> partners/month. Reduced incident response from <span class="crossed">6 hours</span> <strong style="color:#ff1493;">&lt;10 minutes</strong>. Java API integration, 40+ code reviews under Agile.</p>
+    </div>
+
+    <div class="exp-card" style="transform:rotate(-1.2deg);">
+      <div class="staple" style="top:12px;left:8px;"></div>
+      <h3>ENKLU</h3>
+      <div class="role">Software Engineer &bull; June-Sept 2024</div>
+      <p>Primal Ranch game. <strong>1K+ hours</strong> playtime, <strong style="color:#ff1493;">$36K revenue</strong>, 600+ customers. Multiplayer metrics API. C#/Node.js.</p>
+    </div>
+
+    <div class="exp-card" style="transform:rotate(0.5deg);">
+      <h3>CODE YOUR DREAMS</h3>
+      <div class="role">CS Intern &bull; June-Aug 2023</div>
+      <p>16 Python lessons. WhatsApp bot curriculum. Arduino DanceTech. Onboarded <strong>40+ teachers</strong> in Burundi.</p>
+    </div>
+  </div>
+
+  <!-- SKILLS -->
+  <div class="block torn pink-section" style="transform:rotate(0.7deg);">
+    <div style="text-align:center;margin-bottom:16px;">
+      <span class="r2" style="font-size:36px;color:#000;">SKILLS</span>
+    </div>
+    <div class="skills-cloud" id="skillsCloud"></div>
+  </div>
+
+  <!-- EDUCATION + PROJECTS side by side -->
+  <div class="block collage-row" style="margin-top:30px;">
+    <div class="edu-block">
+      <div class="staple" style="top:8px;right:12px;"></div>
+      <strong style="font-size:22px;">UNIVERSITY OF CHICAGO</strong><br>
+      <span class="r3" style="color:#ff1493;">MS Computer Science</span> &mdash; Expected June 2026<br>
+      <span style="font-size:12px;">Distributed Systems &bull; Functional Programming</span><br><br>
+      <span class="r5">BS in CS + BA in Economics</span> &mdash; June 2025<br>
+      GPA: <strong style="font-size:28px;color:#ff1493;">3.7</strong> &bull; <span class="wavy-underline">National Merit Scholar</span><br>
+      <span style="font-size:12px;">ML for Systems &bull; OS &bull; Databases &bull; Networks</span>
+    </div>
+
+    <div style="transform:rotate(1.5deg);">
+      <div class="torn yellow-section">
+        <div style="margin-bottom:12px;">
+          <span class="r2" style="font-size:28px;">PROJECTS</span>
+        </div>
+        <div style="font-family:'Courier New';font-size:13px;line-height:1.8;">
+          <strong class="r5" style="font-size:16px;">Sushi Kitchen Simulator</strong><br>
+          Python game &bull; Data structures &bull; OOP &bull; Agile<br><br>
+          <strong class="r5" style="font-size:16px;">Digital Board Game</strong><br>
+          Python Checkers &bull; GUI &bull; Bot player &bull; Git workflow
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ACTIVITIES -->
+  <div class="block" style="margin-top:30px;transform:rotate(-0.3deg);">
+    <div class="activities-strip">
+      <div class="act-item" style="background:#ffed00;transform:rotate(-2deg);">TRUMPET PLAYER</div>
+      <div class="act-item" style="background:#ff1493;color:#fff;transform:rotate(1deg);">ESPORTS COMPETITOR</div>
+      <div class="act-item" style="background:#000;color:#fff;transform:rotate(-1deg);">BASKETBALL PLAYER</div>
+      <div class="act-item" style="background:#fff;transform:rotate(2deg);">BOWLER</div>
+    </div>
+  </div>
+
+  <!-- Footer scrawl -->
+  <div style="text-align:center;margin-top:50px;padding:20px;">
+    <span class="r3" style="font-size:18px;transform:rotate(-3deg);display:inline-block;">
+      thanks 4 reading!! <span style="color:#ff1493;">&hearts;</span>
+    </span>
+  </div>
+</div>
+
+<script>
+// Generate skill stickers with random rotations and colors
+const skills = [
+  'Python','Java','C','C#','C++','SQL','Haskell','x86 Assembly','JavaScript',
+  'Git','SVN','Linux','VS Code','Docker','WPF','R','Stata',
+  'numpy','pandas','pygame','flask','matplotlib'
+];
+const colors = [
+  {bg:'#000',fg:'#ffed00'},{bg:'#ff1493',fg:'#fff'},{bg:'#ffed00',fg:'#000'},
+  {bg:'#fff',fg:'#000'},{bg:'#000',fg:'#ff1493'},{bg:'#ff1493',fg:'#000'},
+  {bg:'#ffed00',fg:'#ff1493'}
+];
+const cloud = document.getElementById('skillsCloud');
+skills.forEach(skill => {
+  const s = document.createElement('span');
+  s.className = 'sticker';
+  const c = colors[Math.floor(Math.random()*colors.length)];
+  const rot = (Math.random()*10-5).toFixed(1);
+  s.style.cssText = `--rot:${rot}deg;background:${c.bg};color:${c.fg};font-size:${10+Math.floor(Math.random()*6)}px;`;
+  const fonts = ['r1','r2','r3','r4','r5'];
+  s.classList.add(fonts[Math.floor(Math.random()*fonts.length)]);
+  s.textContent = skill;
+  cloud.appendChild(s);
+});
+</script>
+</body>
+</html>

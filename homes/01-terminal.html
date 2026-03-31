@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Luke Hermann - Terminal</title>
+<link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;700&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  background: #0a0a0a;
+  color: #00ff41;
+  font-family: 'Fira Code', monospace;
+  font-size: 14px;
+  line-height: 1.6;
+  overflow: hidden;
+  height: 100vh;
+}
+.back-link {
+  position: fixed; top: 8px; left: 12px; z-index: 100;
+  color: #00ff41; opacity: 0.5; font-size: 12px; text-decoration: none;
+}
+.back-link:hover { opacity: 1; }
+.scanlines {
+  pointer-events: none; position: fixed; inset: 0; z-index: 10;
+  background: repeating-linear-gradient(
+    0deg, rgba(0,0,0,0.15) 0px, rgba(0,0,0,0.15) 1px, transparent 1px, transparent 3px
+  );
+}
+.crt-flicker {
+  pointer-events: none; position: fixed; inset: 0; z-index: 9;
+  animation: flicker 0.15s infinite;
+  background: rgba(0,255,65,0.015);
+}
+@keyframes flicker {
+  0% { opacity: 0.27; } 50% { opacity: 0.2; } 100% { opacity: 0.27; }
+}
+#terminal {
+  padding: 40px 20px 20px;
+  height: 100vh;
+  overflow-y: auto;
+  position: relative;
+  z-index: 5;
+}
+#terminal::-webkit-scrollbar { width: 6px; }
+#terminal::-webkit-scrollbar-track { background: #0a0a0a; }
+#terminal::-webkit-scrollbar-thumb { background: #00ff41; }
+.output-line {
+  white-space: pre-wrap;
+  word-wrap: break-word;
+  text-shadow: 0 0 5px #00ff41, 0 0 10px rgba(0,255,65,0.3);
+}
+.output-line.dim { color: #00802a; }
+.output-line.bright { color: #80ffaa; font-weight: 700; }
+.output-line.error { color: #ff4141; text-shadow: 0 0 5px #ff4141; }
+.output-line.cyan { color: #00d4ff; text-shadow: 0 0 5px #00d4ff; }
+.input-area {
+  display: flex; align-items: center;
+  text-shadow: 0 0 5px #00ff41;
+}
+.prompt { white-space: pre; }
+#cmd-input {
+  background: none; border: none; color: #00ff41;
+  font-family: 'Fira Code', monospace; font-size: 14px;
+  outline: none; flex: 1; caret-color: #00ff41;
+  text-shadow: 0 0 5px #00ff41;
+}
+.cursor-blink {
+  display: inline-block; width: 8px; height: 16px;
+  background: #00ff41; animation: blink 1s step-end infinite;
+  vertical-align: middle; margin-left: 2px;
+}
+@keyframes blink { 50% { opacity: 0; } }
+.typing-cursor::after {
+  content: '\2588'; animation: blink 1s step-end infinite;
+}
+</style>
+</head>
+<body>
+<a href="../gallery.html" class="back-link">&larr; Back to Gallery</a>
+<div class="scanlines"></div>
+<div class="crt-flicker"></div>
+<div id="terminal">
+  <div id="output"></div>
+  <div class="input-area" id="input-area" style="display:none;">
+    <span class="prompt">visitor@luke-hermann:~$ </span>
+    <input type="text" id="cmd-input" autofocus autocomplete="off" spellcheck="false">
+  </div>
+</div>
+<script>
+const output = document.getElementById('output');
+const inputArea = document.getElementById('input-area');
+const cmdInput = document.getElementById('cmd-input');
+const terminal = document.getElementById('terminal');
+const TYPING_SPEED = 18;
+
+function addLine(text, cls = '') {
+  const div = document.createElement('div');
+  div.className = 'output-line' + (cls ? ' ' + cls : '');
+  div.textContent = text;
+  output.appendChild(div);
+  terminal.scrollTop = terminal.scrollHeight;
+}
+
+function typeLines(lines, cb) {
+  let i = 0;
+  function next() {
+    if (i >= lines.length) { if (cb) cb(); return; }
+    const { text, cls } = typeof lines[i] === 'string' ? { text: lines[i], cls: '' } : lines[i];
+    const div = document.createElement('div');
+    div.className = 'output-line' + (cls ? ' ' + cls : '');
+    output.appendChild(div);
+    let j = 0;
+    function typeChar() {
+      if (j < text.length) {
+        div.textContent += text[j]; j++;
+        terminal.scrollTop = terminal.scrollHeight;
+        setTimeout(typeChar, TYPING_SPEED);
+      } else { i++; setTimeout(next, 80); }
+    }
+    typeChar();
+  }
+  next();
+}
+
+const DATA = {
+  help: [
+    { text: 'Available commands:', cls: 'bright' },
+    '  about       - Who is Luke Hermann?',
+    '  education   - Academic background',
+    '  work        - Professional experience',
+    '  projects    - Side projects & builds',
+    '  skills      - Technical skills',
+    '  contact     - Get in touch',
+    '  activities  - Extracurriculars',
+    '  clear       - Clear terminal',
+    ''
+  ],
+  about: [
+    { text: '=== ABOUT LUKE HERMANN ===', cls: 'bright' },
+    '',
+    'Computer Science graduate student at the University of Chicago.',
+    'Passionate about building systems that scale and',
+    'shipping products that matter.',
+    '',
+    'Currently pursuing an MS in Computer Science (Expected June 2026).',
+    'Previously completed BS in CS + BA in Economics (June 2025), GPA 3.7.',
+    'National Merit Scholar.',
+    ''
+  ],
+  education: [
+    { text: '=== EDUCATION ===', cls: 'bright' },
+    '',
+    { text: 'University of Chicago', cls: 'cyan' },
+    '  MS in Computer Science | Expected June 2026',
+    '  Coursework: Distributed Systems, Functional Programming',
+    '',
+    '  BS in Computer Science + BA in Economics | June 2025',
+    '  GPA: 3.7 | National Merit Scholar',
+    '  Coursework: ML for Systems, OS, Databases, Networks',
+    ''
+  ],
+  work: [
+    { text: '=== WORK EXPERIENCE ===', cls: 'bright' },
+    '',
+    { text: 'Amazon | SDE L4 | June-Sept 2025', cls: 'cyan' },
+    '  - Deployable banner on Seller/Vendor Central serving 3.6M partners/mo',
+    '  - Reduced incident response from 6 hours to <10 minutes',
+    '  - Java API integration, 40+ code reviews under Agile',
+    '',
+    { text: 'Enklu | SWE | June-Sept 2024', cls: 'cyan' },
+    '  - Built Primal Ranch game: 1K+ hrs playtime, $36K revenue, 600+ customers',
+    '  - Multiplayer metrics API in C# and Node.js',
+    '',
+    { text: 'Code Your Dreams | CS Intern | June-Aug 2023', cls: 'cyan' },
+    '  - Authored 16 Python lessons, WhatsApp bot curriculum',
+    '  - Arduino DanceTech, onboarded 40+ teachers in Burundi',
+    ''
+  ],
+  projects: [
+    { text: '=== PROJECTS ===', cls: 'bright' },
+    '',
+    { text: 'Sushi Kitchen Simulator', cls: 'cyan' },
+    '  Python game built with data structures, OOP, and Agile methodology',
+    '',
+    { text: 'Digital Board Game', cls: 'cyan' },
+    '  Python Checkers with GUI, bot player, and Git workflow',
+    ''
+  ],
+  skills: [
+    { text: '=== TECHNICAL SKILLS ===', cls: 'bright' },
+    '',
+    { text: 'Languages:', cls: 'cyan' },
+    '  Python, Java, C, C#, C++, SQL, Haskell, x86 Assembly, JavaScript',
+    '',
+    { text: 'Tools:', cls: 'cyan' },
+    '  Git, SVN, Linux, VS Code, Docker, WPF, R, Stata',
+    '',
+    { text: 'Libraries:', cls: 'cyan' },
+    '  numpy, pandas, pygame, flask, matplotlib',
+    ''
+  ],
+  contact: [
+    { text: '=== CONTACT ===', cls: 'bright' },
+    '',
+    '  Phone:    (773) 372-4185',
+    '  Email:    lukehermann@uchicago.edu',
+    '  LinkedIn: https://linkedin.com/in/luke-hermann',
+    '  GitHub:   https://github.com/LHermannCoding',
+    ''
+  ],
+  activities: [
+    { text: '=== ACTIVITIES ===', cls: 'bright' },
+    '',
+    '  Trumpet Player | Esports Competitor | Basketball Player | Bowler',
+    ''
+  ]
+};
+
+function handleCommand(raw) {
+  const cmd = raw.trim().toLowerCase();
+  addLine('visitor@luke-hermann:~$ ' + raw, 'dim');
+  if (cmd === 'clear') {
+    output.innerHTML = '';
+    return;
+  }
+  if (DATA[cmd]) {
+    typeLines(DATA[cmd]);
+  } else if (cmd === '') {
+    // do nothing
+  } else {
+    addLine("Command not found: " + cmd + ". Type 'help' for available commands.", 'error');
+  }
+}
+
+cmdInput.addEventListener('keydown', function(e) {
+  if (e.key === 'Enter') {
+    const val = cmdInput.value;
+    cmdInput.value = '';
+    handleCommand(val);
+  }
+});
+
+document.addEventListener('click', function() { cmdInput.focus(); });
+
+// Welcome sequence
+const welcome = [
+  '',
+  { text: '  _          _          _   _                                      ', cls: 'bright' },
+  { text: ' | |   _   _| | _____  | | | | ___ _ __ _ __ ___   __ _ _ __  _ __', cls: 'bright' },
+  { text: " | |  | | | | |/ / _ \\ | |_| |/ _ \\ '__| '_ ` _ \\ / _` | '_ \\| '_ \\", cls: 'bright' },
+  { text: ' | |__| |_| |   <  __/ |  _  |  __/ |  | | | | | | (_| | | | | | | |', cls: 'bright' },
+  { text: ' |_____\\__,_|_|\\_\\___| |_| |_|\\___|_|  |_| |_| |_|\\__,_|_| |_|_| |_|', cls: 'bright' },
+  '',
+  { text: '  Software Engineer | University of Chicago | MS Computer Science', cls: 'cyan' },
+  '',
+  'Welcome to my interactive resume terminal.',
+  "Type 'help' to see available commands.",
+  ''
+];
+
+typeLines(welcome, function() {
+  inputArea.style.display = 'flex';
+  cmdInput.focus();
+});
+</script>
+</body>
+</html>

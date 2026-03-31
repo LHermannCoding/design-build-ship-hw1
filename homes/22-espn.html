@@ -1,0 +1,499 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Luke Hermann - SportsCenter Resume</title>
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=Roboto+Condensed:wght@300;400;700&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Roboto Condensed', sans-serif;
+    background: #111;
+    color: #fff;
+    overflow-x: hidden;
+  }
+
+  .back-link {
+    position: fixed;
+    top: 12px;
+    left: 14px;
+    z-index: 200;
+    font-size: 0.8rem;
+    color: #ccc;
+    text-decoration: none;
+    background: rgba(0,0,0,0.7);
+    padding: 4px 12px;
+    border-radius: 3px;
+  }
+  .back-link:hover { color: #ffcc00; }
+
+  /* BREAKING NEWS banner */
+  .breaking-bar {
+    background: #cc0000;
+    color: #fff;
+    font-family: 'Oswald', sans-serif;
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    padding: 8px 0;
+    display: flex;
+    align-items: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .breaking-label {
+    background: #ffcc00;
+    color: #111;
+    padding: 4px 18px;
+    font-weight: 700;
+    flex-shrink: 0;
+    z-index: 2;
+    margin-right: 12px;
+  }
+  .live-dot {
+    display: inline-block;
+    width: 10px; height: 10px;
+    background: #cc0000;
+    border-radius: 50%;
+    margin-right: 8px;
+    animation: blink 1s infinite;
+    flex-shrink: 0;
+  }
+  @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0} }
+
+  .breaking-text { font-weight: 400; letter-spacing: 1px; }
+
+  /* Header */
+  .header {
+    background: linear-gradient(135deg, #111 0%, #1a1a1a 50%, #222 100%);
+    padding: 50px 30px 40px;
+    text-align: center;
+    border-bottom: 4px solid #cc0000;
+    position: relative;
+  }
+  .header::after {
+    content: '';
+    position: absolute;
+    bottom: -4px; left: 0;
+    width: 100%;
+    height: 4px;
+    background: repeating-linear-gradient(90deg, #cc0000 0px, #cc0000 20px, #ffcc00 20px, #ffcc00 24px);
+  }
+
+  .header h1 {
+    font-family: 'Oswald', sans-serif;
+    font-size: 3.5rem;
+    text-transform: uppercase;
+    letter-spacing: 4px;
+    color: #fff;
+  }
+  .header h1 span { color: #ffcc00; }
+
+  .header-sub {
+    font-size: 1rem;
+    color: #999;
+    margin-top: 8px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+  }
+
+  .contact-bar {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 10px 28px;
+    margin-top: 16px;
+    font-size: 0.85rem;
+    color: #aaa;
+  }
+  .contact-bar a { color: #ffcc00; text-decoration: none; }
+  .contact-bar a:hover { text-decoration: underline; }
+
+  /* Angled section dividers */
+  .angle-divider {
+    height: 50px;
+    background: #cc0000;
+    clip-path: polygon(0 0, 100% 30%, 100% 100%, 0 70%);
+  }
+  .angle-divider.alt {
+    background: #ffcc00;
+    clip-path: polygon(0 30%, 100% 0, 100% 70%, 0 100%);
+  }
+
+  .section {
+    padding: 40px 30px;
+    max-width: 1000px;
+    margin: 0 auto;
+  }
+
+  h2 {
+    font-family: 'Oswald', sans-serif;
+    font-size: 1.8rem;
+    text-transform: uppercase;
+    letter-spacing: 3px;
+    border-left: 5px solid #cc0000;
+    padding-left: 14px;
+    margin-bottom: 24px;
+    color: #fff;
+  }
+  h2 .accent { color: #ffcc00; }
+
+  /* Scoreboard */
+  .scoreboard {
+    background: #1a1a1a;
+    border: 2px solid #333;
+    border-radius: 4px;
+    overflow: hidden;
+    margin-bottom: 20px;
+  }
+  .scoreboard-header {
+    background: #cc0000;
+    padding: 10px 18px;
+    font-family: 'Oswald', sans-serif;
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .scoreboard-body { padding: 18px; }
+  .score-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 8px 0;
+    border-bottom: 1px solid #2a2a2a;
+    font-size: 0.95rem;
+  }
+  .score-row:last-child { border-bottom: none; }
+  .score-label { color: #999; text-transform: uppercase; font-size: 0.8rem; letter-spacing: 1px; }
+  .score-value { color: #fff; font-weight: 700; }
+  .score-value.highlight { color: #ffcc00; }
+
+  /* Stat boxes */
+  .stat-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 16px;
+    margin: 20px 0;
+  }
+  .stat-box {
+    background: #1a1a1a;
+    border: 1px solid #333;
+    border-top: 3px solid #cc0000;
+    padding: 20px;
+    text-align: center;
+  }
+  .stat-number {
+    font-family: 'Oswald', sans-serif;
+    font-size: 2.5rem;
+    color: #ffcc00;
+    line-height: 1;
+  }
+  .stat-label {
+    font-size: 0.75rem;
+    color: #999;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    margin-top: 6px;
+  }
+
+  /* Matchup comparison */
+  .matchup {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    gap: 16px;
+    align-items: start;
+    margin: 20px 0;
+  }
+  .matchup-card {
+    background: #1a1a1a;
+    border: 1px solid #333;
+    padding: 20px;
+    border-radius: 4px;
+  }
+  .matchup-card h4 {
+    font-family: 'Oswald', sans-serif;
+    text-transform: uppercase;
+    font-size: 1rem;
+    letter-spacing: 1px;
+    margin-bottom: 10px;
+    color: #ffcc00;
+  }
+  .matchup-vs {
+    font-family: 'Oswald', sans-serif;
+    font-size: 1.5rem;
+    color: #cc0000;
+    align-self: center;
+    text-align: center;
+    padding-top: 20px;
+  }
+  .matchup-card ul { list-style: none; }
+  .matchup-card li {
+    font-size: 0.88rem;
+    padding: 4px 0;
+    border-bottom: 1px solid #222;
+    color: #ccc;
+  }
+
+  /* Stats table */
+  .stats-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 16px 0;
+    font-size: 0.9rem;
+  }
+  .stats-table th {
+    background: #cc0000;
+    font-family: 'Oswald', sans-serif;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    padding: 10px 14px;
+    text-align: left;
+    font-size: 0.8rem;
+  }
+  .stats-table td { padding: 10px 14px; }
+  .stats-table tr:nth-child(even) { background: #1a1a1a; }
+  .stats-table tr:nth-child(odd) { background: #151515; }
+
+  /* Skills */
+  .skill-bars { margin-top: 14px; }
+  .skill-row {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+    gap: 12px;
+  }
+  .skill-name {
+    width: 110px;
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: #aaa;
+    text-align: right;
+    flex-shrink: 0;
+  }
+  .skill-bar-track {
+    flex: 1;
+    height: 8px;
+    background: #222;
+    border-radius: 4px;
+    overflow: hidden;
+  }
+  .skill-bar-fill {
+    height: 100%;
+    border-radius: 4px;
+    background: linear-gradient(90deg, #cc0000, #ffcc00);
+  }
+
+  /* Ticker */
+  .ticker {
+    position: fixed;
+    bottom: 0; left: 0;
+    width: 100%;
+    background: #111;
+    border-top: 3px solid #cc0000;
+    z-index: 100;
+    overflow: hidden;
+    height: 38px;
+    display: flex;
+    align-items: center;
+  }
+  .ticker-label {
+    background: #cc0000;
+    color: #fff;
+    font-family: 'Oswald', sans-serif;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    padding: 0 16px;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    flex-shrink: 0;
+    z-index: 2;
+  }
+  .ticker-scroll {
+    display: flex;
+    animation: ticker 35s linear infinite;
+    white-space: nowrap;
+  }
+  .ticker-scroll span {
+    padding: 0 30px;
+    font-size: 0.85rem;
+    color: #ccc;
+  }
+  .ticker-scroll .hl { color: #ffcc00; font-weight: 700; }
+  @keyframes ticker {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(-50%); }
+  }
+
+  .spacer-bottom { height: 50px; }
+
+  @media(max-width:700px) {
+    .matchup { grid-template-columns: 1fr; }
+    .matchup-vs { display: none; }
+    .header h1 { font-size: 2.5rem; }
+    .stat-grid { grid-template-columns: 1fr 1fr; }
+  }
+</style>
+</head>
+<body>
+<a href="../gallery.html" class="back-link">&larr; Back to Gallery</a>
+
+<div class="breaking-bar">
+  <span class="breaking-label"><span class="live-dot" style="background:#111"></span> LIVE</span>
+  <span class="breaking-text">SPORTSCENTER SPECIAL &mdash; PLAYER PROFILE: LUKE HERMANN &mdash; SOFTWARE ENGINEERING DRAFT ANALYSIS</span>
+</div>
+
+<div class="header">
+  <h1>LUKE <span>HERMANN</span></h1>
+  <p class="header-sub">Season: 2024-26 &bull; Team: Amazon / UChicago &bull; Position: SDE &bull; AVG: 3.7 GPA</p>
+  <div class="contact-bar">
+    <span>(773) 372-4185</span>
+    <a href="mailto:lukehermann@uchicago.edu">lukehermann@uchicago.edu</a>
+    <a href="https://linkedin.com/in/luke-hermann" target="_blank">LinkedIn</a>
+    <a href="https://github.com/LHermannCoding" target="_blank">GitHub</a>
+  </div>
+</div>
+
+<div class="angle-divider"></div>
+
+<div class="section">
+  <h2><span class="accent">#</span> HIGHLIGHT REEL</h2>
+  <div class="stat-grid">
+    <div class="stat-box"><div class="stat-number">3.6M</div><div class="stat-label">Partners Served / Month</div></div>
+    <div class="stat-box"><div class="stat-number">$36K</div><div class="stat-label">Game Revenue</div></div>
+    <div class="stat-box"><div class="stat-number">3.7</div><div class="stat-label">GPA</div></div>
+    <div class="stat-box"><div class="stat-number">40+</div><div class="stat-label">Code Reviews</div></div>
+    <div class="stat-box"><div class="stat-number">600+</div><div class="stat-label">Customers</div></div>
+    <div class="stat-box"><div class="stat-number">&lt;10m</div><div class="stat-label">Incident Response</div></div>
+  </div>
+</div>
+
+<div class="angle-divider alt"></div>
+
+<div class="section">
+  <h2><span class="accent">#</span> TEAM ROSTER &mdash; EDUCATION</h2>
+  <div class="scoreboard">
+    <div class="scoreboard-header">
+      <span>UNIVERSITY OF CHICAGO MAROONS</span>
+      <span><span class="live-dot"></span> ACTIVE</span>
+    </div>
+    <div class="scoreboard-body">
+      <div class="score-row"><span class="score-label">Degree (Current)</span><span class="score-value highlight">MS in Computer Science</span></div>
+      <div class="score-row"><span class="score-label">Expected</span><span class="score-value">June 2026</span></div>
+      <div class="score-row"><span class="score-label">Key Plays</span><span class="score-value">Distributed Systems, Functional Programming</span></div>
+    </div>
+  </div>
+  <div class="scoreboard">
+    <div class="scoreboard-header">
+      <span>UNDERGRAD RECORD</span>
+      <span>FINAL</span>
+    </div>
+    <div class="scoreboard-body">
+      <div class="score-row"><span class="score-label">Degrees</span><span class="score-value">BS Computer Science + BA Economics</span></div>
+      <div class="score-row"><span class="score-label">Completed</span><span class="score-value">June 2025</span></div>
+      <div class="score-row"><span class="score-label">GPA</span><span class="score-value highlight">3.7</span></div>
+      <div class="score-row"><span class="score-label">Award</span><span class="score-value highlight">National Merit Scholar</span></div>
+      <div class="score-row"><span class="score-label">Training</span><span class="score-value">ML for Systems, OS, Databases, Networks</span></div>
+    </div>
+  </div>
+</div>
+
+<div class="angle-divider"></div>
+
+<div class="section">
+  <h2><span class="accent">#</span> CAREER STATS</h2>
+  <table class="stats-table">
+    <thead>
+      <tr><th>Season</th><th>Team</th><th>Role</th><th>Key Stat</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>Summer 2025</td><td>Amazon</td><td>SDE L4</td><td>3.6M partners served/mo</td></tr>
+      <tr><td>Summer 2024</td><td>Enklu</td><td>SWE</td><td>$36K revenue, 600+ customers</td></tr>
+      <tr><td>Summer 2023</td><td>Code Your Dreams</td><td>CS Intern</td><td>40+ teachers onboarded</td></tr>
+    </tbody>
+  </table>
+
+  <h2 style="margin-top:36px"><span class="accent">#</span> HEAD-TO-HEAD MATCHUPS</h2>
+  <div class="matchup">
+    <div class="matchup-card">
+      <h4>Amazon &mdash; SDE L4</h4>
+      <ul>
+        <li>Deployable banner for Seller/Vendor Central</li>
+        <li>3.6M partners served per month</li>
+        <li>Incident response: 6hrs &rarr; &lt;10min</li>
+        <li>Java API integration</li>
+        <li>40+ code reviews, Agile workflow</li>
+      </ul>
+    </div>
+    <div class="matchup-vs">VS</div>
+    <div class="matchup-card">
+      <h4>Enklu &mdash; SWE</h4>
+      <ul>
+        <li>Primal Ranch game development</li>
+        <li>1K+ hours total playtime</li>
+        <li>$36K in revenue generated</li>
+        <li>Multiplayer metrics API</li>
+        <li>C# / Node.js stack</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<div class="angle-divider alt"></div>
+
+<div class="section">
+  <h2><span class="accent">#</span> PLAYER SKILLS RATING</h2>
+  <div class="skill-bars">
+    <div class="skill-row"><span class="skill-name">Python</span><div class="skill-bar-track"><div class="skill-bar-fill" style="width:95%"></div></div></div>
+    <div class="skill-row"><span class="skill-name">Java</span><div class="skill-bar-track"><div class="skill-bar-fill" style="width:90%"></div></div></div>
+    <div class="skill-row"><span class="skill-name">C / C++</span><div class="skill-bar-track"><div class="skill-bar-fill" style="width:85%"></div></div></div>
+    <div class="skill-row"><span class="skill-name">C#</span><div class="skill-bar-track"><div class="skill-bar-fill" style="width:82%"></div></div></div>
+    <div class="skill-row"><span class="skill-name">JavaScript</span><div class="skill-bar-track"><div class="skill-bar-fill" style="width:78%"></div></div></div>
+    <div class="skill-row"><span class="skill-name">SQL</span><div class="skill-bar-track"><div class="skill-bar-fill" style="width:80%"></div></div></div>
+    <div class="skill-row"><span class="skill-name">Haskell</span><div class="skill-bar-track"><div class="skill-bar-fill" style="width:65%"></div></div></div>
+    <div class="skill-row"><span class="skill-name">Docker</span><div class="skill-bar-track"><div class="skill-bar-fill" style="width:72%"></div></div></div>
+    <div class="skill-row"><span class="skill-name">Git / Linux</span><div class="skill-bar-track"><div class="skill-bar-fill" style="width:92%"></div></div></div>
+  </div>
+</div>
+
+<div class="angle-divider"></div>
+
+<div class="section">
+  <h2><span class="accent">#</span> OFF THE FIELD</h2>
+  <div class="stat-grid">
+    <div class="stat-box" style="border-top-color:#ffcc00"><div class="stat-number" style="font-size:1.5rem">&#127930;</div><div class="stat-label">Trumpet Player</div></div>
+    <div class="stat-box" style="border-top-color:#ffcc00"><div class="stat-number" style="font-size:1.5rem">&#127918;</div><div class="stat-label">Esports Competitor</div></div>
+    <div class="stat-box" style="border-top-color:#ffcc00"><div class="stat-number" style="font-size:1.5rem">&#127936;</div><div class="stat-label">Basketball Player</div></div>
+    <div class="stat-box" style="border-top-color:#ffcc00"><div class="stat-number" style="font-size:1.5rem">&#127923;</div><div class="stat-label">Bowler</div></div>
+  </div>
+</div>
+
+<div class="spacer-bottom"></div>
+
+<div class="ticker">
+  <div class="ticker-label">HEADLINES</div>
+  <div class="ticker-scroll" id="tickerScroll">
+    <span><span class="hl">BREAKING:</span> Luke Hermann joins Amazon as SDE L4 &bull;</span>
+    <span>Enklu's Primal Ranch generates <span class="hl">$36K</span> revenue with <span class="hl">600+</span> customers &bull;</span>
+    <span><span class="hl">NATIONAL MERIT SCHOLAR</span> earns MS at University of Chicago &bull;</span>
+    <span>Incident response reduced from 6hrs to <span class="hl">&lt;10 MINUTES</span> &bull;</span>
+    <span>Banner system serves <span class="hl">3.6M</span> partners monthly on Seller Central &bull;</span>
+    <span>Code Your Dreams: <span class="hl">40+ TEACHERS</span> onboarded in Burundi &bull;</span>
+    <!-- Duplicate for seamless loop -->
+    <span><span class="hl">BREAKING:</span> Luke Hermann joins Amazon as SDE L4 &bull;</span>
+    <span>Enklu's Primal Ranch generates <span class="hl">$36K</span> revenue with <span class="hl">600+</span> customers &bull;</span>
+    <span><span class="hl">NATIONAL MERIT SCHOLAR</span> earns MS at University of Chicago &bull;</span>
+    <span>Incident response reduced from 6hrs to <span class="hl">&lt;10 MINUTES</span> &bull;</span>
+    <span>Banner system serves <span class="hl">3.6M</span> partners monthly on Seller Central &bull;</span>
+    <span>Code Your Dreams: <span class="hl">40+ TEACHERS</span> onboarded in Burundi &bull;</span>
+  </div>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,469 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Luke Hermann | Trading Card</title>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  font-family: 'Inter', sans-serif;
+  background: #111;
+  min-height: 100vh;
+  display: flex; align-items: center; justify-content: center;
+  overflow: hidden;
+  perspective: 1200px;
+}
+a { color: inherit; }
+.back-link {
+  position: fixed; top: 12px; left: 12px; z-index: 100;
+  font-size: 12px; font-weight: 600; color: #888;
+  text-decoration: none;
+}
+.back-link:hover { color: #ffd700; }
+
+/* Sparkle particles */
+.sparkle-container {
+  position: fixed; inset: 0; pointer-events: none; z-index: 0;
+  overflow: hidden;
+}
+.sparkle {
+  position: absolute;
+  width: 3px; height: 3px;
+  background: #ffd700;
+  border-radius: 50%;
+  animation: sparkleAnim var(--dur) var(--delay) infinite;
+  opacity: 0;
+  left: var(--x);
+  top: var(--y);
+}
+@keyframes sparkleAnim {
+  0% { opacity: 0; transform: scale(0); }
+  50% { opacity: 1; transform: scale(1); }
+  100% { opacity: 0; transform: scale(0); }
+}
+
+/* Card wrapper */
+.card-scene {
+  width: 400px; height: 580px;
+  position: relative; z-index: 10;
+  transform-style: preserve-3d;
+  transition: transform 0.1s ease-out;
+}
+.card-scene.flipped .card-inner {
+  transform: rotateY(180deg);
+}
+
+.card-inner {
+  width: 100%; height: 100%;
+  position: relative;
+  transform-style: preserve-3d;
+  transition: transform 0.7s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.card-face {
+  position: absolute; inset: 0;
+  backface-visibility: hidden;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow:
+    0 0 20px rgba(255,215,0,0.15),
+    0 0 60px rgba(255,215,0,0.08),
+    0 10px 40px rgba(0,0,0,0.6);
+}
+
+/* FRONT */
+.card-front {
+  background: linear-gradient(145deg, #1a1a2e 0%, #16213e 40%, #0f3460 100%);
+  border: 2px solid #ffd700;
+  display: flex; flex-direction: column;
+}
+
+/* Holographic overlay */
+.holo-overlay {
+  position: absolute; inset: 0;
+  background: linear-gradient(
+    var(--holo-angle, 135deg),
+    transparent 0%,
+    rgba(255,215,0,0.08) 20%,
+    rgba(192,192,192,0.12) 40%,
+    rgba(100,200,255,0.08) 60%,
+    rgba(255,100,200,0.06) 80%,
+    transparent 100%
+  );
+  pointer-events: none; z-index: 2;
+  mix-blend-mode: screen;
+  transition: background 0.15s;
+}
+
+/* Card header */
+.card-header {
+  padding: 16px 20px 10px;
+  display: flex; justify-content: space-between; align-items: flex-start;
+  position: relative; z-index: 3;
+}
+.card-name {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 20px; font-weight: 900;
+  color: #ffd700;
+  text-shadow: 0 0 10px rgba(255,215,0,0.4);
+}
+.card-hp {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 13px; font-weight: 700; color: #c0c0c0;
+}
+.card-hp span { color: #ffd700; font-size: 18px; }
+
+/* Portrait area */
+.portrait-area {
+  margin: 6px 20px;
+  height: 200px;
+  border: 2px solid rgba(255,215,0,0.3);
+  border-radius: 8px;
+  background: linear-gradient(135deg, #0a0a1a 0%, #1a1a3e 100%);
+  display: flex; align-items: center; justify-content: center;
+  position: relative; z-index: 3;
+  overflow: hidden;
+}
+.monogram {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 90px; font-weight: 900;
+  background: linear-gradient(135deg, #ffd700, #c0c0c0, #ffd700);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  text-shadow: none;
+  filter: drop-shadow(0 0 20px rgba(255,215,0,0.3));
+}
+.portrait-glow {
+  position: absolute; inset: 0;
+  background: radial-gradient(circle at center, rgba(255,215,0,0.08) 0%, transparent 70%);
+}
+
+/* Type badges */
+.type-badges {
+  display: flex; gap: 8px; padding: 8px 20px;
+  position: relative; z-index: 3;
+}
+.badge {
+  font-size: 10px; font-weight: 700;
+  letter-spacing: 1px; text-transform: uppercase;
+  padding: 4px 12px; border-radius: 20px;
+  border: 1px solid;
+}
+.badge-sde { color: #ffd700; border-color: #ffd700; background: rgba(255,215,0,0.1); }
+.badge-cs { color: #64b5f6; border-color: #64b5f6; background: rgba(100,181,246,0.1); }
+.badge-uchi { color: #ce93d8; border-color: #ce93d8; background: rgba(206,147,216,0.1); }
+
+/* Rarity stars */
+.stars {
+  text-align: center; padding: 6px 0;
+  position: relative; z-index: 3;
+}
+.stars span {
+  color: #ffd700; font-size: 16px; margin: 0 2px;
+  text-shadow: 0 0 6px rgba(255,215,0,0.5);
+}
+
+/* Description */
+.card-desc {
+  padding: 0 20px 10px;
+  font-size: 11px; line-height: 1.5;
+  color: #aaa;
+  position: relative; z-index: 3;
+  font-style: italic;
+}
+
+/* Stats grid */
+.stats-grid {
+  display: grid; grid-template-columns: repeat(4, 1fr);
+  gap: 0;
+  margin: auto 20px 16px;
+  border: 1px solid rgba(255,215,0,0.3);
+  border-radius: 8px;
+  overflow: hidden;
+  position: relative; z-index: 3;
+}
+.stat {
+  text-align: center; padding: 10px 4px;
+  background: rgba(0,0,0,0.3);
+  border-right: 1px solid rgba(255,215,0,0.15);
+}
+.stat:last-child { border-right: none; }
+.stat-label {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 9px; font-weight: 700;
+  color: #888; letter-spacing: 2px;
+  margin-bottom: 4px;
+}
+.stat-value {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 24px; font-weight: 900;
+  color: #ffd700;
+  text-shadow: 0 0 8px rgba(255,215,0,0.3);
+}
+
+/* Card number */
+.card-number {
+  text-align: center; padding: 4px 0 12px;
+  font-size: 9px; color: #555;
+  letter-spacing: 2px;
+  position: relative; z-index: 3;
+}
+
+/* BACK */
+.card-back {
+  background: linear-gradient(145deg, #1a1a2e 0%, #16213e 40%, #0f3460 100%);
+  border: 2px solid #c0c0c0;
+  transform: rotateY(180deg);
+  padding: 20px;
+  overflow-y: auto;
+  font-size: 11px;
+  color: #ccc;
+}
+.card-back::-webkit-scrollbar { width: 4px; }
+.card-back::-webkit-scrollbar-thumb { background: #ffd700; border-radius: 2px; }
+
+.back-header {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 16px; font-weight: 900; color: #ffd700;
+  text-align: center; margin-bottom: 14px;
+  border-bottom: 1px solid rgba(255,215,0,0.3);
+  padding-bottom: 8px;
+}
+.back-section {
+  margin-bottom: 14px;
+}
+.back-section h3 {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 10px; font-weight: 700;
+  color: #ffd700; letter-spacing: 2px;
+  text-transform: uppercase;
+  margin-bottom: 6px;
+}
+.back-section h4 {
+  font-size: 12px; font-weight: 700; color: #eee;
+  margin-bottom: 2px;
+}
+.back-section p {
+  font-size: 11px; line-height: 1.5; color: #aaa;
+  margin-bottom: 4px;
+}
+.back-section ul {
+  padding-left: 14px; color: #999;
+}
+.back-section li {
+  margin-bottom: 3px; line-height: 1.4;
+}
+.back-skills {
+  display: flex; flex-wrap: wrap; gap: 4px;
+}
+.back-skills span {
+  font-size: 9px; padding: 2px 8px;
+  border: 1px solid rgba(255,215,0,0.3);
+  border-radius: 10px; color: #ccc;
+}
+.back-contact {
+  text-align: center; font-size: 10px;
+  color: #888; margin-top: 10px;
+  border-top: 1px solid rgba(255,215,0,0.2);
+  padding-top: 8px;
+}
+.back-contact a { color: #ffd700; text-decoration: none; }
+
+.flip-hint {
+  position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%);
+  color: #555; font-size: 12px; letter-spacing: 2px;
+  animation: pulse 2s infinite;
+  z-index: 50;
+}
+@keyframes pulse {
+  0%, 100% { opacity: 0.5; }
+  50% { opacity: 1; }
+}
+</style>
+</head>
+<body>
+<a href="../gallery.html" class="back-link">&larr; Back to Gallery</a>
+
+<!-- Sparkles -->
+<div class="sparkle-container" id="sparkles"></div>
+
+<!-- Card -->
+<div class="card-scene" id="cardScene">
+  <div class="card-inner" id="cardInner">
+
+    <!-- FRONT -->
+    <div class="card-face card-front">
+      <div class="holo-overlay" id="holoOverlay"></div>
+
+      <div class="card-header">
+        <div class="card-name">Luke Hermann</div>
+        <div class="card-hp"><span>L4</span> SDE</div>
+      </div>
+
+      <div class="portrait-area">
+        <div class="portrait-glow"></div>
+        <div class="monogram">LH</div>
+      </div>
+
+      <div class="type-badges">
+        <span class="badge badge-sde">SDE</span>
+        <span class="badge badge-cs">CS</span>
+        <span class="badge badge-uchi">UChicago</span>
+      </div>
+
+      <div class="stars">
+        <span>&#9733;</span><span>&#9733;</span><span>&#9733;</span><span>&#9733;</span><span>&#9733;</span>
+      </div>
+
+      <div class="card-desc">
+        A versatile software engineer wielding mastery of distributed systems, game development, and full-stack engineering. Dual-degree scholar from the University of Chicago.
+      </div>
+
+      <div class="stats-grid">
+        <div class="stat">
+          <div class="stat-label">ATK</div>
+          <div class="stat-value">92</div>
+        </div>
+        <div class="stat">
+          <div class="stat-label">DEF</div>
+          <div class="stat-value">88</div>
+        </div>
+        <div class="stat">
+          <div class="stat-label">SPD</div>
+          <div class="stat-value">85</div>
+        </div>
+        <div class="stat">
+          <div class="stat-label">INT</div>
+          <div class="stat-value">96</div>
+        </div>
+      </div>
+
+      <div class="card-number">#001 / 001 &bull; LEGENDARY &bull; 2026 EDITION</div>
+    </div>
+
+    <!-- BACK -->
+    <div class="card-face card-back">
+      <div class="back-header">Luke Hermann</div>
+
+      <div class="back-section">
+        <h3>Education</h3>
+        <h4>University of Chicago</h4>
+        <p>MS in Computer Science (Expected June 2026)<br>
+        Distributed Systems, Functional Programming</p>
+        <p>BS in CS + BA in Economics (June 2025)<br>
+        GPA: 3.7 &bull; National Merit Scholar<br>
+        ML for Systems, OS, Databases, Networks</p>
+      </div>
+
+      <div class="back-section">
+        <h3>Experience</h3>
+        <h4>Amazon &mdash; SDE L4 (Summer 2025)</h4>
+        <ul>
+          <li>Banner on Seller/Vendor Central, 3.6M partners/mo</li>
+          <li>Incident response: 6hrs to &lt;10min</li>
+          <li>Java API integration, 40+ code reviews</li>
+        </ul>
+        <h4 style="margin-top:8px;">Enklu &mdash; SWE (Summer 2024)</h4>
+        <ul>
+          <li>Primal Ranch: 1K+ hrs, $36K rev, 600+ customers</li>
+          <li>Multiplayer metrics API (C#, Node.js)</li>
+        </ul>
+        <h4 style="margin-top:8px;">Code Your Dreams &mdash; Intern (Summer 2023)</h4>
+        <ul>
+          <li>16 Python lessons, WhatsApp bot, Arduino DanceTech</li>
+          <li>40+ teachers onboarded in Burundi</li>
+        </ul>
+      </div>
+
+      <div class="back-section">
+        <h3>Skills</h3>
+        <div class="back-skills">
+          <span>Python</span><span>Java</span><span>C</span><span>C#</span><span>C++</span>
+          <span>SQL</span><span>Haskell</span><span>x86 ASM</span><span>JS</span>
+          <span>Git</span><span>Docker</span><span>Linux</span><span>Flask</span>
+          <span>NumPy</span><span>Pandas</span><span>Pygame</span>
+        </div>
+      </div>
+
+      <div class="back-section">
+        <h3>Projects</h3>
+        <p><strong>Sushi Kitchen Simulator</strong> &mdash; Python, OOP, Agile</p>
+        <p><strong>Digital Board Game</strong> &mdash; Checkers, GUI, bot AI</p>
+      </div>
+
+      <div class="back-contact">
+        (773) 372-4185 &bull; lukehermann@uchicago.edu<br>
+        <a href="https://linkedin.com/in/luke-hermann" target="_blank">LinkedIn</a> &bull;
+        <a href="https://github.com/LHermannCoding" target="_blank">GitHub</a>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<div class="flip-hint" id="flipHint">CLICK TO FLIP</div>
+
+<script>
+(function() {
+  const scene = document.getElementById('cardScene');
+  const holo = document.getElementById('holoOverlay');
+  let isFlipped = false;
+
+  // Generate sparkle particles
+  const sparkleContainer = document.getElementById('sparkles');
+  for (let i = 0; i < 40; i++) {
+    const s = document.createElement('div');
+    s.className = 'sparkle';
+    s.style.setProperty('--x', Math.random() * 100 + '%');
+    s.style.setProperty('--y', Math.random() * 100 + '%');
+    s.style.setProperty('--dur', (1.5 + Math.random() * 3) + 's');
+    s.style.setProperty('--delay', (Math.random() * 4) + 's');
+    sparkleContainer.appendChild(s);
+  }
+
+  // Mouse move: tilt card + holographic effect
+  document.addEventListener('mousemove', (e) => {
+    if (isFlipped) return;
+    const rect = scene.getBoundingClientRect();
+    const centerX = rect.left + rect.width / 2;
+    const centerY = rect.top + rect.height / 2;
+    const deltaX = (e.clientX - centerX) / (rect.width / 2);
+    const deltaY = (e.clientY - centerY) / (rect.height / 2);
+
+    // Tilt (max ~12deg)
+    const rotateY = deltaX * 12;
+    const rotateX = -deltaY * 12;
+    scene.style.transform = `rotateY(${rotateY}deg) rotateX(${rotateX}deg)`;
+
+    // Holo angle
+    const angle = Math.atan2(deltaY, deltaX) * (180 / Math.PI) + 180;
+    holo.style.setProperty('--holo-angle', angle + 'deg');
+
+    // Holo intensity based on distance from center
+    const dist = Math.sqrt(deltaX * deltaX + deltaY * deltaY);
+    const opacity = Math.min(dist * 0.5, 1);
+    holo.style.opacity = opacity;
+  });
+
+  // Reset on mouse leave
+  document.addEventListener('mouseleave', () => {
+    scene.style.transform = 'rotateY(0deg) rotateX(0deg)';
+    holo.style.opacity = 0;
+  });
+
+  // Click to flip
+  scene.addEventListener('click', () => {
+    isFlipped = !isFlipped;
+    scene.classList.toggle('flipped', isFlipped);
+    if (isFlipped) {
+      scene.style.transform = 'rotateY(0deg) rotateX(0deg)';
+    }
+    document.getElementById('flipHint').style.display = 'none';
+  });
+})();
+</script>
+</body>
+</html>

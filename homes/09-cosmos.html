@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Luke Hermann - Cosmos Resume</title>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Exo+2:wght@300;400;600&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; scroll-snap-type: y mandatory; }
+  body {
+    background: #0a0a2a; color: #fff; font-family: 'Exo 2', sans-serif;
+    overflow-x: hidden;
+  }
+  a.back-link {
+    position: fixed; top: 12px; left: 12px; z-index: 999;
+    font-family: 'Orbitron', sans-serif; font-size: 10px;
+    color: #ffd700; text-decoration: none;
+  }
+  a.back-link:hover { text-decoration: underline; }
+
+  /* Star layers */
+  .stars, .stars2, .stars3 {
+    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+    pointer-events: none;
+  }
+
+  /* Shooting star */
+  .shooting-star {
+    position: fixed; width: 100px; height: 1px;
+    background: linear-gradient(90deg, #ffd700, transparent);
+    top: -10px; left: -100px; z-index: 5;
+    animation: shoot 4s linear infinite;
+    animation-delay: 2s;
+    opacity: 0;
+  }
+  .shooting-star:nth-child(2) { animation-delay: 8s; top: 20%; }
+  @keyframes shoot {
+    0% { transform: translate(0,0) rotate(-35deg); opacity: 0; }
+    5% { opacity: 1; }
+    30% { opacity: 1; }
+    35% { opacity: 0; }
+    100% { transform: translate(120vw, 60vh) rotate(-35deg); opacity: 0; }
+  }
+
+  /* Sections */
+  .section {
+    min-height: 100vh; display: flex; align-items: center; justify-content: center;
+    position: relative; scroll-snap-align: start;
+    padding: 60px 20px;
+  }
+
+  /* Celestial body */
+  .orb {
+    background: radial-gradient(circle at 35% 35%, #1a1a4e, #0a0a2a 70%);
+    border: 1px solid rgba(255,215,0,0.15);
+    border-radius: 50%;
+    box-shadow: 0 0 40px rgba(255,215,0,0.08), 0 0 80px rgba(255,215,0,0.04), inset 0 0 30px rgba(255,215,0,0.05);
+    padding: 50px;
+    max-width: 600px; width: 90%;
+    position: relative;
+  }
+  .orb::before {
+    content: ''; position: absolute; top: -2px; left: -2px; right: -2px; bottom: -2px;
+    border-radius: 50%;
+    background: conic-gradient(from 0deg, transparent, rgba(255,215,0,0.1), transparent, rgba(255,215,0,0.05), transparent);
+    z-index: -1;
+    animation: orbit-glow 8s linear infinite;
+  }
+  @keyframes orbit-glow { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+
+  .orb h2 {
+    font-family: 'Orbitron', sans-serif; font-size: 24px; color: #ffd700;
+    text-align: center; margin-bottom: 20px; letter-spacing: 3px;
+    animation: pulse-text 3s ease-in-out infinite;
+  }
+  @keyframes pulse-text {
+    0%,100% { text-shadow: 0 0 10px rgba(255,215,0,0.3); }
+    50% { text-shadow: 0 0 25px rgba(255,215,0,0.6), 0 0 50px rgba(255,215,0,0.2); }
+  }
+
+  .orb-content { font-size: 14px; line-height: 1.8; color: #c0c0d0; text-align: center; }
+  .orb-content a { color: #ffd700; text-decoration: none; }
+  .orb-content a:hover { text-decoration: underline; }
+  .orb-content .gold { color: #ffd700; font-weight: 600; }
+  .orb-content .dim { color: #8888aa; }
+
+  /* Constellation SVG overlay */
+  .constellation {
+    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+    pointer-events: none; z-index: 2; opacity: 0.15;
+  }
+
+  /* Skill orbs */
+  .skill-cluster { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; margin-top: 12px; }
+  .skill-node {
+    padding: 5px 14px; border: 1px solid rgba(255,215,0,0.3);
+    border-radius: 20px; font-size: 12px; color: #ffd700;
+    background: rgba(255,215,0,0.05);
+    font-family: 'Orbitron', sans-serif; font-size: 10px;
+  }
+
+  /* Timeline */
+  .cosmic-timeline { text-align: left; width: 100%; }
+  .ct-item { margin-bottom: 20px; padding-left: 20px; border-left: 1px solid rgba(255,215,0,0.2); }
+  .ct-item h3 { font-family: 'Orbitron', sans-serif; font-size: 14px; color: #ffd700; }
+  .ct-item .ct-role { font-size: 12px; color: #aaaac0; }
+  .ct-item p { font-size: 13px; color: #c0c0d0; margin-top: 4px; line-height: 1.6; }
+
+  /* Nav dots */
+  .nav-dots {
+    position: fixed; right: 20px; top: 50%; transform: translateY(-50%);
+    display: flex; flex-direction: column; gap: 12px; z-index: 100;
+  }
+  .nav-dot {
+    width: 8px; height: 8px; border-radius: 50%; background: rgba(255,215,0,0.3);
+    cursor: pointer; transition: all 0.3s;
+  }
+  .nav-dot:hover, .nav-dot.active { background: #ffd700; box-shadow: 0 0 10px rgba(255,215,0,0.5); transform: scale(1.4); }
+</style>
+</head>
+<body>
+<a class="back-link" href="../gallery.html">&larr; Back to Gallery</a>
+
+<div class="shooting-star"></div>
+<div class="shooting-star"></div>
+
+<canvas class="stars" id="starfield"></canvas>
+
+<svg class="constellation" viewBox="0 0 1000 5000" preserveAspectRatio="none">
+  <line x1="500" y1="400" x2="300" y2="900" stroke="#ffd700" stroke-width="0.5"/>
+  <line x1="500" y1="400" x2="700" y2="900" stroke="#ffd700" stroke-width="0.5"/>
+  <line x1="300" y1="900" x2="500" y2="1500" stroke="#ffd700" stroke-width="0.5"/>
+  <line x1="700" y1="900" x2="500" y2="1500" stroke="#ffd700" stroke-width="0.5"/>
+  <line x1="500" y1="1500" x2="400" y2="2200" stroke="#ffd700" stroke-width="0.5"/>
+  <line x1="500" y1="1500" x2="600" y2="2200" stroke="#ffd700" stroke-width="0.5"/>
+  <line x1="400" y1="2200" x2="500" y2="2900" stroke="#ffd700" stroke-width="0.5"/>
+  <line x1="600" y1="2200" x2="500" y2="2900" stroke="#ffd700" stroke-width="0.5"/>
+  <line x1="500" y1="2900" x2="500" y2="3700" stroke="#ffd700" stroke-width="0.5"/>
+</svg>
+
+<div class="nav-dots">
+  <div class="nav-dot active" onclick="document.querySelectorAll('.section')[0].scrollIntoView({behavior:'smooth'})" title="About"></div>
+  <div class="nav-dot" onclick="document.querySelectorAll('.section')[1].scrollIntoView({behavior:'smooth'})" title="Education"></div>
+  <div class="nav-dot" onclick="document.querySelectorAll('.section')[2].scrollIntoView({behavior:'smooth'})" title="Experience"></div>
+  <div class="nav-dot" onclick="document.querySelectorAll('.section')[3].scrollIntoView({behavior:'smooth'})" title="Skills"></div>
+  <div class="nav-dot" onclick="document.querySelectorAll('.section')[4].scrollIntoView({behavior:'smooth'})" title="Projects"></div>
+</div>
+
+<!-- ABOUT -->
+<div class="section">
+  <div class="orb">
+    <h2>LUKE HERMANN</h2>
+    <div class="orb-content">
+      <p style="font-family:'Orbitron';font-size:12px;color:#ffd700;margin-bottom:16px;">Software Development Engineer</p>
+      <p>(773) 372-4185 &bull; <a href="mailto:lukehermann@uchicago.edu">lukehermann@uchicago.edu</a></p>
+      <p style="margin-top:8px;">
+        <a href="https://linkedin.com/in/luke-hermann" target="_blank">LinkedIn</a> &bull;
+        <a href="https://github.com/LHermannCoding" target="_blank">GitHub</a>
+      </p>
+      <p style="margin-top:20px;font-size:13px;" class="dim">
+        Trumpet Player &bull; Esports Competitor &bull; Basketball Player &bull; Bowler
+      </p>
+    </div>
+  </div>
+</div>
+
+<!-- EDUCATION -->
+<div class="section">
+  <div class="orb">
+    <h2>EDUCATION</h2>
+    <div class="orb-content" style="text-align:left;">
+      <p><span class="gold">University of Chicago</span></p>
+      <p>MS in Computer Science <span class="dim">&mdash; Expected June 2026</span></p>
+      <p class="dim" style="font-size:12px;">Distributed Systems &bull; Functional Programming</p>
+      <br>
+      <p>BS in Computer Science + BA in Economics <span class="dim">&mdash; June 2025</span></p>
+      <p>GPA: <span class="gold" style="font-size:22px;">3.7</span> &bull; <span class="gold">National Merit Scholar</span></p>
+      <p class="dim" style="font-size:12px;">ML for Systems &bull; Operating Systems &bull; Databases &bull; Networks</p>
+    </div>
+  </div>
+</div>
+
+<!-- EXPERIENCE -->
+<div class="section">
+  <div class="orb" style="max-width:650px;">
+    <h2>EXPERIENCE</h2>
+    <div class="orb-content cosmic-timeline">
+      <div class="ct-item">
+        <h3>AMAZON</h3>
+        <div class="ct-role">SDE L4 &bull; June &ndash; September 2025</div>
+        <p>Deployable banner on Seller/Vendor Central serving <span class="gold">3.6M partners/month</span>. Reduced incident response from 6hrs to <span class="gold">&lt;10min</span>. Java API integration, 40+ code reviews under Agile.</p>
+      </div>
+      <div class="ct-item">
+        <h3>ENKLU</h3>
+        <div class="ct-role">Software Engineer &bull; June &ndash; September 2024</div>
+        <p>Primal Ranch game: <span class="gold">1K+ hours</span> playtime, <span class="gold">$36K revenue</span>, 600+ customers. Multiplayer metrics API with C#/Node.js.</p>
+      </div>
+      <div class="ct-item">
+        <h3>CODE YOUR DREAMS</h3>
+        <div class="ct-role">CS Intern &bull; June &ndash; August 2023</div>
+        <p>16 Python lessons, WhatsApp bot curriculum, Arduino DanceTech. Onboarded <span class="gold">40+ teachers</span> in Burundi.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- SKILLS -->
+<div class="section">
+  <div class="orb">
+    <h2>SKILLS</h2>
+    <div class="orb-content">
+      <p class="dim" style="margin-bottom:8px;font-size:11px;">LANGUAGES</p>
+      <div class="skill-cluster">
+        <span class="skill-node">Python</span><span class="skill-node">Java</span>
+        <span class="skill-node">C</span><span class="skill-node">C#</span>
+        <span class="skill-node">C++</span><span class="skill-node">SQL</span>
+        <span class="skill-node">Haskell</span><span class="skill-node">x86 ASM</span>
+        <span class="skill-node">JavaScript</span>
+      </div>
+      <p class="dim" style="margin:16px 0 8px;font-size:11px;">TOOLS</p>
+      <div class="skill-cluster">
+        <span class="skill-node">Git</span><span class="skill-node">SVN</span>
+        <span class="skill-node">Linux</span><span class="skill-node">Docker</span>
+        <span class="skill-node">VS Code</span><span class="skill-node">WPF</span>
+        <span class="skill-node">R</span><span class="skill-node">Stata</span>
+      </div>
+      <p class="dim" style="margin:16px 0 8px;font-size:11px;">LIBRARIES</p>
+      <div class="skill-cluster">
+        <span class="skill-node">numpy</span><span class="skill-node">pandas</span>
+        <span class="skill-node">pygame</span><span class="skill-node">flask</span>
+        <span class="skill-node">matplotlib</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- PROJECTS -->
+<div class="section">
+  <div class="orb">
+    <h2>PROJECTS</h2>
+    <div class="orb-content" style="text-align:left;">
+      <p><span class="gold">Sushi Kitchen Simulator</span></p>
+      <p>Python game built with data structures, OOP, and Agile development.</p>
+      <br>
+      <p><span class="gold">Digital Board Game</span></p>
+      <p>Python Checkers with GUI, bot player, and Git workflow.</p>
+    </div>
+  </div>
+</div>
+
+<script>
+// Generate star field on canvas
+const canvas = document.getElementById('starfield');
+const ctx = canvas.getContext('2d');
+function resizeCanvas() {
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+}
+resizeCanvas();
+window.addEventListener('resize', resizeCanvas);
+
+const starCount = 400;
+const stars = [];
+for (let i = 0; i < starCount; i++) {
+  stars.push({
+    x: Math.random() * 2000,
+    y: Math.random() * 2000,
+    r: Math.random() * 1.5 + 0.3,
+    a: Math.random() * 0.7 + 0.3,
+    speed: Math.random() * 0.5 + 0.1
+  });
+}
+
+function drawStars() {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  const scroll = window.scrollY;
+  stars.forEach(s => {
+    const x = ((s.x - scroll * s.speed * 0.02) % canvas.width + canvas.width) % canvas.width;
+    const y = ((s.y - scroll * s.speed * 0.01) % canvas.height + canvas.height) % canvas.height;
+    ctx.beginPath();
+    ctx.arc(x, y, s.r, 0, Math.PI * 2);
+    ctx.fillStyle = `rgba(255,255,255,${s.a})`;
+    ctx.fill();
+  });
+  requestAnimationFrame(drawStars);
+}
+drawStars();
+
+// Nav dot active state
+const sections = document.querySelectorAll('.section');
+const dots = document.querySelectorAll('.nav-dot');
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      const idx = Array.from(sections).indexOf(entry.target);
+      dots.forEach((d, i) => d.classList.toggle('active', i === idx));
+    }
+  });
+}, { threshold: 0.5 });
+sections.forEach(s => observer.observe(s));
+</script>
+</body>
+</html>

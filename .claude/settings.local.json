@@ -23,7 +23,8 @@
       "Bash(curl -sL -A \"Mozilla/5.0\" -o skeleton.jpg \"https://upload.wikimedia.org/wikipedia/commons/thumb/3/3f/Platypus_skeleton_Pengo.jpg/500px-Platypus_skeleton_Pengo.jpg\")",
       "Bash(curl -sL -A \"Mozilla/5.0\" -o electrolocation.png \"https://upload.wikimedia.org/wikipedia/commons/thumb/e/e4/Platypus_electrolocation.svg/500px-Platypus_electrolocation.svg.png\")",
       "Bash(curl -sL -A \"Mozilla/5.0\" -o first-description.jpg \"https://upload.wikimedia.org/wikipedia/commons/thumb/6/61/Platypus_%28Ornithorhynchus_anatinus%29._First_Description_1799.jpg/500px-Platypus_%28Ornithorhynchus_anatinus%29._First_Description_1799.jpg\")",
-      "Bash(curl -sL -A \"Mozilla/5.0\" -o distribution-map.png \"https://upload.wikimedia.org/wikipedia/commons/thumb/0/05/Distribution_of_the_Platypus_%28Ornithorhynchus_anatinus%29.png/500px-Distribution_of_the_Platypus_%28Ornithorhynchus_anatinus%29.png\")"
+      "Bash(curl -sL -A \"Mozilla/5.0\" -o distribution-map.png \"https://upload.wikimedia.org/wikipedia/commons/thumb/0/05/Distribution_of_the_Platypus_%28Ornithorhynchus_anatinus%29.png/500px-Distribution_of_the_Platypus_%28Ornithorhynchus_anatinus%29.png\")",
+      "Bash(find /Users/lukehermann/design-build-ship -type f \\\\\\(-name *.html -o -name *.css -o -name *.js -o -name package.json -o -name *.pdf \\\\\\))"
     ]
   }
 }

@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Luke Hermann - Vaporwave</title>
+<style>
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  background: #1a0030;
+  color: #fff;
+  font-family: Georgia, 'Times New Roman', serif;
+  font-size: 15px;
+  line-height: 1.6;
+  overflow-x: hidden;
+  min-height: 100vh;
+}
+.back-link {
+  position: fixed; top: 8px; left: 12px; z-index: 200;
+  color: #ff71ce; font-size: 12px; text-decoration: none;
+  font-family: Arial, sans-serif;
+}
+.back-link:hover { color: #01cdfe; }
+
+/* BG gradient cycling */
+.bg-gradient {
+  position: fixed; inset: 0; z-index: 0;
+  background: linear-gradient(135deg, #ff71ce, #b967ff, #01cdfe, #ff71ce);
+  background-size: 600% 600%;
+  animation: gradientCycle 12s ease infinite;
+  opacity: 0.25;
+}
+@keyframes gradientCycle {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+/* VHS tracking */
+.vhs-lines {
+  position: fixed; inset: 0; z-index: 1; pointer-events: none;
+  overflow: hidden;
+}
+.vhs-line {
+  position: absolute; left: 0; width: 100%; height: 3px;
+  background: rgba(255,255,255,0.08);
+  animation: vhsTrack 4s linear infinite;
+}
+.vhs-line:nth-child(1) { top: 20%; animation-delay: 0s; animation-duration: 3s; }
+.vhs-line:nth-child(2) { top: 55%; animation-delay: 1.2s; animation-duration: 5s; }
+.vhs-line:nth-child(3) { top: 80%; animation-delay: 2.5s; animation-duration: 3.5s; }
+@keyframes vhsTrack {
+  0% { transform: translateX(-100%) scaleY(1); opacity: 0; }
+  10% { opacity: 1; }
+  50% { transform: translateX(50%) scaleY(3); }
+  90% { opacity: 1; }
+  100% { transform: translateX(200%) scaleY(1); opacity: 0; }
+}
+
+/* Floating shapes */
+.shapes { position: fixed; inset: 0; z-index: 0; pointer-events: none; }
+.shape {
+  position: absolute;
+  opacity: 0.15;
+  animation: floatShape 20s ease-in-out infinite;
+}
+.shape.circle {
+  width: 80px; height: 80px; border-radius: 50%;
+  border: 3px solid #ff71ce;
+}
+.shape.triangle {
+  width: 0; height: 0;
+  border-left: 40px solid transparent;
+  border-right: 40px solid transparent;
+  border-bottom: 70px solid #01cdfe;
+}
+.shape.square {
+  width: 60px; height: 60px;
+  border: 3px solid #b967ff;
+  transform: rotate(45deg);
+}
+.shape:nth-child(1) { top: 10%; left: 5%; animation-delay: 0s; }
+.shape:nth-child(2) { top: 30%; right: 8%; animation-delay: 3s; }
+.shape:nth-child(3) { top: 60%; left: 10%; animation-delay: 6s; }
+.shape:nth-child(4) { top: 15%; right: 20%; animation-delay: 2s; }
+.shape:nth-child(5) { top: 70%; right: 15%; animation-delay: 8s; }
+.shape:nth-child(6) { top: 45%; left: 3%; animation-delay: 4s; }
+@keyframes floatShape {
+  0%, 100% { transform: translateY(0) rotate(0deg); }
+  50% { transform: translateY(-30px) rotate(15deg); }
+}
+
+/* Retro grid floor */
+.grid-floor {
+  position: fixed; bottom: 0; left: -10%; width: 120%; height: 35vh;
+  z-index: 0;
+  background:
+    linear-gradient(90deg, rgba(255,113,206,0.3) 1px, transparent 1px),
+    linear-gradient(0deg, rgba(255,113,206,0.3) 1px, transparent 1px);
+  background-size: 60px 40px;
+  transform: perspective(400px) rotateX(55deg);
+  transform-origin: bottom center;
+  mask-image: linear-gradient(to top, rgba(0,0,0,1) 30%, transparent);
+  -webkit-mask-image: linear-gradient(to top, rgba(0,0,0,1) 30%, transparent);
+}
+
+.content {
+  position: relative; z-index: 10;
+  max-width: 850px;
+  margin: 0 auto;
+  padding: 40px 20px 200px;
+}
+
+/* TITLE */
+.title {
+  text-align: center;
+  margin-bottom: 40px;
+}
+.title h1 {
+  font-family: Impact, 'Arial Black', sans-serif;
+  font-size: 52px;
+  letter-spacing: 6px;
+  background: linear-gradient(180deg, #ff71ce 0%, #b967ff 50%, #01cdfe 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  text-shadow: none;
+  filter: drop-shadow(0 0 20px rgba(185,103,255,0.5));
+  line-height: 1.2;
+}
+.title .subtitle {
+  font-family: Impact, sans-serif;
+  font-size: 16px;
+  letter-spacing: 8px;
+  text-transform: uppercase;
+  color: #01cdfe;
+  margin-top: 4px;
+}
+
+/* WIN95 DIALOG BOXES */
+.win-dialog {
+  background: #c0c0c0;
+  border: 2px solid;
+  border-color: #ffffff #808080 #808080 #ffffff;
+  margin-bottom: 24px;
+  color: #000;
+  box-shadow: 4px 4px 0 rgba(0,0,0,0.4);
+}
+.win-titlebar {
+  background: linear-gradient(90deg, #000080, #1084d0);
+  color: #fff;
+  font-family: Arial, sans-serif;
+  font-size: 13px;
+  font-weight: 700;
+  padding: 3px 6px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.win-buttons {
+  display: flex; gap: 2px;
+}
+.win-btn {
+  width: 18px; height: 18px;
+  background: #c0c0c0;
+  border: 2px solid;
+  border-color: #ffffff #808080 #808080 #ffffff;
+  font-size: 10px;
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer; font-family: Arial; font-weight: 700;
+  color: #000;
+}
+.win-btn:active {
+  border-color: #808080 #ffffff #ffffff #808080;
+}
+.win-body {
+  padding: 14px 16px;
+  font-size: 14px;
+  line-height: 1.6;
+}
+.win-body h3 {
+  font-family: Impact, sans-serif;
+  font-size: 18px;
+  color: #000080;
+  margin-bottom: 6px;
+}
+.win-body p { margin-bottom: 6px; }
+.win-body ul { padding-left: 20px; margin-bottom: 6px; }
+.win-body li { margin-bottom: 3px; }
+.win-body .label {
+  font-weight: 700;
+  color: #800080;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+/* contact links */
+.contact-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+.contact-grid a {
+  display: block;
+  background: #c0c0c0;
+  border: 2px solid;
+  border-color: #ffffff #808080 #808080 #ffffff;
+  padding: 6px 12px;
+  text-decoration: none;
+  color: #000080;
+  font-family: Arial, sans-serif;
+  font-size: 13px;
+  text-align: center;
+}
+.contact-grid a:active {
+  border-color: #808080 #ffffff #ffffff #808080;
+}
+
+/* SKILLS TAGS */
+.skill-tags { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 6px; }
+.skill-tag {
+  background: #fff;
+  border: 1px solid #808080;
+  padding: 2px 8px;
+  font-size: 12px;
+  font-family: Arial, sans-serif;
+}
+
+/* Statusbar */
+.statusbar {
+  background: #c0c0c0;
+  border: 2px solid;
+  border-color: #808080 #ffffff #ffffff #808080;
+  padding: 3px 8px;
+  font-family: Arial, sans-serif;
+  font-size: 12px;
+  color: #000;
+  margin-top: 4px;
+  text-align: center;
+}
+
+@media (max-width: 600px) {
+  .title h1 { font-size: 30px; letter-spacing: 2px; }
+  .contact-grid { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+<a href="../gallery.html" class="back-link">&larr; Back to Gallery</a>
+<div class="bg-gradient"></div>
+<div class="vhs-lines">
+  <div class="vhs-line"></div>
+  <div class="vhs-line"></div>
+  <div class="vhs-line"></div>
+</div>
+<div class="shapes">
+  <div class="shape circle"></div>
+  <div class="shape triangle"></div>
+  <div class="shape square"></div>
+  <div class="shape circle" style="width:50px;height:50px;border-color:#b967ff;"></div>
+  <div class="shape triangle" style="border-bottom-color:#ff71ce;"></div>
+  <div class="shape square" style="width:40px;height:40px;border-color:#01cdfe;"></div>
+</div>
+<div class="grid-floor"></div>
+
+<div class="content">
+
+  <div class="title">
+    <h1>&#xFF2C;&#xFF55;&#xFF4B;&#xFF45; &#xFF28;&#xFF45;&#xFF52;&#xFF4D;&#xFF41;&#xFF4E;&#xFF4E;</h1>
+    <div class="subtitle">Software Engineer</div>
+  </div>
+
+  <!-- CONTACT -->
+  <div class="win-dialog">
+    <div class="win-titlebar">
+      <span>&#128225; contact.exe</span>
+      <div class="win-buttons"><span class="win-btn">_</span><span class="win-btn">&#9633;</span><span class="win-btn">X</span></div>
+    </div>
+    <div class="win-body">
+      <div class="contact-grid">
+        <a href="tel:7733724185">(773) 372-4185</a>
+        <a href="mailto:lukehermann@uchicago.edu">lukehermann@uchicago.edu</a>
+        <a href="https://linkedin.com/in/luke-hermann" target="_blank">linkedin.com/in/luke-hermann</a>
+        <a href="https://github.com/LHermannCoding" target="_blank">github.com/LHermannCoding</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- EDUCATION -->
+  <div class="win-dialog">
+    <div class="win-titlebar">
+      <span>&#127891; education.exe</span>
+      <div class="win-buttons"><span class="win-btn">_</span><span class="win-btn">&#9633;</span><span class="win-btn">X</span></div>
+    </div>
+    <div class="win-body">
+      <h3>University of Chicago</h3>
+      <p><span class="label">MS Computer Science</span> &mdash; Expected June 2026</p>
+      <p>Coursework: Distributed Systems, Functional Programming</p>
+      <br>
+      <p><span class="label">BS Computer Science + BA Economics</span> &mdash; June 2025</p>
+      <p>GPA 3.7 | National Merit Scholar</p>
+      <p>Coursework: ML for Systems, OS, Databases, Networks</p>
+    </div>
+  </div>
+
+  <!-- AMAZON -->
+  <div class="win-dialog">
+    <div class="win-titlebar">
+      <span>&#128188; amazon_sde.exe</span>
+      <div class="win-buttons"><span class="win-btn">_</span><span class="win-btn">&#9633;</span><span class="win-btn">X</span></div>
+    </div>
+    <div class="win-body">
+      <h3>Amazon &mdash; SDE L4</h3>
+      <p><span class="label">June &ndash; Sept 2025</span></p>
+      <ul>
+        <li>Deployable banner on Seller/Vendor Central serving 3.6M partners/month</li>
+        <li>Reduced incident response from 6 hours to &lt;10 minutes</li>
+        <li>Java API integration, 40+ code reviews under Agile</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- ENKLU -->
+  <div class="win-dialog">
+    <div class="win-titlebar">
+      <span>&#127918; enklu_swe.exe</span>
+      <div class="win-buttons"><span class="win-btn">_</span><span class="win-btn">&#9633;</span><span class="win-btn">X</span></div>
+    </div>
+    <div class="win-body">
+      <h3>Enklu &mdash; Software Engineer</h3>
+      <p><span class="label">June &ndash; Sept 2024</span></p>
+      <ul>
+        <li>Primal Ranch: 1K+ hours playtime, $36K revenue, 600+ customers</li>
+        <li>Multiplayer metrics API in C# and Node.js</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- CODE YOUR DREAMS -->
+  <div class="win-dialog">
+    <div class="win-titlebar">
+      <span>&#128187; codeyourdreams.exe</span>
+      <div class="win-buttons"><span class="win-btn">_</span><span class="win-btn">&#9633;</span><span class="win-btn">X</span></div>
+    </div>
+    <div class="win-body">
+      <h3>Code Your Dreams &mdash; CS Intern</h3>
+      <p><span class="label">June &ndash; Aug 2023</span></p>
+      <ul>
+        <li>16 Python lessons, WhatsApp bot curriculum</li>
+        <li>Arduino DanceTech project</li>
+        <li>Onboarded 40+ teachers in Burundi</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- PROJECTS -->
+  <div class="win-dialog">
+    <div class="win-titlebar">
+      <span>&#128193; projects.exe</span>
+      <div class="win-buttons"><span class="win-btn">_</span><span class="win-btn">&#9633;</span><span class="win-btn">X</span></div>
+    </div>
+    <div class="win-body">
+      <h3>Sushi Kitchen Simulator</h3>
+      <p>Python game built with data structures, OOP, and Agile methodology.</p>
+      <br>
+      <h3>Digital Board Game</h3>
+      <p>Python Checkers with GUI, bot player, and Git workflow.</p>
+    </div>
+  </div>
+
+  <!-- SKILLS -->
+  <div class="win-dialog">
+    <div class="win-titlebar">
+      <span>&#9881; skills.dll</span>
+      <div class="win-buttons"><span class="win-btn">_</span><span class="win-btn">&#9633;</span><span class="win-btn">X</span></div>
+    </div>
+    <div class="win-body">
+      <p class="label">Languages</p>
+      <div class="skill-tags">
+        <span class="skill-tag">Python</span><span class="skill-tag">Java</span><span class="skill-tag">C</span>
+        <span class="skill-tag">C#</span><span class="skill-tag">C++</span><span class="skill-tag">SQL</span>
+        <span class="skill-tag">Haskell</span><span class="skill-tag">x86 Assembly</span><span class="skill-tag">JavaScript</span>
+      </div>
+      <br>
+      <p class="label">Tools</p>
+      <div class="skill-tags">
+        <span class="skill-tag">Git</span><span class="skill-tag">SVN</span><span class="skill-tag">Linux</span>
+        <span class="skill-tag">VS Code</span><span class="skill-tag">Docker</span><span class="skill-tag">WPF</span>
+        <span class="skill-tag">R</span><span class="skill-tag">Stata</span>
+      </div>
+      <br>
+      <p class="label">Libraries</p>
+      <div class="skill-tags">
+        <span class="skill-tag">numpy</span><span class="skill-tag">pandas</span><span class="skill-tag">pygame</span>
+        <span class="skill-tag">flask</span><span class="skill-tag">matplotlib</span>
+      </div>
+    </div>
+    <div class="statusbar">22 skills loaded successfully.</div>
+  </div>
+
+  <!-- ACTIVITIES -->
+  <div class="win-dialog">
+    <div class="win-titlebar">
+      <span>&#127917; activities.exe</span>
+      <div class="win-buttons"><span class="win-btn">_</span><span class="win-btn">&#9633;</span><span class="win-btn">X</span></div>
+    </div>
+    <div class="win-body">
+      <p>Trumpet Player &bull; Esports Competitor &bull; Basketball Player &bull; Bowler</p>
+    </div>
+    <div class="statusbar">It's not all code. Sometimes it's music, games, and strikes.</div>
+  </div>
+
+</div>
+
+<script>
+// Close button functionality
+document.querySelectorAll('.win-btn').forEach(btn => {
+  if (btn.textContent.trim() === 'X') {
+    btn.addEventListener('click', function() {
+      const dialog = this.closest('.win-dialog');
+      dialog.style.transition = 'opacity 0.3s, transform 0.3s';
+      dialog.style.opacity = '0';
+      dialog.style.transform = 'scale(0.95)';
+      setTimeout(() => { dialog.style.display = 'none'; }, 300);
+    });
+  }
+  // Minimize
+  if (btn.textContent.trim() === '_') {
+    btn.addEventListener('click', function() {
+      const body = this.closest('.win-dialog').querySelector('.win-body');
+      const sb = this.closest('.win-dialog').querySelector('.statusbar');
+      if (body.style.display === 'none') {
+        body.style.display = '';
+        if (sb) sb.style.display = '';
+      } else {
+        body.style.display = 'none';
+        if (sb) sb.style.display = 'none';
+      }
+    });
+  }
+});
+</script>
+</body>
+</html>

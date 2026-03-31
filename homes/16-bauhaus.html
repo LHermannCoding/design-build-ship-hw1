@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Luke Hermann | Bauhaus</title>
+<link href="https://fonts.googleapis.com/css2?family=Jost:wght@400;700;900&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  font-family: 'Jost', sans-serif;
+  background: #fff;
+  color: #111;
+  overflow-x: hidden;
+  min-height: 100vh;
+}
+a { color: inherit; text-decoration: none; }
+.back-link {
+  position: fixed; top: 16px; left: 16px; z-index: 100;
+  font-size: 13px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase;
+  color: #111; border-bottom: 2px solid #111;
+}
+.back-link:hover { color: #e30613; border-color: #e30613; }
+
+/* COLORS */
+:root {
+  --red: #e30613;
+  --blue: #003da5;
+  --yellow: #ffd700;
+}
+
+/* GRID LAYOUT */
+.grid {
+  display: grid;
+  grid-template-columns: 80px 1fr 1fr 1fr 80px;
+  grid-template-rows: auto;
+  gap: 0;
+  min-height: 100vh;
+  padding: 60px 0 40px 0;
+}
+
+/* GEOMETRIC DECORATIONS */
+.shape {
+  position: absolute;
+  pointer-events: none;
+}
+.circle-red {
+  width: 320px; height: 320px; border-radius: 50%;
+  background: var(--red); position: absolute;
+  top: 80px; right: -60px; z-index: 0;
+}
+.rect-blue {
+  width: 200px; height: 600px;
+  background: var(--blue); position: absolute;
+  top: 300px; left: 0; z-index: 0;
+}
+.circle-yellow {
+  width: 180px; height: 180px; border-radius: 50%;
+  background: var(--yellow); position: absolute;
+  bottom: 200px; left: 300px; z-index: 0;
+}
+.tri-black {
+  width: 0; height: 0;
+  border-left: 120px solid transparent;
+  border-right: 120px solid transparent;
+  border-bottom: 200px solid #111;
+  position: absolute;
+  top: 500px; right: 200px; z-index: 0;
+}
+.rect-yellow-sm {
+  width: 100px; height: 100px;
+  background: var(--yellow); position: absolute;
+  top: 60px; left: 200px; z-index: 0;
+}
+.line-h {
+  position: absolute; height: 3px; background: #111;
+  width: 100%; left: 0;
+}
+.line-v {
+  position: absolute; width: 3px; background: #111;
+  height: 100%; top: 0;
+}
+
+.wrapper {
+  position: relative;
+  max-width: 1200px;
+  margin: 0 auto;
+  min-height: 100vh;
+}
+
+/* HERO */
+.hero {
+  position: relative; z-index: 1;
+  padding: 100px 100px 40px 120px;
+}
+.hero h1 {
+  font-size: 72px; font-weight: 900; line-height: 0.95;
+  text-transform: uppercase; letter-spacing: -2px;
+}
+.hero h1 span { color: var(--red); }
+.hero .subtitle {
+  font-size: 14px; font-weight: 400; letter-spacing: 3px;
+  text-transform: uppercase; margin-top: 12px; color: #555;
+}
+
+/* CONTACT BAR */
+.contact-bar {
+  position: relative; z-index: 1;
+  display: flex; gap: 30px; flex-wrap: wrap;
+  padding: 20px 120px;
+  font-size: 13px; letter-spacing: 1px;
+  border-top: 3px solid #111;
+  border-bottom: 3px solid #111;
+  margin: 0 80px;
+}
+.contact-bar a { border-bottom: 1px solid #111; }
+.contact-bar a:hover { color: var(--blue); border-color: var(--blue); }
+
+/* SECTIONS GRID */
+.sections {
+  position: relative; z-index: 1;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0;
+  margin: 0 80px;
+}
+.section {
+  padding: 40px;
+  position: relative;
+}
+.section::before {
+  content: '';
+  position: absolute; top: 0; left: 0;
+  width: 100%; height: 3px; background: #111;
+}
+.section::after {
+  content: '';
+  position: absolute; top: 0; right: 0;
+  width: 3px; height: 100%; background: #111;
+}
+.section:nth-child(even)::after { display: none; }
+
+.section h2 {
+  font-size: 11px; font-weight: 700; letter-spacing: 4px;
+  text-transform: uppercase; margin-bottom: 20px;
+  display: flex; align-items: center; gap: 10px;
+}
+.section h2 .dot {
+  display: inline-block; width: 12px; height: 12px; border-radius: 50%;
+}
+.section h2 .dot.red { background: var(--red); }
+.section h2 .dot.blue { background: var(--blue); }
+.section h2 .dot.yellow { background: var(--yellow); }
+.section h2 .dot.black { background: #111; }
+
+.section h3 {
+  font-size: 18px; font-weight: 900; margin-bottom: 4px;
+}
+.section h4 {
+  font-size: 13px; font-weight: 700; color: #555;
+  margin-bottom: 8px; letter-spacing: 1px;
+}
+.section p, .section li {
+  font-size: 14px; line-height: 1.6; color: #333;
+}
+.section ul {
+  list-style: none; padding: 0;
+}
+.section ul li {
+  padding-left: 18px; position: relative; margin-bottom: 6px;
+}
+.section ul li::before {
+  content: '';
+  position: absolute; left: 0; top: 7px;
+  width: 8px; height: 8px; background: var(--red);
+}
+
+/* EDUCATION - big circle bg */
+.edu-section {
+  grid-column: 1 / 2;
+  background: #fff;
+}
+.edu-section .bg-shape {
+  position: absolute; top: 20px; right: -40px;
+  width: 200px; height: 200px; border-radius: 50%;
+  border: 3px solid var(--red);
+  pointer-events: none;
+}
+
+/* EXPERIENCE */
+.exp-entry { margin-bottom: 24px; }
+.exp-entry:last-child { margin-bottom: 0; }
+
+/* SKILLS */
+.skills-grid {
+  display: flex; flex-wrap: wrap; gap: 8px;
+}
+.skill-tag {
+  font-size: 12px; font-weight: 700; letter-spacing: 1px;
+  text-transform: uppercase;
+  padding: 6px 12px;
+  border: 2px solid #111;
+  background: #fff;
+}
+.skill-tag:nth-child(3n+1) { border-color: var(--red); color: var(--red); }
+.skill-tag:nth-child(3n+2) { border-color: var(--blue); color: var(--blue); }
+.skill-tag:nth-child(3n) { border-color: #111; }
+
+/* PROJECTS */
+.project-card {
+  padding: 16px;
+  border: 2px solid #111;
+  margin-bottom: 12px;
+  position: relative;
+}
+.project-card::before {
+  content: '';
+  position: absolute; top: -2px; left: -2px;
+  width: 20px; height: 20px;
+  background: var(--yellow);
+}
+
+/* ACTIVITIES */
+.activity-list {
+  display: flex; flex-wrap: wrap; gap: 12px;
+}
+.activity-item {
+  width: 100px; height: 100px;
+  display: flex; align-items: center; justify-content: center;
+  text-align: center;
+  font-size: 12px; font-weight: 700;
+  text-transform: uppercase; letter-spacing: 1px;
+}
+.activity-item:nth-child(1) { background: var(--red); color: #fff; }
+.activity-item:nth-child(2) { background: var(--blue); color: #fff; border-radius: 50%; }
+.activity-item:nth-child(3) { background: var(--yellow); color: #111; }
+.activity-item:nth-child(4) { background: #111; color: #fff;
+  clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
+  width: 110px; height: 110px; padding-top: 30px;
+}
+
+/* FOOTER */
+.footer {
+  position: relative; z-index: 1;
+  margin: 0 80px;
+  padding: 30px 40px;
+  border-top: 3px solid #111;
+  display: flex; justify-content: space-between;
+  font-size: 11px; letter-spacing: 2px; text-transform: uppercase;
+  color: #999;
+}
+
+/* Large decorative text */
+.watermark {
+  position: fixed; bottom: -30px; right: -20px;
+  font-size: 200px; font-weight: 900;
+  color: rgba(0,0,0,0.03);
+  letter-spacing: -10px;
+  pointer-events: none; z-index: 0;
+  text-transform: uppercase;
+}
+</style>
+</head>
+<body>
+<a href="../gallery.html" class="back-link">&larr; Back to Gallery</a>
+
+<div class="wrapper">
+  <!-- GEOMETRIC SHAPES -->
+  <div class="circle-red"></div>
+  <div class="rect-blue"></div>
+  <div class="circle-yellow"></div>
+  <div class="tri-black"></div>
+  <div class="rect-yellow-sm"></div>
+
+  <!-- HERO -->
+  <div class="hero">
+    <h1>Luke<br><span>Hermann</span></h1>
+    <div class="subtitle">Software Engineer &bull; MS Computer Science &bull; University of Chicago</div>
+  </div>
+
+  <!-- CONTACT -->
+  <div class="contact-bar">
+    <span>(773) 372-4185</span>
+    <a href="mailto:lukehermann@uchicago.edu">lukehermann@uchicago.edu</a>
+    <a href="https://linkedin.com/in/luke-hermann" target="_blank">LinkedIn</a>
+    <a href="https://github.com/LHermannCoding" target="_blank">GitHub</a>
+  </div>
+
+  <!-- SECTIONS -->
+  <div class="sections">
+    <!-- EDUCATION -->
+    <div class="section edu-section">
+      <div class="bg-shape"></div>
+      <h2><span class="dot red"></span>Education</h2>
+      <h3>University of Chicago</h3>
+      <h4>MS in Computer Science &mdash; Expected June 2026</h4>
+      <p>Coursework: Distributed Systems, Functional Programming</p>
+      <br>
+      <h4>BS in Computer Science + BA in Economics &mdash; June 2025</h4>
+      <p>GPA: 3.7 &bull; National Merit Scholar</p>
+      <p>Coursework: ML for Systems, OS, Databases, Networks</p>
+    </div>
+
+    <!-- AMAZON -->
+    <div class="section">
+      <h2><span class="dot blue"></span>Amazon &mdash; SDE L4</h2>
+      <h4>June &ndash; September 2025</h4>
+      <ul>
+        <li>Built deployable banner on Seller/Vendor Central serving 3.6M partners/month</li>
+        <li>Reduced incident response time from 6 hours to under 10 minutes</li>
+        <li>Java API integration across services</li>
+        <li>Completed 40+ code reviews under Agile methodology</li>
+      </ul>
+    </div>
+
+    <!-- ENKLU -->
+    <div class="section">
+      <h2><span class="dot yellow"></span>Enklu &mdash; SWE</h2>
+      <h4>June &ndash; September 2024</h4>
+      <ul>
+        <li>Developed Primal Ranch game: 1K+ hours playtime, $36K revenue, 600+ customers</li>
+        <li>Built multiplayer metrics API</li>
+        <li>Tech stack: C#, Node.js</li>
+      </ul>
+    </div>
+
+    <!-- CODE YOUR DREAMS -->
+    <div class="section">
+      <h2><span class="dot black"></span>Code Your Dreams &mdash; CS Intern</h2>
+      <h4>June &ndash; August 2023</h4>
+      <ul>
+        <li>Created 16 Python lessons and WhatsApp bot curriculum</li>
+        <li>Developed Arduino DanceTech projects</li>
+        <li>Onboarded 40+ teachers in Burundi</li>
+      </ul>
+    </div>
+
+    <!-- SKILLS -->
+    <div class="section">
+      <h2><span class="dot red"></span>Skills</h2>
+      <div class="skills-grid">
+        <span class="skill-tag">Python</span>
+        <span class="skill-tag">Java</span>
+        <span class="skill-tag">C</span>
+        <span class="skill-tag">C#</span>
+        <span class="skill-tag">C++</span>
+        <span class="skill-tag">SQL</span>
+        <span class="skill-tag">Haskell</span>
+        <span class="skill-tag">x86 ASM</span>
+        <span class="skill-tag">JavaScript</span>
+        <span class="skill-tag">Git</span>
+        <span class="skill-tag">SVN</span>
+        <span class="skill-tag">Linux</span>
+        <span class="skill-tag">Docker</span>
+        <span class="skill-tag">WPF</span>
+        <span class="skill-tag">Flask</span>
+        <span class="skill-tag">NumPy</span>
+        <span class="skill-tag">Pandas</span>
+        <span class="skill-tag">Pygame</span>
+        <span class="skill-tag">Matplotlib</span>
+      </div>
+    </div>
+
+    <!-- PROJECTS -->
+    <div class="section">
+      <h2><span class="dot blue"></span>Projects</h2>
+      <div class="project-card">
+        <h3>Sushi Kitchen Simulator</h3>
+        <p>Python game leveraging data structures, OOP principles, and Agile development methodology.</p>
+      </div>
+      <div class="project-card">
+        <h3>Digital Board Game</h3>
+        <p>Python Checkers with GUI, bot player AI, and collaborative Git workflow.</p>
+      </div>
+    </div>
+
+    <!-- ACTIVITIES -->
+    <div class="section" style="grid-column: 1 / -1;">
+      <h2><span class="dot yellow"></span>Activities</h2>
+      <div class="activity-list">
+        <div class="activity-item">Trumpet Player</div>
+        <div class="activity-item">Esports Competitor</div>
+        <div class="activity-item">Basketball Player</div>
+        <div class="activity-item">Bowler</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <div class="footer">
+    <span>Bauhaus Portfolio</span>
+    <span>Luke Hermann &copy; 2026</span>
+  </div>
+</div>
+
+<div class="watermark">BAUHAUS</div>
+</body>
+</html>

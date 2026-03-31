@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Luke Hermann - Comic Book Resume</title>
+<link href="https://fonts.googleapis.com/css2?family=Bangers&family=Comic+Neue:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'Comic Neue', cursive;
+    background: #fff8dc;
+    background-image: radial-gradient(circle, #000 1px, transparent 1px);
+    background-size: 12px 12px;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+  .back-link {
+    position: fixed; top: 12px; left: 14px; z-index: 100;
+    color: #000; text-decoration: none; font-family: 'Bangers', cursive;
+    font-size: 1rem; background: #f7d51d; padding: 4px 12px;
+    border: 3px solid #000; border-radius: 4px;
+    transition: background 0.2s;
+  }
+  .back-link:hover { background: #ee1c25; color: #fff; }
+  .page-title {
+    text-align: center; padding: 70px 20px 20px;
+    font-family: 'Bangers', cursive; font-size: 3.5rem;
+    color: #000; text-shadow: 4px 4px 0 #f7d51d, 6px 6px 0 #ee1c25;
+    letter-spacing: 3px;
+  }
+  .page-title .sub {
+    display: block; font-size: 1.1rem; font-family: 'Comic Neue', cursive;
+    font-weight: 700; text-shadow: none; color: #333; margin-top: 4px;
+  }
+  .contact-strip {
+    text-align: center; font-size: 0.9rem; font-weight: 700;
+    padding: 6px 20px 24px; color: #333;
+  }
+  .contact-strip a { color: #0971b2; }
+  .panels {
+    max-width: 1100px; margin: 0 auto; padding: 0 20px 40px;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+  }
+  .panel {
+    background: #fff; border: 4px solid #000; border-radius: 6px;
+    padding: 20px; position: relative; overflow: hidden;
+    box-shadow: 6px 6px 0 rgba(0,0,0,0.15);
+    transition: transform 0.2s;
+  }
+  .panel:hover { transform: rotate(-0.5deg) scale(1.02); }
+  .panel h2 {
+    font-family: 'Bangers', cursive; font-size: 1.6rem;
+    margin-bottom: 10px; color: #000; letter-spacing: 1px;
+    border-bottom: 3px solid #000; padding-bottom: 6px;
+  }
+  .panel h3 { font-family: 'Bangers', cursive; font-size: 1.15rem; margin: 10px 0 4px; }
+  .panel p, .panel li { font-size: 0.88rem; line-height: 1.55; color: #222; }
+  .panel ul { padding-left: 18px; }
+  .panel ul li { margin-bottom: 4px; }
+  .span-2 { grid-column: span 2; }
+  .span-row { grid-column: 1 / -1; }
+  .bg-red { background: #ee1c25; color: #fff; }
+  .bg-red h2, .bg-red h3 { color: #fff; border-color: #fff; }
+  .bg-red p, .bg-red li { color: #ffe; }
+  .bg-yellow { background: #f7d51d; }
+  .bg-blue { background: #0971b2; color: #fff; }
+  .bg-blue h2, .bg-blue h3 { color: #fff; border-color: #fff; }
+  .bg-blue p, .bg-blue li { color: #e0eeff; }
+
+  /* Callout bursts */
+  .burst {
+    display: inline-block; font-family: 'Bangers', cursive;
+    padding: 8px 16px; border-radius: 50%;
+    transform: rotate(-8deg);
+    font-size: 1rem; line-height: 1;
+    border: 3px solid #000; text-align: center;
+    position: relative; z-index: 2;
+    animation: popIn 0.4s ease;
+  }
+  .burst-red { background: #ee1c25; color: #fff; }
+  .burst-yellow { background: #f7d51d; color: #000; }
+  .burst-blue { background: #0971b2; color: #fff; }
+  @keyframes popIn {
+    0% { transform: rotate(-8deg) scale(0); }
+    60% { transform: rotate(-8deg) scale(1.15); }
+    100% { transform: rotate(-8deg) scale(1); }
+  }
+
+  /* Speech bubble */
+  .speech {
+    background: #fff; border: 3px solid #000; border-radius: 18px;
+    padding: 12px 16px; position: relative; margin: 12px 0;
+    font-size: 0.88rem; font-weight: 700;
+  }
+  .speech::after {
+    content: ''; position: absolute; bottom: -16px; left: 30px;
+    width: 0; height: 0;
+    border-left: 12px solid transparent;
+    border-right: 12px solid transparent;
+    border-top: 16px solid #000;
+  }
+  .speech::before {
+    content: ''; position: absolute; bottom: -12px; left: 32px;
+    width: 0; height: 0;
+    border-left: 10px solid transparent;
+    border-right: 10px solid transparent;
+    border-top: 14px solid #fff;
+    z-index: 1;
+  }
+
+  /* Action lines behind bursts */
+  .action-lines {
+    position: absolute; top: 50%; left: 50%;
+    width: 200px; height: 200px;
+    transform: translate(-50%, -50%);
+    background: repeating-conic-gradient(#f7d51d 0deg 5deg, transparent 5deg 15deg);
+    border-radius: 50%; opacity: 0.3; z-index: 0;
+    pointer-events: none;
+  }
+
+  /* Halftone overlay for some panels */
+  .halftone::before {
+    content: ''; position: absolute; inset: 0;
+    background-image: radial-gradient(circle, rgba(0,0,0,0.08) 1px, transparent 1px);
+    background-size: 6px 6px; pointer-events: none; border-radius: 4px;
+  }
+
+  .bursts-row { display: flex; gap: 16px; flex-wrap: wrap; align-items: center; margin: 10px 0; }
+
+  .skills-tags { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 6px; }
+  .skills-tags span {
+    background: #000; color: #f7d51d; font-family: 'Bangers', cursive;
+    padding: 3px 10px; border-radius: 4px; font-size: 0.82rem; letter-spacing: 0.5px;
+  }
+
+  @media (max-width: 768px) {
+    .panels { grid-template-columns: 1fr; }
+    .span-2 { grid-column: span 1; }
+    .page-title { font-size: 2.4rem; }
+  }
+</style>
+</head>
+<body>
+<a href="../gallery.html" class="back-link">&larr; Back to Gallery</a>
+
+<h1 class="page-title">
+  LUKE HERMANN
+  <span class="sub">MS Computer Science &bull; University of Chicago</span>
+</h1>
+<div class="contact-strip">
+  (773) 372-4185 &bull; <a href="mailto:lukehermann@uchicago.edu">lukehermann@uchicago.edu</a> &bull;
+  <a href="https://linkedin.com/in/luke-hermann" target="_blank">LinkedIn</a> &bull;
+  <a href="https://github.com/LHermannCoding" target="_blank">GitHub</a>
+</div>
+
+<div class="panels">
+  <!-- EDUCATION -->
+  <div class="panel bg-yellow halftone">
+    <h2>EDUCATION</h2>
+    <h3>University of Chicago</h3>
+    <p><strong>MS in Computer Science</strong> &mdash; Expected June 2026</p>
+    <p style="font-size:0.8rem;">Distributed Systems, Functional Programming</p>
+    <h3 style="margin-top:12px;">BS in CS + BA in Economics</h3>
+    <p>June 2025 &bull; GPA 3.7</p>
+    <div class="speech" style="margin-top:14px;">National Merit Scholar! ML for Systems, OS, Databases, Networks.</div>
+  </div>
+
+  <!-- AMAZON -->
+  <div class="panel span-2 bg-red halftone" style="position:relative;">
+    <div class="action-lines" style="top:30%;left:85%;"></div>
+    <h2>AMAZON &mdash; SDE L4</h2>
+    <p style="opacity:0.8;">June &ndash; September 2025</p>
+    <p>Built a deployable banner on Seller/Vendor Central.</p>
+    <div class="bursts-row">
+      <span class="burst burst-yellow" style="font-size:1.3rem;">POW!<br><small>3.6M</small><br><small>partners/mo</small></span>
+      <span class="burst burst-blue">WHAM!<br><small>&lt;10 min</small><br><small>response</small></span>
+    </div>
+    <p>Reduced incident response from 6 hrs to &lt;10 min. Java API integration, 40+ code reviews under Agile.</p>
+  </div>
+
+  <!-- ENKLU -->
+  <div class="panel span-2 bg-blue halftone" style="position:relative;">
+    <div class="action-lines" style="top:25%;left:80%;"></div>
+    <h2>ENKLU &mdash; SWE</h2>
+    <p style="opacity:0.8;">June &ndash; September 2024</p>
+    <p>Shipped Primal Ranch game with multiplayer metrics API (C# &amp; Node.js).</p>
+    <div class="bursts-row">
+      <span class="burst burst-red">BOOM!<br><small>$36K</small><br><small>revenue</small></span>
+      <span class="burst burst-yellow" style="transform:rotate(6deg);">KA-POW!<br><small>600+</small><br><small>customers</small></span>
+      <span class="burst burst-red" style="transform:rotate(-4deg);">ZAP!<br><small>1K+ hrs</small><br><small>playtime</small></span>
+    </div>
+  </div>
+
+  <!-- CODE YOUR DREAMS -->
+  <div class="panel halftone">
+    <h2>CODE YOUR DREAMS</h2>
+    <p style="opacity:0.6;font-size:0.82rem;">CS Intern &bull; June &ndash; Aug 2023</p>
+    <ul>
+      <li>Created 16 Python lessons</li>
+      <li>WhatsApp bot curriculum</li>
+      <li>Arduino DanceTech</li>
+      <li>Onboarded 40+ teachers in Burundi</li>
+    </ul>
+    <div class="speech">Teaching the world to code, one lesson at a time!</div>
+  </div>
+
+  <!-- PROJECTS -->
+  <div class="panel bg-yellow halftone">
+    <h2>PROJECTS</h2>
+    <h3>Sushi Kitchen Simulator</h3>
+    <p>Python game &mdash; data structures, OOP, Agile development.</p>
+    <h3>Digital Board Game</h3>
+    <p>Python Checkers with GUI, bot player, and Git workflow.</p>
+  </div>
+
+  <!-- SKILLS -->
+  <div class="panel span-2 halftone">
+    <h2>SKILLS &amp; ARSENAL</h2>
+    <h3>Languages</h3>
+    <div class="skills-tags">
+      <span>Python</span><span>Java</span><span>C</span><span>C#</span><span>C++</span>
+      <span>SQL</span><span>Haskell</span><span>x86 Assembly</span><span>JavaScript</span>
+    </div>
+    <h3>Tools</h3>
+    <div class="skills-tags">
+      <span>Git</span><span>SVN</span><span>Linux</span><span>VS Code</span>
+      <span>Docker</span><span>WPF</span><span>R</span><span>Stata</span>
+    </div>
+    <h3>Libraries</h3>
+    <div class="skills-tags">
+      <span>numpy</span><span>pandas</span><span>pygame</span><span>flask</span><span>matplotlib</span>
+    </div>
+  </div>
+
+  <!-- ACTIVITIES -->
+  <div class="panel bg-red halftone">
+    <h2>ACTIVITIES</h2>
+    <ul>
+      <li>Trumpet Player</li>
+      <li>Esports Competitor</li>
+      <li>Basketball Player</li>
+      <li>Bowler</li>
+    </ul>
+  </div>
+</div>
+</body>
+</html>

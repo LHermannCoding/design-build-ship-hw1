@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Luke Hermann - Matrix Resume</title>
+<link href="https://fonts.googleapis.com/css2?family=Source+Code+Pro:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'Source Code Pro', monospace;
+    background: #000;
+    color: #00ff41;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+  canvas {
+    position: fixed; top: 0; left: 0; z-index: 0;
+    width: 100%; height: 100%;
+  }
+  .back-link {
+    position: fixed; top: 12px; left: 14px; z-index: 100;
+    color: #00ff41; text-decoration: none; font-size: 0.8rem;
+    border: 1px solid #00ff41; padding: 4px 12px;
+    background: rgba(0,0,0,0.7); transition: background 0.2s;
+  }
+  .back-link:hover { background: rgba(0,255,65,0.15); }
+
+  .content {
+    position: relative; z-index: 1;
+    max-width: 800px; margin: 0 auto;
+    padding: 70px 24px 60px;
+  }
+
+  .header {
+    text-align: center; margin-bottom: 40px;
+    border: 1px solid rgba(0,255,65,0.2);
+    padding: 28px 20px; background: rgba(0,0,0,0.85);
+  }
+  .header h1 { font-size: 2.2rem; font-weight: 700; letter-spacing: 4px; }
+  .header .sub { font-size: 0.85rem; color: rgba(0,255,65,0.6); margin-top: 6px; }
+  .header .contact-row {
+    display: flex; flex-wrap: wrap; justify-content: center;
+    gap: 14px; margin-top: 12px; font-size: 0.78rem;
+  }
+  .header .contact-row a { color: #00ff41; }
+
+  .section {
+    margin-bottom: 24px;
+    border: 1px solid rgba(0,255,65,0.15);
+    background: rgba(0,0,0,0.85);
+    overflow: hidden;
+  }
+  .section-header {
+    padding: 12px 18px;
+    background: rgba(0,255,65,0.08);
+    cursor: pointer;
+    user-select: none;
+    font-weight: 700; font-size: 1rem;
+    display: flex; justify-content: space-between; align-items: center;
+    border-bottom: 1px solid rgba(0,255,65,0.15);
+    transition: background 0.2s;
+  }
+  .section-header:hover { background: rgba(0,255,65,0.15); }
+  .section-header .status {
+    font-size: 0.72rem; color: rgba(0,255,65,0.4);
+    font-weight: 400;
+  }
+  .section-header.decrypted .status { color: #00ff41; }
+
+  .section-body {
+    padding: 18px;
+    font-size: 0.85rem; line-height: 1.7;
+    max-height: 0; overflow: hidden;
+    transition: max-height 0.5s ease;
+  }
+  .section-body.open { max-height: 1200px; }
+
+  .section-body .garbled {
+    color: rgba(0,255,65,0.3);
+    word-break: break-all;
+    font-size: 0.78rem;
+  }
+  .section-body .clear { display: none; }
+  .section-body.revealed .garbled { display: none; }
+  .section-body.revealed .clear { display: block; }
+
+  /* ACCESS GRANTED animation */
+  .access-granted {
+    position: fixed; top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 2.4rem; font-weight: 700;
+    color: #00ff41; letter-spacing: 6px;
+    z-index: 200; pointer-events: none;
+    opacity: 0;
+    text-shadow: 0 0 20px #00ff41, 0 0 40px #00ff41;
+  }
+  .access-granted.show {
+    animation: accessAnim 1.2s ease forwards;
+  }
+  @keyframes accessAnim {
+    0% { opacity: 0; transform: translate(-50%, -50%) scale(0.5); }
+    20% { opacity: 1; transform: translate(-50%, -50%) scale(1.1); }
+    60% { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+    100% { opacity: 0; transform: translate(-50%, -50%) scale(1); }
+  }
+
+  /* Glitch hover */
+  .glitch:hover {
+    animation: glitchText 0.3s ease;
+  }
+  @keyframes glitchText {
+    0% { transform: translate(0); }
+    20% { transform: translate(-2px, 1px); color: #ff0040; }
+    40% { transform: translate(2px, -1px); color: #00ffff; }
+    60% { transform: translate(-1px, -1px); color: #ff0040; }
+    80% { transform: translate(1px, 1px); }
+    100% { transform: translate(0); color: #00ff41; }
+  }
+
+  .entry { margin-bottom: 14px; }
+  .entry h3 { font-size: 0.92rem; font-weight: 700; margin-bottom: 2px; }
+  .entry .meta { font-size: 0.75rem; color: rgba(0,255,65,0.5); }
+  .entry ul { padding-left: 20px; margin-top: 4px; }
+  .entry li { margin-bottom: 3px; font-size: 0.82rem; }
+
+  .tags { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 6px; }
+  .tags span {
+    border: 1px solid rgba(0,255,65,0.3); padding: 2px 10px;
+    font-size: 0.75rem; color: #00ff41;
+  }
+
+  .prompt::before { content: '> '; color: rgba(0,255,65,0.4); }
+
+  @media (max-width: 600px) {
+    .header h1 { font-size: 1.5rem; }
+  }
+</style>
+</head>
+<body>
+<a href="../gallery.html" class="back-link">&larr; Back to Gallery</a>
+<canvas id="rain"></canvas>
+<div class="access-granted" id="accessMsg">ACCESS GRANTED</div>
+
+<div class="content">
+  <div class="header">
+    <h1 class="glitch">LUKE HERMANN</h1>
+    <p class="sub">MS Computer Science // University of Chicago</p>
+    <div class="contact-row">
+      <span>(773) 372-4185</span>
+      <a href="mailto:lukehermann@uchicago.edu">lukehermann@uchicago.edu</a>
+      <a href="https://linkedin.com/in/luke-hermann" target="_blank">LinkedIn</a>
+      <a href="https://github.com/LHermannCoding" target="_blank">GitHub</a>
+    </div>
+  </div>
+
+  <!-- IDENTITY -->
+  <div class="section" id="sec-identity">
+    <div class="section-header glitch" onclick="decrypt('identity')">
+      [IDENTITY] <span class="status">// ENCRYPTED - CLICK TO DECRYPT</span>
+    </div>
+    <div class="section-body" id="body-identity">
+      <div class="garbled" id="garble-identity"></div>
+      <div class="clear">
+        <div class="entry">
+          <p class="prompt">Designation: Luke Hermann</p>
+          <p class="prompt">Clearance: MS Computer Science (Expected June 2026)</p>
+          <p class="prompt">Prior Clearance: BS in CS + BA in Economics (June 2025)</p>
+          <p class="prompt">Merit Rating: 3.7 GPA // National Merit Scholar</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- EDUCATION -->
+  <div class="section" id="sec-education">
+    <div class="section-header glitch" onclick="decrypt('education')">
+      [EDUCATION] <span class="status">// ENCRYPTED - CLICK TO DECRYPT</span>
+    </div>
+    <div class="section-body" id="body-education">
+      <div class="garbled" id="garble-education"></div>
+      <div class="clear">
+        <div class="entry">
+          <h3>> University of Chicago - MS in Computer Science</h3>
+          <p class="meta">Expected June 2026</p>
+          <p>Coursework: Distributed Systems, Functional Programming</p>
+        </div>
+        <div class="entry">
+          <h3>> University of Chicago - BS in CS + BA in Economics</h3>
+          <p class="meta">June 2025 // GPA 3.7 // National Merit Scholar</p>
+          <p>Coursework: ML for Systems, OS, Databases, Networks</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MISSIONS (Work) -->
+  <div class="section" id="sec-missions">
+    <div class="section-header glitch" onclick="decrypt('missions')">
+      [MISSIONS] <span class="status">// ENCRYPTED - CLICK TO DECRYPT</span>
+    </div>
+    <div class="section-body" id="body-missions">
+      <div class="garbled" id="garble-missions"></div>
+      <div class="clear">
+        <div class="entry">
+          <h3>> MISSION: Amazon // SDE L4</h3>
+          <p class="meta">June - September 2025</p>
+          <ul>
+            <li>Deployed banner on Seller/Vendor Central serving 3.6M partners/month</li>
+            <li>Reduced incident response from 6 hrs to &lt;10 min</li>
+            <li>Java API integration, 40+ code reviews under Agile</li>
+          </ul>
+        </div>
+        <div class="entry">
+          <h3>> MISSION: Enklu // Software Engineer</h3>
+          <p class="meta">June - September 2024</p>
+          <ul>
+            <li>Primal Ranch game: 1K+ hours playtime, $36K revenue, 600+ customers</li>
+            <li>Multiplayer metrics API (C# &amp; Node.js)</li>
+          </ul>
+        </div>
+        <div class="entry">
+          <h3>> MISSION: Code Your Dreams // CS Intern</h3>
+          <p class="meta">June - August 2023</p>
+          <ul>
+            <li>Created 16 Python lessons, WhatsApp bot curriculum, Arduino DanceTech</li>
+            <li>Onboarded 40+ teachers in Burundi</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ARSENAL (Skills) -->
+  <div class="section" id="sec-arsenal">
+    <div class="section-header glitch" onclick="decrypt('arsenal')">
+      [ARSENAL] <span class="status">// ENCRYPTED - CLICK TO DECRYPT</span>
+    </div>
+    <div class="section-body" id="body-arsenal">
+      <div class="garbled" id="garble-arsenal"></div>
+      <div class="clear">
+        <p style="margin-bottom:8px;font-weight:700;">> Languages:</p>
+        <div class="tags">
+          <span>Python</span><span>Java</span><span>C</span><span>C#</span><span>C++</span>
+          <span>SQL</span><span>Haskell</span><span>x86 Assembly</span><span>JavaScript</span>
+        </div>
+        <p style="margin:12px 0 8px;font-weight:700;">> Tools:</p>
+        <div class="tags">
+          <span>Git</span><span>SVN</span><span>Linux</span><span>VS Code</span>
+          <span>Docker</span><span>WPF</span><span>R</span><span>Stata</span>
+        </div>
+        <p style="margin:12px 0 8px;font-weight:700;">> Libraries:</p>
+        <div class="tags">
+          <span>numpy</span><span>pandas</span><span>pygame</span><span>flask</span><span>matplotlib</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SIDE_QUESTS (Projects) -->
+  <div class="section" id="sec-sidequests">
+    <div class="section-header glitch" onclick="decrypt('sidequests')">
+      [SIDE_QUESTS] <span class="status">// ENCRYPTED - CLICK TO DECRYPT</span>
+    </div>
+    <div class="section-body" id="body-sidequests">
+      <div class="garbled" id="garble-sidequests"></div>
+      <div class="clear">
+        <div class="entry">
+          <h3>> Sushi Kitchen Simulator</h3>
+          <p>Python game exploring data structures, OOP, and Agile development.</p>
+        </div>
+        <div class="entry">
+          <h3>> Digital Board Game</h3>
+          <p>Python Checkers with GUI, bot player, and Git workflow.</p>
+        </div>
+        <div class="entry" style="margin-top:16px;">
+          <p style="color:rgba(0,255,65,0.5);">> Activities: Trumpet Player // Esports Competitor // Basketball Player // Bowler</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+// Matrix rain
+const canvas = document.getElementById('rain');
+const ctx = canvas.getContext('2d');
+let W, H, columns, drops;
+const katakana = 'アイウエオカキクケコサシスセソタチツテトナニヌネノハヒフヘホマミムメモヤユヨラリルレロワヲン';
+const latin = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789@#$%&';
+const chars = katakana + latin;
+
+function initRain() {
+  W = canvas.width = window.innerWidth;
+  H = canvas.height = window.innerHeight;
+  const fontSize = 14;
+  columns = Math.floor(W / fontSize);
+  drops = Array.from({ length: columns }, () => Math.random() * -100);
+}
+initRain();
+window.addEventListener('resize', initRain);
+
+function drawRain() {
+  ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
+  ctx.fillRect(0, 0, W, H);
+  ctx.fillStyle = '#00ff41';
+  ctx.font = '14px monospace';
+  for (let i = 0; i < drops.length; i++) {
+    const ch = chars[Math.floor(Math.random() * chars.length)];
+    const x = i * 14;
+    const y = drops[i] * 14;
+    ctx.globalAlpha = 0.4 + Math.random() * 0.6;
+    ctx.fillText(ch, x, y);
+    if (y > H && Math.random() > 0.975) {
+      drops[i] = 0;
+    }
+    drops[i]++;
+  }
+  ctx.globalAlpha = 1;
+  requestAnimationFrame(drawRain);
+}
+drawRain();
+
+// Garbled text generation
+function makeGarble(len) {
+  let s = '';
+  for (let i = 0; i < len; i++) {
+    s += chars[Math.floor(Math.random() * chars.length)];
+    if (Math.random() < 0.08) s += ' ';
+  }
+  return s;
+}
+
+// Initialize garbled text
+const sections = ['identity', 'education', 'missions', 'arsenal', 'sidequests'];
+sections.forEach(id => {
+  const el = document.getElementById('garble-' + id);
+  if (el) el.textContent = makeGarble(200 + Math.floor(Math.random() * 150));
+});
+
+// Decrypt function
+const accessMsg = document.getElementById('accessMsg');
+const decryptedSet = new Set();
+
+function decrypt(id) {
+  const body = document.getElementById('body-' + id);
+  const header = body.previousElementSibling;
+
+  if (decryptedSet.has(id)) {
+    // Toggle open/close
+    body.classList.toggle('open');
+    return;
+  }
+
+  // Show ACCESS GRANTED
+  accessMsg.classList.remove('show');
+  void accessMsg.offsetWidth;
+  accessMsg.classList.add('show');
+
+  // Scramble animation
+  const garbleEl = document.getElementById('garble-' + id);
+  body.classList.add('open');
+  let steps = 0;
+  const interval = setInterval(() => {
+    garbleEl.textContent = makeGarble(200 - steps * 8);
+    steps++;
+    if (steps > 20) {
+      clearInterval(interval);
+      body.classList.add('revealed');
+      header.classList.add('decrypted');
+      header.querySelector('.status').textContent = '// DECRYPTED';
+      decryptedSet.add(id);
+    }
+  }, 40);
+}
+</script>
+</body>
+</html>

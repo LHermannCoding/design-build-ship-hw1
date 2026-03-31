@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Luke Hermann - Blueprint</title>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  background: #003366;
+  color: #ffffff;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 13px;
+  line-height: 1.55;
+  overflow-x: hidden;
+  min-height: 100vh;
+}
+a { color: #00d4ff; }
+.back-link {
+  position: fixed; top: 8px; left: 12px; z-index: 100;
+  color: #00d4ff; font-size: 11px; text-decoration: none;
+}
+.back-link:hover { color: #fff; }
+
+/* DOT GRID BACKGROUND */
+.dot-grid {
+  position: fixed; inset: 0; z-index: 0;
+  background-image: radial-gradient(circle, rgba(0,212,255,0.2) 1px, transparent 1px);
+  background-size: 24px 24px;
+  pointer-events: none;
+}
+
+.page {
+  position: relative; z-index: 1;
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 50px 30px 180px;
+}
+
+/* COMPONENT BOX */
+.component {
+  border: 1px dashed rgba(0,212,255,0.5);
+  padding: 18px 22px;
+  margin-bottom: 28px;
+  position: relative;
+}
+.component::before {
+  content: attr(data-label);
+  position: absolute;
+  top: -10px; left: 16px;
+  background: #003366;
+  padding: 0 8px;
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  color: #00d4ff;
+}
+
+/* DIMENSION LINE */
+.dim-line {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: rgba(0,212,255,0.6);
+  font-size: 10px;
+  margin: 4px 0;
+}
+.dim-line .line {
+  flex: 1;
+  height: 0;
+  border-top: 1px dashed rgba(0,212,255,0.4);
+  position: relative;
+}
+.dim-line .line::before {
+  content: '\25C0'; position: absolute; left: -2px; top: -7px;
+  font-size: 8px; color: rgba(0,212,255,0.5);
+}
+.dim-line .line::after {
+  content: '\25B6'; position: absolute; right: -2px; top: -7px;
+  font-size: 8px; color: rgba(0,212,255,0.5);
+}
+
+/* HEADINGS */
+h1 {
+  font-size: 28px;
+  font-weight: 700;
+  color: #ffffff;
+  letter-spacing: 4px;
+  text-transform: uppercase;
+}
+h2 {
+  font-size: 16px;
+  font-weight: 700;
+  color: #00d4ff;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  margin-bottom: 8px;
+}
+h3 {
+  font-size: 14px;
+  font-weight: 600;
+  color: #fff;
+  margin-bottom: 4px;
+}
+
+/* GRID LAYOUT */
+.grid-2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 28px;
+}
+.grid-3 {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 16px;
+}
+
+/* CONNECTOR SVG area */
+.connector-area {
+  position: relative;
+  margin: -14px 0;
+  height: 40px;
+}
+.connector-area svg {
+  position: absolute;
+  width: 100%; height: 100%;
+  left: 0; top: 0;
+}
+
+/* ANNOTATION */
+.annotation {
+  font-size: 10px;
+  color: rgba(255,255,255,0.45);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-top: 6px;
+}
+
+/* SPEC TABLE */
+.spec-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 8px;
+}
+.spec-table td {
+  padding: 4px 8px;
+  border: 1px dashed rgba(0,212,255,0.25);
+  font-size: 12px;
+}
+.spec-table td:first-child {
+  color: #00d4ff;
+  width: 140px;
+  text-transform: uppercase;
+  font-size: 10px;
+  letter-spacing: 1px;
+}
+
+/* SKILL CHIPS */
+.skill-chips { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 6px; }
+.skill-chip {
+  border: 1px solid rgba(0,212,255,0.5);
+  padding: 3px 10px;
+  font-size: 11px;
+  color: #00d4ff;
+}
+
+/* TITLE BLOCK */
+.title-block {
+  position: fixed;
+  bottom: 20px; right: 20px;
+  z-index: 50;
+  border: 1px solid rgba(0,212,255,0.6);
+  padding: 0;
+  background: #003366;
+  min-width: 240px;
+}
+.title-block table {
+  border-collapse: collapse;
+  width: 100%;
+}
+.title-block td {
+  border: 1px solid rgba(0,212,255,0.3);
+  padding: 4px 10px;
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+.title-block .name-cell {
+  font-size: 14px;
+  font-weight: 700;
+  color: #fff;
+  letter-spacing: 2px;
+}
+
+/* CONTACT ROW */
+.contact-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  margin-top: 8px;
+}
+.contact-item {
+  font-size: 12px;
+  color: rgba(255,255,255,0.7);
+}
+.contact-item a { text-decoration: none; }
+.contact-item span { color: #00d4ff; font-size: 10px; text-transform: uppercase; }
+
+/* WORK ENTRY */
+.work-entry {
+  margin-bottom: 16px;
+  padding-left: 14px;
+  border-left: 2px solid rgba(0,212,255,0.3);
+}
+.work-entry:last-child { margin-bottom: 0; }
+.work-entry ul {
+  list-style: none;
+  padding: 0;
+  margin-top: 4px;
+}
+.work-entry li {
+  padding-left: 16px;
+  position: relative;
+  margin-bottom: 3px;
+  color: rgba(255,255,255,0.8);
+}
+.work-entry li::before {
+  content: '\25B8';
+  position: absolute; left: 0; color: #00d4ff;
+}
+
+/* CROSSHAIR */
+.crosshair {
+  position: absolute;
+  width: 20px; height: 20px;
+  pointer-events: none;
+}
+.crosshair::before, .crosshair::after {
+  content: '';
+  position: absolute;
+  background: rgba(0,212,255,0.3);
+}
+.crosshair::before { width: 1px; height: 100%; left: 50%; }
+.crosshair::after { height: 1px; width: 100%; top: 50%; }
+
+@media (max-width: 700px) {
+  .grid-2, .grid-3 { grid-template-columns: 1fr; }
+  .title-block { position: relative; bottom: auto; right: auto; margin-top: 40px; }
+  h1 { font-size: 20px; }
+}
+</style>
+</head>
+<body>
+<a href="../gallery.html" class="back-link">&larr; Back to Gallery</a>
+<div class="dot-grid"></div>
+
+<div class="page">
+
+  <!-- HEADER -->
+  <div class="component" data-label="System Overview">
+    <div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:12px;">
+      <div>
+        <h1>Luke Hermann</h1>
+        <div class="annotation">Software Engineer // System Architect</div>
+      </div>
+      <div style="text-align:right;">
+        <div class="annotation">rev 2.0 &mdash; active development</div>
+      </div>
+    </div>
+    <div class="contact-row">
+      <div class="contact-item"><span>Tel:</span> <a href="tel:7733724185">(773) 372-4185</a></div>
+      <div class="contact-item"><span>Email:</span> <a href="mailto:lukehermann@uchicago.edu">lukehermann@uchicago.edu</a></div>
+      <div class="contact-item"><span>LinkedIn:</span> <a href="https://linkedin.com/in/luke-hermann" target="_blank">luke-hermann</a></div>
+      <div class="contact-item"><span>GitHub:</span> <a href="https://github.com/LHermannCoding" target="_blank">LHermannCoding</a></div>
+    </div>
+  </div>
+
+  <!-- CONNECTOR -->
+  <div class="connector-area">
+    <svg viewBox="0 0 1000 40" preserveAspectRatio="none">
+      <line x1="500" y1="0" x2="250" y2="40" stroke="#00d4ff" stroke-width="1" stroke-dasharray="4,4" opacity="0.4"/>
+      <line x1="500" y1="0" x2="750" y2="40" stroke="#00d4ff" stroke-width="1" stroke-dasharray="4,4" opacity="0.4"/>
+    </svg>
+  </div>
+
+  <!-- EDUCATION + SKILLS -->
+  <div class="grid-2">
+    <div class="component" data-label="Education Module">
+      <h2>Education</h2>
+      <h3>University of Chicago</h3>
+      <table class="spec-table">
+        <tr><td>Degree</td><td>MS in Computer Science</td></tr>
+        <tr><td>Status</td><td>Expected June 2026</td></tr>
+        <tr><td>Coursework</td><td>Distributed Systems, Functional Programming</td></tr>
+      </table>
+      <div style="margin-top:12px;"></div>
+      <table class="spec-table">
+        <tr><td>Degree</td><td>BS in CS + BA in Economics</td></tr>
+        <tr><td>Completed</td><td>June 2025</td></tr>
+        <tr><td>GPA</td><td>3.7 &mdash; National Merit Scholar</td></tr>
+        <tr><td>Coursework</td><td>ML for Systems, OS, Databases, Networks</td></tr>
+      </table>
+    </div>
+
+    <div class="component" data-label="Skills Registry">
+      <h2>Technical Skills</h2>
+      <div class="annotation" style="margin-bottom:8px;">Languages</div>
+      <div class="skill-chips">
+        <span class="skill-chip">Python</span><span class="skill-chip">Java</span><span class="skill-chip">C</span>
+        <span class="skill-chip">C#</span><span class="skill-chip">C++</span><span class="skill-chip">SQL</span>
+        <span class="skill-chip">Haskell</span><span class="skill-chip">x86 Asm</span><span class="skill-chip">JavaScript</span>
+      </div>
+      <div class="annotation" style="margin-top:10px;margin-bottom:8px;">Tools &amp; Platforms</div>
+      <div class="skill-chips">
+        <span class="skill-chip">Git</span><span class="skill-chip">SVN</span><span class="skill-chip">Linux</span>
+        <span class="skill-chip">VS Code</span><span class="skill-chip">Docker</span><span class="skill-chip">WPF</span>
+        <span class="skill-chip">R</span><span class="skill-chip">Stata</span>
+      </div>
+      <div class="annotation" style="margin-top:10px;margin-bottom:8px;">Libraries</div>
+      <div class="skill-chips">
+        <span class="skill-chip">numpy</span><span class="skill-chip">pandas</span><span class="skill-chip">pygame</span>
+        <span class="skill-chip">flask</span><span class="skill-chip">matplotlib</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- CONNECTOR -->
+  <div class="connector-area">
+    <svg viewBox="0 0 1000 40" preserveAspectRatio="none">
+      <line x1="250" y1="0" x2="500" y2="40" stroke="#00d4ff" stroke-width="1" stroke-dasharray="4,4" opacity="0.4"/>
+      <line x1="750" y1="0" x2="500" y2="40" stroke="#00d4ff" stroke-width="1" stroke-dasharray="4,4" opacity="0.4"/>
+    </svg>
+  </div>
+
+  <!-- WORK EXPERIENCE -->
+  <div class="component" data-label="Experience Pipeline">
+    <h2>Work Experience</h2>
+
+    <div class="work-entry">
+      <h3>Amazon &mdash; SDE L4</h3>
+      <div class="dim-line">
+        <span>Jun 2025</span>
+        <div class="line"></div>
+        <span>Sept 2025</span>
+        <span style="color:#00d4ff;">[4 months]</span>
+      </div>
+      <ul>
+        <li>Deployable banner on Seller/Vendor Central serving 3.6M partners/month</li>
+        <li>Reduced incident response from 6 hours to &lt;10 minutes</li>
+        <li>Java API integration, 40+ code reviews under Agile</li>
+      </ul>
+    </div>
+
+    <div class="work-entry">
+      <h3>Enklu &mdash; Software Engineer</h3>
+      <div class="dim-line">
+        <span>Jun 2024</span>
+        <div class="line"></div>
+        <span>Sept 2024</span>
+        <span style="color:#00d4ff;">[4 months]</span>
+      </div>
+      <ul>
+        <li>Primal Ranch game: 1K+ hrs playtime, $36K revenue, 600+ customers</li>
+        <li>Multiplayer metrics API in C# and Node.js</li>
+      </ul>
+    </div>
+
+    <div class="work-entry">
+      <h3>Code Your Dreams &mdash; CS Intern</h3>
+      <div class="dim-line">
+        <span>Jun 2023</span>
+        <div class="line"></div>
+        <span>Aug 2023</span>
+        <span style="color:#00d4ff;">[3 months]</span>
+      </div>
+      <ul>
+        <li>16 Python lessons, WhatsApp bot curriculum</li>
+        <li>Arduino DanceTech, onboarded 40+ teachers in Burundi</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- CONNECTOR -->
+  <div class="connector-area">
+    <svg viewBox="0 0 1000 40" preserveAspectRatio="none">
+      <line x1="333" y1="0" x2="333" y2="40" stroke="#00d4ff" stroke-width="1" stroke-dasharray="4,4" opacity="0.4"/>
+      <line x1="666" y1="0" x2="666" y2="40" stroke="#00d4ff" stroke-width="1" stroke-dasharray="4,4" opacity="0.4"/>
+    </svg>
+  </div>
+
+  <!-- PROJECTS + ACTIVITIES -->
+  <div class="grid-2">
+    <div class="component" data-label="Project Modules">
+      <h2>Projects</h2>
+      <div style="margin-bottom:12px;">
+        <h3>Sushi Kitchen Simulator</h3>
+        <div class="annotation">Python // Data Structures // OOP // Agile</div>
+        <p style="margin-top:4px;color:rgba(255,255,255,0.75);">Full gameplay simulation with queue-based order management and Agile sprints.</p>
+      </div>
+      <div>
+        <h3>Digital Board Game</h3>
+        <div class="annotation">Python // GUI // AI Bot // Git Workflow</div>
+        <p style="margin-top:4px;color:rgba(255,255,255,0.75);">Checkers engine with graphical interface, AI opponent, and version-controlled development.</p>
+      </div>
+    </div>
+
+    <div class="component" data-label="Auxiliary Systems">
+      <h2>Activities</h2>
+      <table class="spec-table">
+        <tr><td>Music</td><td>Trumpet Player</td></tr>
+        <tr><td>Gaming</td><td>Esports Competitor</td></tr>
+        <tr><td>Sports</td><td>Basketball Player</td></tr>
+        <tr><td>Recreation</td><td>Bowler</td></tr>
+      </table>
+      <div class="annotation" style="margin-top:12px;">
+        Note: Auxiliary systems complement the primary engineering function and contribute to overall system resilience.
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- TITLE BLOCK -->
+<div class="title-block">
+  <table>
+    <tr>
+      <td colspan="2" class="name-cell">Luke Hermann</td>
+    </tr>
+    <tr>
+      <td>Date</td>
+      <td>2026-03-30</td>
+    </tr>
+    <tr>
+      <td>Drawing</td>
+      <td>Resume Schematic</td>
+    </tr>
+    <tr>
+      <td>Scale</td>
+      <td>1:1</td>
+    </tr>
+    <tr>
+      <td>Sheet</td>
+      <td>1 of 1</td>
+    </tr>
+  </table>
+</div>
+
+</body>
+</html>

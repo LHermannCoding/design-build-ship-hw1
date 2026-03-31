@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Luke Hermann - Typewriter Resume</title>
+<link href="https://fonts.googleapis.com/css2?family=Special+Elite&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    background: #e8dcc8;
+    font-family: 'Special Elite', cursive;
+    color: #2a2a2a; font-size: 16px; line-height: 2;
+    min-height: 100vh;
+  }
+  a.back-link {
+    position: fixed; top: 12px; left: 12px; z-index: 999;
+    font-size: 13px; color: #cc0000; text-decoration: none;
+    font-family: 'Special Elite', cursive;
+  }
+  a.back-link:hover { text-decoration: underline; }
+
+  .paper-wrapper {
+    display: flex; justify-content: center; padding: 40px 20px 80px;
+  }
+  .paper {
+    max-width: 600px; width: 100%;
+    background: #faf3e0;
+    padding: 60px 50px 80px;
+    position: relative;
+    box-shadow: 4px 4px 20px rgba(0,0,0,0.15), 0 0 60px rgba(0,0,0,0.05);
+    min-height: 100vh;
+  }
+
+  /* Ruled lines */
+  .paper::before {
+    content: '';
+    position: absolute; top: 0; left: 0; right: 0; bottom: 0;
+    background: repeating-linear-gradient(
+      transparent, transparent 30px, rgba(100,130,180,0.12) 30px, rgba(100,130,180,0.12) 31px
+    );
+    pointer-events: none;
+    z-index: 0;
+  }
+  /* Red margin line */
+  .paper::after {
+    content: '';
+    position: absolute; top: 0; bottom: 0; left: 46px;
+    width: 1px; background: rgba(204,0,0,0.2);
+    pointer-events: none; z-index: 0;
+  }
+
+  .paper > * { position: relative; z-index: 1; }
+
+  .date { text-align: right; margin-bottom: 32px; color: #666; font-size: 14px; }
+
+  .greeting { margin-bottom: 24px; }
+
+  p { margin-bottom: 16px; }
+
+  .correction {
+    color: #cc0000; text-decoration: line-through;
+    text-decoration-thickness: 2px;
+    opacity: 0.7;
+  }
+  .inserted {
+    color: #cc0000; position: relative;
+    display: inline;
+  }
+  .inserted::before {
+    content: '^';
+    position: absolute; bottom: -8px; left: 50%;
+    transform: translateX(-50%);
+    font-size: 12px; color: #cc0000;
+  }
+
+  .section-break {
+    text-align: center; margin: 32px 0;
+    letter-spacing: 12px; color: #999;
+  }
+
+  .heading {
+    font-size: 18px; text-transform: uppercase;
+    letter-spacing: 4px; margin-bottom: 8px;
+    text-decoration: underline;
+    text-underline-offset: 4px;
+  }
+
+  .indent { padding-left: 32px; }
+
+  .skill-line { display: inline; }
+
+  /* Blinking cursor */
+  .cursor {
+    display: inline-block; width: 8px; height: 18px;
+    background: #2a2a2a; vertical-align: text-bottom;
+    animation: blink-cursor 1s step-end infinite;
+    position: fixed; opacity: 0;
+    transition: opacity 0.3s;
+    pointer-events: none; z-index: 100;
+  }
+  .cursor.visible { opacity: 1; }
+  @keyframes blink-cursor { 0%,100% { opacity: 1; } 50% { opacity: 0; } }
+
+  a { color: #2a2a2a; }
+
+  .sign-off { margin-top: 40px; }
+  .signature { font-size: 24px; margin-top: 16px; }
+
+  /* Ink irregularity applied via JS */
+  .ink-char { display: inline; }
+
+  .contact-block { font-size: 13px; line-height: 1.8; margin-bottom: 24px; color: #555; }
+  .contact-block a { color: #555; }
+</style>
+</head>
+<body>
+<a class="back-link" href="../gallery.html">&larr; Back to Gallery</a>
+<div class="cursor" id="cursor"></div>
+
+<div class="paper-wrapper">
+<div class="paper" id="paper">
+
+  <div class="date">March 30, 2026</div>
+
+  <div class="contact-block">
+    Luke Hermann<br>
+    (773) 372-4185 | <a href="mailto:lukehermann@uchicago.edu">lukehermann@uchicago.edu</a><br>
+    <a href="https://linkedin.com/in/luke-hermann" target="_blank">linkedin.com/in/luke-hermann</a> |
+    <a href="https://github.com/LHermannCoding" target="_blank">github.com/LHermannCoding</a>
+  </div>
+
+  <p class="greeting">Dear Hiring Manager,</p>
+
+  <p>I am writing to introduce myself. My name is Luke Hermann, and I am a <span class="correction">student</span> <span class="inserted">software engineer</span> at the University of Chicago, where I am completing my Master's in Computer Science, expected June 2026. I also hold a BS in Computer Science and a BA in Economics, earned June 2025, with a GPA of 3.7. I was named a National Merit Scholar.</p>
+
+  <div class="section-break">* * *</div>
+
+  <div class="heading">Experience</div>
+
+  <p>Most recently, I worked at <strong>Amazon</strong> as an SDE L4 (June-September 2025), where I built a deployable banner on Seller/Vendor Central that serves <span class="correction">some</span> <span class="inserted">3.6 million</span> partners per month. I reduced incident response time from six hours to less than ten minutes, handled Java API integration, and participated in over forty code reviews under Agile methodology.</p>
+
+  <p>Before that, at <strong>Enklu</strong> (June-September 2024), I worked as a Software Engineer on a game called Primal Ranch. The numbers <span class="correction">were decent</span> <span class="inserted">speak for themselves</span>: over one thousand hours of playtime, thirty-six thousand dollars in revenue, and more than six hundred customers. I built a multiplayer metrics API using C# and Node.js.</p>
+
+  <p>My first professional role was at <strong>Code Your Dreams</strong> (June-August 2023), where I created sixteen Python lessons, a WhatsApp bot curriculum, and an Arduino DanceTech project. I onboarded over forty teachers in Burundi.</p>
+
+  <div class="section-break">* * *</div>
+
+  <div class="heading">Education</div>
+
+  <p class="indent"><strong>University of Chicago</strong><br>
+  MS in Computer Science -- Expected June 2026<br>
+  Coursework: Distributed Systems, Functional Programming</p>
+
+  <p class="indent">BS in Computer Science + BA in Economics -- June 2025<br>
+  GPA: 3.7 | National Merit Scholar<br>
+  Coursework: ML for Systems, Operating Systems, Databases, Networks</p>
+
+  <div class="section-break">* * *</div>
+
+  <div class="heading">Projects</div>
+
+  <p class="indent"><strong>Sushi Kitchen Simulator</strong> -- A Python game built with data structures, OOP, and Agile development practices.</p>
+
+  <p class="indent"><strong>Digital Board Game</strong> -- Python Checkers featuring a GUI, a bot player, and a proper Git workflow.</p>
+
+  <div class="section-break">* * *</div>
+
+  <div class="heading">Skills</div>
+
+  <p><span class="skill-line">Languages: Python, Java, C, C#, C++, SQL, Haskell, x86 Assembly, JavaScript</span></p>
+  <p><span class="skill-line">Tools: Git, SVN, Linux, VS Code, Docker, WPF, R, Stata</span></p>
+  <p><span class="skill-line">Libraries: numpy, pandas, pygame, flask, matplotlib</span></p>
+
+  <div class="section-break">* * *</div>
+
+  <p>In my spare time, I play trumpet, compete in esports, play basketball, and bowl. I am <span class="correction">pretty good</span> <span class="inserted">quite passionate</span> about all of them.</p>
+
+  <div class="sign-off">
+    <p>Sincerely yours,</p>
+    <p class="signature">Luke Hermann</p>
+  </div>
+
+</div>
+</div>
+
+<script>
+// Ink irregularity: add slight opacity variation to characters
+function applyInkEffect() {
+  const paper = document.getElementById('paper');
+  const walker = document.createTreeWalker(paper, NodeFilter.SHOW_TEXT, null, false);
+  const textNodes = [];
+  while (walker.nextNode()) textNodes.push(walker.currentNode);
+
+  textNodes.forEach(node => {
+    const text = node.textContent;
+    if (!text.trim()) return;
+    const parent = node.parentNode;
+    if (parent.classList && (parent.classList.contains('cursor') || parent.tagName === 'STYLE' || parent.tagName === 'SCRIPT')) return;
+
+    const frag = document.createDocumentFragment();
+    for (let i = 0; i < text.length; i++) {
+      const span = document.createElement('span');
+      span.textContent = text[i];
+      span.className = 'ink-char';
+      // Subtle variation: 0.75 to 1.0 opacity
+      const opacity = 0.78 + Math.random() * 0.22;
+      span.style.opacity = opacity.toFixed(2);
+      // Occasional very slight vertical jitter
+      if (Math.random() < 0.08) {
+        const jitter = (Math.random() * 1.2 - 0.6).toFixed(1);
+        span.style.position = 'relative';
+        span.style.top = jitter + 'px';
+      }
+      frag.appendChild(span);
+    }
+    parent.replaceChild(frag, node);
+  });
+}
+
+// Blinking cursor that follows scroll position
+const cursor = document.getElementById('cursor');
+const paper = document.getElementById('paper');
+
+function updateCursor() {
+  const scrollY = window.scrollY;
+  const viewH = window.innerHeight;
+  const paperRect = paper.getBoundingClientRect();
+
+  // Position cursor at roughly the "reading line" - 60% down viewport
+  const readLineY = viewH * 0.6;
+  const readLineAbsolute = scrollY + readLineY;
+
+  // Find the approximate character at that position
+  const paperTop = paperRect.top + scrollY;
+  const paperBottom = paperTop + paper.offsetHeight;
+
+  if (readLineAbsolute > paperTop && readLineAbsolute < paperBottom) {
+    cursor.classList.add('visible');
+    cursor.style.top = readLineY + 'px';
+    // Place at end of content area
+    cursor.style.left = (paperRect.left + paper.offsetWidth - 60) + 'px';
+  } else {
+    cursor.classList.remove('visible');
+  }
+}
+
+window.addEventListener('scroll', updateCursor);
+window.addEventListener('resize', updateCursor);
+
+// Apply effects after load
+window.addEventListener('load', () => {
+  applyInkEffect();
+  updateCursor();
+});
+</script>
+</body>
+</html>
